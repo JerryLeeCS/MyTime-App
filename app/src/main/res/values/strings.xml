@@ -8,5 +8,6 @@
     <string name="timer_start_button">START</string>
     <string name="timer_stop_button">STOP</string>
     <string name="timer_text_view_empty">0</string>
+    <string name="quote_placement">The most dangerous thing you can do in life is play it safe.</string>
 
 </resources>

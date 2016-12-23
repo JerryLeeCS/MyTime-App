@@ -10,6 +10,9 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.NotificationCompat;
 import android.util.Log;
 
+import com.example.jerrylee.mytime.MainActivity;
+import com.example.jerrylee.mytime.R;
+
 import layout.ChronometerFragment;
 
 /**
@@ -103,25 +106,32 @@ public class TimerService extends Service {
 
     public void foreground(){
         startForeground(NOTIFICATION_ID,createNotification());
+        if(Log.isLoggable(TAG,Log.VERBOSE)){
+            Log.v(TAG,"foreground starting...");
+        }
+        Log.v(TAG,"foreground starting...");
     }
 
     public void background(){
         stopForeground(true);
+        Log.v(TAG,"background starting...");
     }
 
     private Notification createNotification() {
-        NotificationCompat.Builder builder = (NotificationCompat.Builder) new NotificationCompat.Builder(this)
-                .setContentTitle("Timer Active")
-                .setContentText("tap to return to the app")
-                ;
+        NotificationCompat.Builder builder = (NotificationCompat.Builder) new NotificationCompat.Builder(this);
 
-        Intent resultIntent = new Intent(this, ChronometerFragment.class);
+        builder.setSmallIcon(R.mipmap.ic_launcher);
+        builder.setContentTitle("Hello from Timer App");
+        builder.setContentText("tap to return to the app");
+
+        Intent resultIntent = new Intent(this, MainActivity.class);
         PendingIntent resultPendingIntent =
                 PendingIntent.getActivity(this,0,resultIntent,
                         PendingIntent.FLAG_UPDATE_CURRENT);
 
         builder.setContentIntent(resultPendingIntent);
 
+        Log.v(TAG,"notification building...");
         return builder.build();
     }
 

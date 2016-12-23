@@ -140,13 +140,14 @@ public class ChronometerFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
+
     }
 
     @Override
     public void onStop() {
         super.onStop();
-        updateUIStopRun();
 
+        updateUIStopRun();
         if(serviceBound){
             if(timerService.isTimerRunning()){
                 timerService.foreground();
@@ -154,11 +155,12 @@ public class ChronometerFragment extends Fragment {
             else{
                 getActivity().stopService(new Intent(getActivity(), TimerService.class));
             }
+
+            getActivity().unbindService(mConnection);
+            serviceBound = false;
         }
 
 
-        getActivity().unbindService(mConnection);
-        serviceBound = false;
     }
 
     public interface OnFragmentInteractionListener {
@@ -180,7 +182,6 @@ public class ChronometerFragment extends Fragment {
             if(timerService.isTimerRunning()){
             updateUIStartRun();
             }
-
         }
 
         @Override
