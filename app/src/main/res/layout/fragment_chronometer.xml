@@ -83,7 +83,8 @@
                     android:textAlignment="textStart"
                     android:textSize="28sp"
                     android:background="@color/colorPrimary"
-                    android:textColor="@android:color/background_light" />
+                    android:textColor="@android:color/background_light"
+                    android:onClick="onStartButtonClicked (ChronometerFragment)" />
             </LinearLayout>
 
         </LinearLayout>

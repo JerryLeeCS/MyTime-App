@@ -34,9 +34,9 @@ public class ServiceTest extends ServiceTestCase<TimerService>{
     }
 
     @MediumTest
-    public void TestBinding(){
+    public void TestBinding() {
         Intent intent = new Intent();
-        intent.setClass(getContext(),TimerService.class);
+        intent.setClass(getContext(), TimerService.class);
         IBinder service = bindService(intent);
         assertNotNull(service);
     }

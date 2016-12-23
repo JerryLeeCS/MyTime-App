@@ -112,7 +112,8 @@ public class TimerService extends Service {
     private Notification createNotification() {
         NotificationCompat.Builder builder = (NotificationCompat.Builder) new NotificationCompat.Builder(this)
                 .setContentTitle("Timer Active")
-                .setContentText("tap to return to the app");
+                .setContentText("tap to return to the app")
+                ;
 
         Intent resultIntent = new Intent(this, ChronometerFragment.class);
         PendingIntent resultPendingIntent =
