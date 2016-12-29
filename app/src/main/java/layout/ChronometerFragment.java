@@ -95,6 +95,7 @@ public class ChronometerFragment extends Fragment {
         Intent intent = new Intent(getActivity(), TimerService.class);
         getActivity().startService(intent);
         getActivity().bindService(intent,mConnection,0);
+        Log.v(TAG,"chrono onStart()....");
     }
 
     //the button for viewpager
@@ -129,11 +130,8 @@ public class ChronometerFragment extends Fragment {
                     timerService.stopTimer();
                     updateUIStopRun();
                 }
-
-
             }
         });
-
     }
 
     @Override
@@ -158,6 +156,7 @@ public class ChronometerFragment extends Fragment {
 
             getActivity().unbindService(mConnection);
             serviceBound = false;
+            Log.v(TAG,"Chrono onStop()....");
         }
 
 
@@ -217,7 +216,6 @@ public class ChronometerFragment extends Fragment {
         UIUpdateHandler(ChronometerFragment fragment){
             this.fragmentWeakReference = new WeakReference<ChronometerFragment>(fragment);
         }
-
         @Override
         public void handleMessage(Message msg) {
             if(MSG_UPDATE_TIME == msg.what){
