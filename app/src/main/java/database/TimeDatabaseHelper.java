@@ -14,21 +14,24 @@ public class TimeDatabaseHelper extends SQLiteOpenHelper {
     private static final String DB_NAME = "MYTIME";
     private static final int DB_VERSION = 1;
 
+    private static final String TABLE_NAME = "ALL_TIME";
+
     TimeDatabaseHelper(Context context) {
         super(context, DB_NAME, null, DB_VERSION);
     }
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        db.execSQL("CREATE TABLE ALL_TIME( "
-                + "_id INTEGER PRIMARY KEY AUTOINCREMENT,"
+        db.execSQL("CREATE TABLE "+ TABLE_NAME
+                + "( _id INTEGER PRIMARY KEY AUTOINCREMENT,"
                 + "TASK TEXT,"
                 + "TIME INTEGER);");
     }
 
     @Override
-    public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
-
+    public void onUpgrade(SQLiteDatabase db, int i, int i1) {
+        this.getWritableDatabase().execSQL("DROP TABLE IF EXISTS " + TABLE_NAME);
+        onCreate(db);
     }
 
     public void insertContent(String table, String task, int time ){

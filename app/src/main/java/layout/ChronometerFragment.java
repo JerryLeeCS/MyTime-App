@@ -138,7 +138,6 @@ public class ChronometerFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
-
     }
 
     @Override
@@ -204,8 +203,16 @@ public class ChronometerFragment extends Fragment {
 
     private void updateUITimer(){
         if(serviceBound){
-            timerTextView.setText(timerService.elapsedTime() + "");
+            timerTextView.setText(formattedTimer(timerService.elapsedTime()));
         }
+    }
+
+    private String formattedTimer(long time){
+        long hour = time/3600;
+        long minutes = (time%3600)/60;
+        long seconds = time - (hour * 3600 + minutes * 60);
+
+        return hour + ":" + minutes + ":" + seconds;
     }
 
     static class UIUpdateHandler extends Handler{
