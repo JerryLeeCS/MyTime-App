@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+
+        <TextView
+            android:text="---"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/tasknameView"
+            android:layout_weight="1"
+            android:textSize="36sp"
+            android:textAlignment="textStart" />
+
+        <TextView
+            android:text="00:00:10"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/timeElapsedView"
+            android:layout_weight="0.5"
+            android:textSize="24sp"
+            android:textAlignment="center" />
+    </LinearLayout>
+</android.support.v7.widget.CardView>
