@@ -1,27 +1,25 @@
 package layout;
 
-import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.ListFragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.jerrylee.mytime.R;
 
-import java.util.List;
-
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link TempListFragment.OnFragmentInteractionListener} interface
+ * {@link ListFragment.OnFragmentInteractionListener} interface
  * to handle interaction events.
- * Use the {@link TempListFragment#newInstance} factory method to
+ * Use the {@link ListFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class TempListFragment extends Fragment {
+public class ListFragment extends Fragment {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_SECTION = "section2";
 
@@ -29,12 +27,16 @@ public class TempListFragment extends Fragment {
 
     private OnFragmentInteractionListener mListener;
 
-    public TempListFragment() {
+    private RecyclerView mRecyclerView;
+    private RecyclerView.Adapter mAdapter;
+    private RecyclerView.LayoutManager mLayoutManager;
+
+    public ListFragment() {
         // Required empty public constructor
     }
 
-    public static TempListFragment newInstance(String param1) {
-        TempListFragment fragment = new TempListFragment();
+    public static ListFragment newInstance(String param1) {
+        ListFragment fragment = new ListFragment();
         Bundle args = new Bundle();
         args.putString(ARG_SECTION, param1);
         fragment.setArguments(args);
@@ -47,6 +49,15 @@ public class TempListFragment extends Fragment {
         if (getArguments() != null) {
             section = getArguments().getString(ARG_SECTION);
         }
+
+        mRecyclerView = (RecyclerView) getActivity().findViewById(R.id.recycler_view);
+
+        mRecyclerView.setHasFixedSize(true);
+
+        mLayoutManager = new LinearLayoutManager(getActivity());
+        mRecyclerView.setLayoutManager(mLayoutManager);
+
+
     }
 
     @Override
