@@ -8,8 +8,11 @@ public class RecyclerViewItem {
     private String taskName;
     private String timeElapsed;
 
-    public RecyclerViewItem(String taskName, String timeElapsed){
+    public void setTaskName(String taskName){
         this.taskName = taskName;
+    }
+
+    public void setTimeElapsed(String timeElapsed){
         this.timeElapsed = timeElapsed;
     }
 

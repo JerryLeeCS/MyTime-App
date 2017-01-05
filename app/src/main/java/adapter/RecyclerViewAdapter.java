@@ -8,6 +8,8 @@ import android.widget.TextView;
 
 import com.example.jerrylee.mytime.R;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 import java.util.List;
 
 import item.RecyclerViewItem;
@@ -39,8 +41,6 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
         holder.taskView.setText(recyclerViewItem.getTaskName());
         holder.timeView.setText(recyclerViewItem.getTimeElapsed());
-
-
     }
 
     @Override

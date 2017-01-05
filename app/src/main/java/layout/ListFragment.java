@@ -2,14 +2,20 @@ package layout;
 
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.jerrylee.mytime.R;
+
+import adapter.RecyclerViewAdapter;
+import database.TimeDatabaseHelper;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -50,14 +56,6 @@ public class ListFragment extends Fragment {
             section = getArguments().getString(ARG_SECTION);
         }
 
-        mRecyclerView = (RecyclerView) getActivity().findViewById(R.id.recycler_view);
-
-        mRecyclerView.setHasFixedSize(true);
-
-        mLayoutManager = new LinearLayoutManager(getActivity());
-        mRecyclerView.setLayoutManager(mLayoutManager);
-
-
     }
 
     @Override
@@ -65,6 +63,23 @@ public class ListFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_temp_list, container, false);
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
+        mRecyclerView = (RecyclerView) getView().findViewById(R.id.recyclerView);
+
+        mRecyclerView.setHasFixedSize(true);
+
+        mLayoutManager = new LinearLayoutManager(getActivity());
+        mRecyclerView.setLayoutManager(mLayoutManager);
+
+        TimeDatabaseHelper timeDatabaseHelper = new TimeDatabaseHelper(getContext());
+        RecyclerViewAdapter recyclerViewAdapter = new RecyclerViewAdapter(timeDatabaseHelper.getRecyclerViewItemList());
+
+        mRecyclerView.setAdapter(recyclerViewAdapter);
     }
 
     // TODO: Rename method, update argument and hook method into UI event
