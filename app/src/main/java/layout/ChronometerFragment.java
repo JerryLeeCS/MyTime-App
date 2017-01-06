@@ -230,7 +230,7 @@ public class ChronometerFragment extends Fragment {
         long minutes = (time%3600)/60;
         long seconds = time - (hour * 3600 + minutes * 60);
 
-        SimpleDateFormat simpleDateFormat =  new SimpleDateFormat("h:mm:ss");
+        SimpleDateFormat simpleDateFormat =  new SimpleDateFormat("HH:mm:ss");
         Date date = new Date(0,0,0,(int)hour,(int)minutes,(int)seconds);
         return simpleDateFormat.format(date);
     }
