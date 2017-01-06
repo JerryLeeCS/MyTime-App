@@ -45,7 +45,7 @@ public class TimeDatabaseHelper extends SQLiteOpenHelper {
                 + timeElapsedColumn +" INTEGER,"
                 + startTimeColumn + " TEXT,"
                 + endTimeColumn + " TEXT,"
-                + dateColumn + " TEXT" + ");");
+                + dateColumn + " DATE" + ");");
     }
 
     @Override
@@ -54,10 +54,10 @@ public class TimeDatabaseHelper extends SQLiteOpenHelper {
         onCreate(db);
     }
 
-    public void insertContent(String task, int time, String startTime, String endTime, String date){
+    public void insertContent(String task, long elapsedTime, String startTime, String endTime, String date){
         ContentValues values = new ContentValues();
         values.put(taskColumn, task);
-        values.put(timeElapsedColumn,time);
+        values.put(timeElapsedColumn,elapsedTime);
         values.put(startTimeColumn,startTime);
         values.put(endTimeColumn,endTime);
         values.put(dateColumn,date);
@@ -70,7 +70,6 @@ public class TimeDatabaseHelper extends SQLiteOpenHelper {
         Cursor cursor = getReadableDatabase().query(TABLE_NAME,
                                                     new String[]{taskColumn, timeElapsedColumn},
                                                     null, null, null, null, null);
-
         try{
             if(cursor.moveToFirst()){
                 do{
@@ -88,8 +87,6 @@ public class TimeDatabaseHelper extends SQLiteOpenHelper {
                 cursor.close();
             }
         }
-
-
         return itemList;
     }
 

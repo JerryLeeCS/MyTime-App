@@ -10,10 +10,12 @@ import android.os.IBinder;
 import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.pm.ActivityInfoCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -22,7 +24,11 @@ import com.example.jerrylee.mytime.R;
 
 import java.lang.ref.WeakReference;
 import java.sql.Time;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 
+import database.TimeDatabaseHelper;
 import service.TimerService;
 
 /**
@@ -48,6 +54,7 @@ public class ChronometerFragment extends Fragment {
 
     private Button timerButton;
     private TextView timerTextView;
+    private AutoCompleteTextView autoCompleteTextView;
 
     private final Handler mUpdateTimeHandler = new UIUpdateHandler(this);
 
@@ -81,8 +88,6 @@ public class ChronometerFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-
-
         return inflater.inflate(R.layout.fragment_chronometer, container, false);
     }
 
@@ -111,24 +116,37 @@ public class ChronometerFragment extends Fragment {
 
         timerButton = (Button) getView().findViewById(R.id.start_button);
         timerTextView = (TextView) getView().findViewById(R.id.timer_text_view);
+        autoCompleteTextView = (AutoCompleteTextView) getView().findViewById(R.id.autoCompleteTextView);
+
+        final TimeDatabaseHelper helper = new TimeDatabaseHelper(getContext());
 
         timerButton.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
                 timerTextView.setText(R.string.timer_text_view_empty);
+                String startTime = "";
+                String endTime = "";
+                String startDate = "";
                 if(serviceBound && !timerService.isTimerRunning()){
                     if(Log.isLoggable(TAG,Log.VERBOSE)){
                         Log.v(TAG,"Starting timer.....");
                     }
                     timerService.startTimer();
                     updateUIStartRun();
+                    startTime= getCurrentTime();
+                    startDate = getCurrentDate();
                 }
                 else if(serviceBound && timerService.isTimerRunning()){
                     if(Log.isLoggable(TAG,Log.VERBOSE)){
                         Log.v(TAG,"Stopping timer");
                     }
+
                     timerService.stopTimer();
                     updateUIStopRun();
+                    endTime = getCurrentTime();
+                    //input the gathered information into the sqlite database.
+                    helper.insertContent(autoCompleteTextView.getText().toString(),timerService.elapsedTime(),startTime,endTime,startDate );
+
                 }
             }
         });
@@ -212,8 +230,12 @@ public class ChronometerFragment extends Fragment {
         long minutes = (time%3600)/60;
         long seconds = time - (hour * 3600 + minutes * 60);
 
-        return hour + ":" + minutes + ":" + seconds;
+        SimpleDateFormat simpleDateFormat =  new SimpleDateFormat("h:mm:ss");
+        Date date = new Date(0,0,0,(int)hour,(int)minutes,(int)seconds);
+        return simpleDateFormat.format(date);
     }
+
+
 
     static class UIUpdateHandler extends Handler{
 
@@ -231,10 +253,20 @@ public class ChronometerFragment extends Fragment {
                 }
                 fragmentWeakReference.get().updateUITimer();
                 sendEmptyMessageDelayed(MSG_UPDATE_TIME,UPDATE_TIME_RATE);
-
             }
-
         }
+    }
+
+    private String getCurrentTime(){
+        String format = "h:mm a";
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(format);
+        return  simpleDateFormat.format(new Date());
+    }
+
+    private String getCurrentDate(){
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        Date date = new Date();
+        return simpleDateFormat.format(date);
     }
 
 }
