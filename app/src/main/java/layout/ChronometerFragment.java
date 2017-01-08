@@ -9,7 +9,7 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
+import android.support.v4.app.*;
 import android.support.v4.content.pm.ActivityInfoCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -146,7 +146,7 @@ public class ChronometerFragment extends Fragment {
                     endTime = getCurrentTime();
                     //input the gathered information into the sqlite database.
                     helper.insertContent(autoCompleteTextView.getText().toString(),timerService.elapsedTime(),startTime,endTime,startDate );
-
+                    ListFragment.mAdapter.notifyDataSetChanged();
                 }
             }
         });

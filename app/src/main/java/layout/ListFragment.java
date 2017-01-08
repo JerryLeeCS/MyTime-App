@@ -14,6 +14,9 @@ import android.view.ViewGroup;
 
 import com.example.jerrylee.mytime.R;
 
+import java.sql.Time;
+import java.util.List;
+
 import adapter.RecyclerViewAdapter;
 import database.TimeDatabaseHelper;
 
@@ -29,12 +32,14 @@ public class ListFragment extends Fragment {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_SECTION = "section2";
 
+    private static final String TAG = ListFragment.class.getSimpleName();
+
     private String section;
 
     private OnFragmentInteractionListener mListener;
 
     private RecyclerView mRecyclerView;
-    private RecyclerView.Adapter mAdapter;
+    public static RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
 
     public ListFragment() {
@@ -55,7 +60,11 @@ public class ListFragment extends Fragment {
         if (getArguments() != null) {
             section = getArguments().getString(ARG_SECTION);
         }
+    }
 
+    @Override
+    public void onResume() {
+        super.onResume();
     }
 
     @Override
@@ -77,9 +86,10 @@ public class ListFragment extends Fragment {
         mRecyclerView.setLayoutManager(mLayoutManager);
 
         TimeDatabaseHelper timeDatabaseHelper = new TimeDatabaseHelper(getContext());
-        RecyclerViewAdapter recyclerViewAdapter = new RecyclerViewAdapter(timeDatabaseHelper.getRecyclerViewItemList());
+        mAdapter = new RecyclerViewAdapter(timeDatabaseHelper.getRecyclerViewItemList());
 
-        mRecyclerView.setAdapter(recyclerViewAdapter);
+        mRecyclerView.setAdapter(mAdapter);
+        Log.v(TAG, "listFragment onActivityCreated");
     }
 
     // TODO: Rename method, update argument and hook method into UI event
