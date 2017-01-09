@@ -81,6 +81,7 @@ public class ChronometerFragment extends Fragment {
 
         try{
             dataChangedListener = (onDataChangedListener) context;
+
         }catch (ClassCastException e){
             e.printStackTrace();
         }
@@ -92,7 +93,7 @@ public class ChronometerFragment extends Fragment {
         if (getArguments() != null) {
             section = getArguments().getString(ARG_SECTION);
         }
-        Log.v(TAG,"ChronomterFragment onCreate...");
+        Log.v(TAG,"onCreate...");
 
     }
 
@@ -100,6 +101,7 @@ public class ChronometerFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
+        Log.v(TAG,"onCreateView...");
         return inflater.inflate(R.layout.fragment_chronometer, container, false);
     }
 
@@ -112,7 +114,7 @@ public class ChronometerFragment extends Fragment {
         Intent intent = new Intent(getActivity(), TimerService.class);
         getActivity().startService(intent);
         getActivity().bindService(intent,mConnection,0);
-        Log.v(TAG,"chrono onStart()....");
+        Log.v(TAG,"onStart()....");
     }
 
     //the button for viewpager
@@ -131,7 +133,7 @@ public class ChronometerFragment extends Fragment {
         autoCompleteTextView = (AutoCompleteTextView) getView().findViewById(R.id.autoCompleteTextView);
 
         final TimeDatabaseHelper helper = new TimeDatabaseHelper(getContext());
-
+        Log.v(TAG,"onViewCreated...");
         timerButton.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
@@ -167,12 +169,13 @@ public class ChronometerFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
+        Log.v(TAG,"onDetach...");
     }
 
     @Override
     public void onStop() {
         super.onStop();
-
+        Log.v(TAG,"onStop...");
         updateUIStopRun();
         if(serviceBound){
             if(timerService.isTimerRunning()){

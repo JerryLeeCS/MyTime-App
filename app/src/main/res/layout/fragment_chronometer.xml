@@ -6,7 +6,8 @@
     tools:context="layout.ChronometerFragment"
     android:orientation="vertical"
     android:padding="1dp"
-    android:background="@android:color/background_light">
+    android:background="@android:color/background_light"
+    android:id="@+id/chronometerFragment">
 
     <!-- TODO: Update blank fragment layout -->
 

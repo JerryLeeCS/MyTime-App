@@ -66,12 +66,14 @@ public class ListFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
+        Log.v(TAG, "onResume...");
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
+        Log.v(TAG,"onCreateView...");
         return inflater.inflate(R.layout.fragment_temp_list, container, false);
     }
 
@@ -90,7 +92,7 @@ public class ListFragment extends Fragment {
         mAdapter = new RecyclerViewAdapter(timeDatabaseHelper.getRecyclerViewItemList());
 
         mRecyclerView.setAdapter(mAdapter);
-        Log.v(TAG, "listFragment onActivityCreated");
+        Log.v(TAG, "onActivityCreated...");
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -105,6 +107,7 @@ public class ListFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
+        Log.v(TAG,"onDetach...");
     }
 
     /**
@@ -121,6 +124,7 @@ public class ListFragment extends Fragment {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
     }
+
 
     public void refreshAdapter(){
         mAdapter.notifyDataSetChanged();
