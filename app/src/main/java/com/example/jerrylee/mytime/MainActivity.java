@@ -10,6 +10,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -17,7 +18,7 @@ import layout.ChronometerFragment;
 import layout.ExtraFragment;
 import layout.ListFragment;
 
-public class MainActivity extends AppCompatActivity  {
+public class MainActivity extends AppCompatActivity  implements ChronometerFragment.onDataChangedListener{
 
     /**
      * The {@link android.support.v4.view.PagerAdapter} that will provide
@@ -29,6 +30,7 @@ public class MainActivity extends AppCompatActivity  {
      */
     private SectionsPagerAdapter mSectionsPagerAdapter;
 
+    private static final String TAG = MainActivity.class.getSimpleName();
     /**
      * The {@link ViewPager} that will host the section contents.
      */
@@ -79,8 +81,17 @@ public class MainActivity extends AppCompatActivity  {
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    public void onDataInserted() {
+        ListFragment listFragment = (ListFragment)mSectionsPagerAdapter.getItem(mSectionsPagerAdapter.getItemPosition(ListFragment.class));
+        if(listFragment != null){
+            listFragment.refreshAdapter();
+        }else{
+            Log.i(TAG,"listFragment is not initialized...");
+        }
 
 
+    }
 
 
     /**

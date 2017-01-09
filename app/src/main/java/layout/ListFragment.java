@@ -39,7 +39,7 @@ public class ListFragment extends Fragment {
     private OnFragmentInteractionListener mListener;
 
     private RecyclerView mRecyclerView;
-    public static RecyclerView.Adapter mAdapter;
+    private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
 
     public ListFragment() {
@@ -56,6 +56,7 @@ public class ListFragment extends Fragment {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+        Log.v(TAG,"ListFragment onCreate...");
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             section = getArguments().getString(ARG_SECTION);
@@ -119,5 +120,10 @@ public class ListFragment extends Fragment {
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
+    }
+
+    public void refreshAdapter(){
+        mAdapter.notifyDataSetChanged();
+        Log.v(TAG,"refreshAdapter called...");
     }
 }

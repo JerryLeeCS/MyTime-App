@@ -22,7 +22,6 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
     private List<RecyclerViewItem> itemList;
 
-
     public RecyclerViewAdapter(List<RecyclerViewItem> itemList){
         this.itemList = itemList;
 }

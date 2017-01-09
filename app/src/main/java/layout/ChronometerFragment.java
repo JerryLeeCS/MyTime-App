@@ -1,6 +1,8 @@
 package layout;
 
+import android.app.Activity;
 import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.net.Uri;
@@ -60,6 +62,7 @@ public class ChronometerFragment extends Fragment {
 
     private final static int MSG_UPDATE_TIME = 0;
 
+    private onDataChangedListener dataChangedListener;
     public ChronometerFragment() {
         // Required empty public constructor
     }
@@ -73,14 +76,23 @@ public class ChronometerFragment extends Fragment {
     }
 
     @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+
+        try{
+            dataChangedListener = (onDataChangedListener) context;
+        }catch (ClassCastException e){
+            e.printStackTrace();
+        }
+    }
+
+    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             section = getArguments().getString(ARG_SECTION);
         }
-        if(Log.isLoggable(TAG, Log.VERBOSE)) {
-            Log.v(TAG, "Fragment Chronometer onCreate---------------");
-        }
+        Log.v(TAG,"ChronomterFragment onCreate...");
 
     }
 
@@ -144,9 +156,8 @@ public class ChronometerFragment extends Fragment {
                     timerService.stopTimer();
                     updateUIStopRun();
                     endTime = getCurrentTime();
-                    //input the gathered information into the sqlite database.
                     helper.insertContent(autoCompleteTextView.getText().toString(),timerService.elapsedTime(),startTime,endTime,startDate );
-                    ListFragment.mAdapter.notifyDataSetChanged();
+                    dataChangedListener.onDataInserted();
                 }
             }
         });
@@ -235,8 +246,6 @@ public class ChronometerFragment extends Fragment {
         return simpleDateFormat.format(date);
     }
 
-
-
     static class UIUpdateHandler extends Handler{
 
         private final static int UPDATE_TIME_RATE = 1000;
@@ -269,4 +278,7 @@ public class ChronometerFragment extends Fragment {
         return simpleDateFormat.format(date);
     }
 
+    public interface onDataChangedListener{
+        public void onDataInserted();
+    }
 }
