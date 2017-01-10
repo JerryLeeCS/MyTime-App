@@ -11,6 +11,37 @@
 
     <!-- TODO: Update blank fragment layout -->
 
+
+    <Button
+        android:text="@string/timer_start_button"
+        android:id="@+id/start_button"
+        android:layout_width="wrap_content"
+        style="@style/Widget.AppCompat.Button"
+        android:textAlignment="center"
+        android:textSize="28sp"
+        android:textColor="@color/colorPrimary"
+        android:onClick="onStartButtonClicked (ChronometerFragment)"
+        android:layout_height="wrap_content"
+        android:elevation="2dp"
+        android:backgroundTint="@android:color/background_light"
+        android:drawableTint="@color/cardview_dark_background"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true" />
+
+    <TextView
+        android:text="@string/timer_text_view_empty"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/timer_text_view"
+        android:textAlignment="center"
+        android:textSize="72sp"
+        android:padding="6dp"
+        android:textColor="@color/colorPrimary"
+        android:background="@android:color/background_light"
+        android:layout_marginTop="123dp"
+        android:layout_below="@+id/autoCompleteTextView"
+        android:layout_alignParentStart="true" />
+
     <AutoCompleteTextView
         android:hint="@string/auto_complete_text_view_blank"
         android:layout_width="match_parent"
@@ -25,40 +56,9 @@
         android:maxLines="1"
         android:inputType="text"
         android:imeOptions="actionDone"
+        android:layout_marginTop="25dp"
         android:layout_alignParentTop="true"
-        android:layout_alignParentStart="true"
-        android:layout_marginTop="20dp"/>
-
-
-    <TextView
-        android:text="@string/timer_text_view_empty"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/timer_text_view"
-        android:textAlignment="center"
-        android:textSize="72sp"
-        android:padding="6dp"
-        android:textColor="@color/colorPrimary"
-        android:background="@android:color/background_light"
-        android:layout_below="@id/autoCompleteTextView"
-        android:layout_marginTop="40dp"/>
-
-    <Button
-        android:text="@string/timer_start_button"
-        android:id="@+id/start_button"
-        android:layout_width="wrap_content"
-        style="@style/Widget.AppCompat.Button"
-        android:textAlignment="center"
-        android:textSize="28sp"
-        android:textColor="@color/colorPrimary"
-        android:onClick="onStartButtonClicked (ChronometerFragment)"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_alignParentBottom="true"
-        android:layout_marginBottom="30dp"
-         />
-
-
+        android:layout_alignParentStart="true" />
 
 
 </RelativeLayout>

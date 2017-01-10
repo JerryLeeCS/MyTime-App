@@ -28,7 +28,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
     @Override
     public CustomViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.listfragment_cardview,null);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.listfragment_cardview,parent,false);
         CustomViewHolder customViewHolder = new CustomViewHolder(view);
 
         return customViewHolder;
