@@ -17,6 +17,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.TextView;
@@ -78,7 +79,7 @@ public class ChronometerFragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-
+        Log.v(TAG,"onAttach..." +this.getTag());
         try{
             dataChangedListener = (onDataChangedListener) context;
 
@@ -149,17 +150,21 @@ public class ChronometerFragment extends Fragment {
                     updateUIStartRun();
                     startTime= getCurrentTime();
                     startDate = getCurrentDate();
+
+                    closeSoftKeyboard();
                 }
                 else if(serviceBound && timerService.isTimerRunning()){
                     if(Log.isLoggable(TAG,Log.VERBOSE)){
                         Log.v(TAG,"Stopping timer");
                     }
-
                     timerService.stopTimer();
                     updateUIStopRun();
                     endTime = getCurrentTime();
                     helper.insertContent(autoCompleteTextView.getText().toString(),timerService.elapsedTime(),startTime,endTime,startDate );
                     dataChangedListener.onDataInserted();
+
+                    autoCompleteTextView.setText("");
+
                 }
             }
         });
@@ -283,5 +288,10 @@ public class ChronometerFragment extends Fragment {
 
     public interface onDataChangedListener{
         public void onDataInserted();
+    }
+
+    private  void closeSoftKeyboard(){
+        InputMethodManager inputMethodManager = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+        inputMethodManager.toggleSoftInput(InputMethodManager.SHOW_FORCED,0);
     }
 }

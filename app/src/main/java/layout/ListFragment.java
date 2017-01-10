@@ -83,7 +83,7 @@ public class ListFragment extends Fragment {
 
         mRecyclerView = (RecyclerView) getView().findViewById(R.id.recyclerView);
 
-        mRecyclerView.setHasFixedSize(true);
+        mRecyclerView.setHasFixedSize(false);
 
         mLayoutManager = new LinearLayoutManager(getActivity());
         mRecyclerView.setLayoutManager(mLayoutManager);
@@ -101,7 +101,6 @@ public class ListFragment extends Fragment {
             mListener.onFragmentInteraction(uri);
         }
     }
-
 
     @Override
     public void onDetach() {
@@ -127,7 +126,9 @@ public class ListFragment extends Fragment {
 
 
     public void refreshAdapter(){
-        mAdapter.notifyDataSetChanged();
-        Log.v(TAG,"refreshAdapter called...");
+        TimeDatabaseHelper timeDatabaseHelper = new TimeDatabaseHelper(getContext());
+        mAdapter = new RecyclerViewAdapter(timeDatabaseHelper.getRecyclerViewItemList());
+        mRecyclerView.setAdapter(mAdapter);
+        Log.v(TAG,"refreshAdapter is called...");
     }
 }

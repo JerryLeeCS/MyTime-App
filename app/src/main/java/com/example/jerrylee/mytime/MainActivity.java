@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.pm.ActivityInfo;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.support.v4.app.FragmentManager;
@@ -87,12 +88,10 @@ public class MainActivity extends AppCompatActivity  implements ChronometerFragm
     @Override
     public void onDataInserted() {
         //ListFragment listFragment = (ListFragment)mSectionsPagerAdapter.getItem(1);
-        ListFragment listFragment = (ListFragment) getSupportFragmentManager().findFragmentByTag(android.support.v4.app.ListFragment.class.getSimpleName());
+        ListFragment listFragment = (ListFragment) mSectionsPagerAdapter.getItem(1);
         Log.v(TAG,android.support.v4.app.ListFragment.class.getSimpleName() + " onDataInserted...");
         if(listFragment != null){
             listFragment.refreshAdapter();
-        }else{
-            Log.i(TAG,"listFragment is not initialized...");
         }
     }
 
@@ -103,13 +102,14 @@ public class MainActivity extends AppCompatActivity  implements ChronometerFragm
      */
     public class SectionsPagerAdapter extends FragmentPagerAdapter {
 
-        private List<String> fragmentList;
+        Fragment[] fragments;
 
         public SectionsPagerAdapter(FragmentManager fm) {
             super(fm);
-            fragmentList.add(ChronometerFragment.class.getName());
-            fragmentList.add(ListFragment.class.getName());
-            fragmentList.add(ExtraFragment.class.getName());
+            fragments = new Fragment[getCount()];
+            fragments[0] = ChronometerFragment.newInstance("1");
+            fragments[1] = ListFragment.newInstance("2");
+            fragments[2] = ExtraFragment.newInstance("3");
         }
 
         @Override
@@ -117,16 +117,17 @@ public class MainActivity extends AppCompatActivity  implements ChronometerFragm
             // getItem is called to instantiate the fragment for the given page.
             // Return a PlaceholderFragment (defined as a static inner class below).
             /*
+            Log.v(TAG,"getItem...");
             switch(position){
                 case 0:
-                    return ChronometerFragment.newInstance("section 1");
+                    return new ChronometerFragment();
                 case 1:
-                    return ListFragment.newInstance("section 2");
+                    return new ListFragment();
                 case 2:
-                    return ExtraFragment.newInstance("section 3");
-            }*/
-
-            return Fragment.instantiate(getBaseContext(), fragmentList.get(position));
+                    return new ExtraFragment();
+            }
+            */
+            return fragments[position];
         }
 
         @Override
