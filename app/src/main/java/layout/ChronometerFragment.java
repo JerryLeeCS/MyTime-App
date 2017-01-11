@@ -293,8 +293,8 @@ public class ChronometerFragment extends Fragment {
 
     private  void closeSoftKeyboard(){
         InputMethodManager inputMethodManager = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-        if(autoCompleteTextView.isFocused() && autoCompleteTextView.isInEditMode()) {
-            inputMethodManager.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
+        if(autoCompleteTextView.isEnabled()) {
+            inputMethodManager.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
         }
     }
 

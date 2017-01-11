@@ -82,6 +82,8 @@ public class ListFragment extends Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        mRecyclerView = (RecyclerView) getView().findViewById(R.id.recyclerView);
+        mRecyclerView.setHasFixedSize(false);
         setUpRecyclerView();
         Log.v(TAG, "onActivityCreated...");
     }
@@ -121,9 +123,6 @@ public class ListFragment extends Fragment {
     }
 
     private void setUpRecyclerView(){
-        mRecyclerView = (RecyclerView) getActivity().findViewById(R.id.recyclerView);
-        mRecyclerView.setHasFixedSize(false);
-
         mLayoutManager = new LinearLayoutManager(getActivity());
         mRecyclerView.setLayoutManager(mLayoutManager);
 

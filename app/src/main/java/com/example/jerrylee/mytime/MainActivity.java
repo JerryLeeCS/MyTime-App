@@ -87,7 +87,6 @@ public class MainActivity extends AppCompatActivity  implements ChronometerFragm
 
     @Override
     public void onDataInserted() {
-        //ListFragment listFragment = (ListFragment)mSectionsPagerAdapter.getItem(1);
         ListFragment listFragment = (ListFragment) mSectionsPagerAdapter.getItem(1);
         Log.v(TAG,android.support.v4.app.ListFragment.class.getSimpleName() + " onDataInserted...");
         if(listFragment != null){
