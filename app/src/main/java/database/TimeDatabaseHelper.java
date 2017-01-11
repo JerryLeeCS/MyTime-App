@@ -66,11 +66,11 @@ public class TimeDatabaseHelper extends SQLiteOpenHelper {
 
     public List<RecyclerViewItem> getRecyclerViewItemList(){
         LinkedList<RecyclerViewItem> itemList = new LinkedList<>();
-
-        Cursor cursor = getReadableDatabase().query(TABLE_NAME,
+        Cursor cursor = null;
+        try{
+            cursor = this.getReadableDatabase().query(TABLE_NAME,
                                                     new String[]{taskColumn, timeElapsedColumn},
                                                     null, null, null, null, null);
-        try{
             if(cursor.moveToFirst()){
                 do{
                     RecyclerViewItem item = new RecyclerViewItem();
