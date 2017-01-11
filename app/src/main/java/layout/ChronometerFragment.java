@@ -133,6 +133,8 @@ public class ChronometerFragment extends Fragment {
         timerTextView = (TextView) getView().findViewById(R.id.timer_text_view);
         autoCompleteTextView = (AutoCompleteTextView) getView().findViewById(R.id.autoCompleteTextView);
 
+        autoCompleteTextView.clearFocus();
+
         final TimeDatabaseHelper helper = new TimeDatabaseHelper(getContext());
         Log.v(TAG,"onViewCreated...");
         timerButton.setOnClickListener(new View.OnClickListener(){
@@ -150,7 +152,6 @@ public class ChronometerFragment extends Fragment {
                     updateUIStartRun();
                     startTime= getCurrentTime();
                     startDate = getCurrentDate();
-
                     closeSoftKeyboard();
                 }
                 else if(serviceBound && timerService.isTimerRunning()){
@@ -164,7 +165,7 @@ public class ChronometerFragment extends Fragment {
                     dataChangedListener.onDataInserted();
 
                     autoCompleteTextView.setText("");
-
+                    closeSoftKeyboard();
                 }
             }
         });
@@ -281,7 +282,7 @@ public class ChronometerFragment extends Fragment {
     }
 
     private String getCurrentDate(){
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
         Date date = new Date();
         return simpleDateFormat.format(date);
     }
@@ -292,6 +293,9 @@ public class ChronometerFragment extends Fragment {
 
     private  void closeSoftKeyboard(){
         InputMethodManager inputMethodManager = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-        inputMethodManager.toggleSoftInput(InputMethodManager.SHOW_FORCED,0);
+        if(autoCompleteTextView.isFocused() && autoCompleteTextView.isInEditMode()) {
+            inputMethodManager.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
+        }
     }
+
 }

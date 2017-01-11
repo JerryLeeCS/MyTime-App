@@ -74,24 +74,15 @@ public class ListFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         Log.v(TAG,"onCreateView...");
+
+
         return inflater.inflate(R.layout.fragment_temp_list, container, false);
     }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-
-        mRecyclerView = (RecyclerView) getView().findViewById(R.id.recyclerView);
-
-        mRecyclerView.setHasFixedSize(false);
-
-        mLayoutManager = new LinearLayoutManager(getActivity());
-        mRecyclerView.setLayoutManager(mLayoutManager);
-
-        TimeDatabaseHelper timeDatabaseHelper = new TimeDatabaseHelper(getContext());
-        mAdapter = new RecyclerViewAdapter(timeDatabaseHelper.getRecyclerViewItemList());
-
-        mRecyclerView.setAdapter(mAdapter);
+        setUpRecyclerView();
         Log.v(TAG, "onActivityCreated...");
     }
 
@@ -126,9 +117,18 @@ public class ListFragment extends Fragment {
 
 
     public void refreshAdapter(){
+        setUpRecyclerView();
+    }
+
+    private void setUpRecyclerView(){
+        mRecyclerView = (RecyclerView) getActivity().findViewById(R.id.recyclerView);
+        mRecyclerView.setHasFixedSize(false);
+
+        mLayoutManager = new LinearLayoutManager(getActivity());
+        mRecyclerView.setLayoutManager(mLayoutManager);
+
         TimeDatabaseHelper timeDatabaseHelper = new TimeDatabaseHelper(getContext());
         mAdapter = new RecyclerViewAdapter(timeDatabaseHelper.getRecyclerViewItemList());
         mRecyclerView.setAdapter(mAdapter);
-        Log.v(TAG,"refreshAdapter is called...");
     }
 }

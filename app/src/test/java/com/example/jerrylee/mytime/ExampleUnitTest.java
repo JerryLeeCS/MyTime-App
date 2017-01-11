@@ -19,6 +19,10 @@ public class ExampleUnitTest {
         assertEquals(4, 2 + 2);
     }
 
+    @Test
+    public void testDate() throws Exception{
+
+    }
 
 
 }

@@ -114,19 +114,6 @@ public class MainActivity extends AppCompatActivity  implements ChronometerFragm
 
         @Override
         public Fragment getItem(int position) {
-            // getItem is called to instantiate the fragment for the given page.
-            // Return a PlaceholderFragment (defined as a static inner class below).
-            /*
-            Log.v(TAG,"getItem...");
-            switch(position){
-                case 0:
-                    return new ChronometerFragment();
-                case 1:
-                    return new ListFragment();
-                case 2:
-                    return new ExtraFragment();
-            }
-            */
             return fragments[position];
         }
 

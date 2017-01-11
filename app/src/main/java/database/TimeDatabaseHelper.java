@@ -7,6 +7,8 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -25,6 +27,7 @@ public class TimeDatabaseHelper extends SQLiteOpenHelper {
 
     private static final String TABLE_NAME = "ALL_TIME";
 
+    private static final String idColumn = "_id";
     private static final String taskColumn = "TASK";
     private static final String timeElapsedColumn = "TIME";
     private static final String startTimeColumn = "START_TIME";
@@ -40,7 +43,7 @@ public class TimeDatabaseHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         db.execSQL("CREATE TABLE "+ TABLE_NAME
-                + "( _id INTEGER PRIMARY KEY AUTOINCREMENT,"
+                + "( "+ idColumn + " INTEGER PRIMARY KEY AUTOINCREMENT,"
                 + taskColumn +" TEXT,"
                 + timeElapsedColumn +" INTEGER,"
                 + startTimeColumn + " TEXT,"
@@ -68,9 +71,15 @@ public class TimeDatabaseHelper extends SQLiteOpenHelper {
         LinkedList<RecyclerViewItem> itemList = new LinkedList<>();
         Cursor cursor = null;
         try{
+            String[] columns = new String[]{taskColumn,timeElapsedColumn};
+            String where = dateColumn + " < ?";
+            String[] whereArg = new String[]{"date("+ getLastMondayDate() + ")"};
+            String orderBy = idColumn + " DESC";
             cursor = this.getReadableDatabase().query(TABLE_NAME,
-                                                    new String[]{taskColumn, timeElapsedColumn},
-                                                    null, null, null, null, null);
+                                                    columns,
+                                                    where,
+                                                    whereArg,
+                                                    null, null, orderBy);
             if(cursor.moveToFirst()){
                 do{
                     RecyclerViewItem item = new RecyclerViewItem();
@@ -88,6 +97,15 @@ public class TimeDatabaseHelper extends SQLiteOpenHelper {
             }
         }
         return itemList;
+    }
+
+    private String getLastMondayDate(){
+        Calendar calendar = Calendar.getInstance();
+        int diff = Calendar.MONDAY - calendar.get(Calendar.DAY_OF_WEEK);
+
+        calendar.add(Calendar.DAY_OF_MONTH,diff);
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        return simpleDateFormat.format(calendar.getTime());
     }
 
 
