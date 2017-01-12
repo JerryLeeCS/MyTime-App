@@ -4,7 +4,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -13,9 +12,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.jerrylee.mytime.R;
-
-import java.sql.Time;
-import java.util.List;
 
 import adapter.RecyclerViewAdapter;
 import database.TimeDatabaseHelper;
@@ -76,7 +72,7 @@ public class ListFragment extends Fragment {
         Log.v(TAG,"onCreateView...");
 
 
-        return inflater.inflate(R.layout.fragment_temp_list, container, false);
+        return inflater.inflate(R.layout.listfragment_list_holder, container, false);
     }
 
     @Override
@@ -84,8 +80,11 @@ public class ListFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
         mRecyclerView = (RecyclerView) getView().findViewById(R.id.recyclerView);
         mRecyclerView.setHasFixedSize(false);
+
+
         setUpRecyclerView();
         Log.v(TAG, "onActivityCreated...");
+
     }
 
     // TODO: Rename method, update argument and hook method into UI event

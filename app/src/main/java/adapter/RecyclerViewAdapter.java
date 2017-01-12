@@ -8,8 +8,6 @@ import android.widget.TextView;
 
 import com.example.jerrylee.mytime.R;
 
-import java.lang.reflect.Array;
-import java.util.ArrayList;
 import java.util.List;
 
 import item.RecyclerViewItem;
@@ -28,7 +26,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
     @Override
     public CustomViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.listfragment_cardview,parent,false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.listfragment_list_item,parent,false);
         CustomViewHolder customViewHolder = new CustomViewHolder(view);
         return customViewHolder;
     }
