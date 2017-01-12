@@ -8,10 +8,12 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.LinkedList;
 import java.util.List;
 
+import item.DataModel;
 import item.RecyclerViewItem;
 
 /**
@@ -97,6 +99,62 @@ public class TimeDatabaseHelper extends SQLiteOpenHelper {
             }
         }
         return itemList;
+    }
+
+    public List<DataModel> getDataModelList(){
+        ArrayList<DataModel> dataModelList = new ArrayList<DataModel>();
+        LinkedList<String> dates = new LinkedList<>();
+        DataModel dataModel = new DataModel();
+        LinkedList<RecyclerViewItem> itemList = new LinkedList<>();
+
+        Cursor cursor = null;
+        try{
+            String[] columns = new String[]{taskColumn,timeElapsedColumn};
+            String where = dateColumn + " < ?";
+            String[] whereArg = new String[]{"date("+ getLastMondayDate() + ")"};
+            String orderBy = idColumn + " DESC";
+            cursor = this.getReadableDatabase().query(TABLE_NAME,
+                    columns,
+                    where,
+                    whereArg,
+                    null, null, orderBy);
+            if(cursor.moveToFirst()){
+                dates.add(cursor.getString(cursor.getColumnIndex(dateColumn)));
+                dataModel.setSectionTitle(cursor.getString(cursor.getColumnIndex(dateColumn)));
+
+                do{
+                    RecyclerViewItem item = new RecyclerViewItem();
+                    item.setTaskName(cursor.getString(cursor.getColumnIndex(taskColumn)));
+                    item.setTimeElapsed(cursor.getString(cursor.getColumnIndex(timeElapsedColumn)));
+
+                    String date = cursor.getString(cursor.getColumnIndex(dateColumn));
+
+                    if(!dates.contains(date)){
+                        dates.add(date);
+                        dataModel.setItemList(itemList);
+                        dataModelList.add(dataModel);
+                        dataModel = new DataModel();
+                        dataModel.setSectionTitle(date);
+
+                        itemList = new LinkedList<>();
+                    }
+
+                    itemList.add(item);
+
+
+                }while(cursor.moveToNext());
+            }
+
+        }catch (Exception e){
+            Log.v(TAG, "Failed to getDataModelList...");
+        }finally {
+            if(cursor != null && !cursor.isClosed()){
+                cursor.close();
+            }
+        }
+
+
+        return dataModelList;
     }
 
     private String getLastMondayDate(){
