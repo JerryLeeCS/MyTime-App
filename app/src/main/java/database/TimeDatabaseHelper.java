@@ -7,6 +7,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -107,9 +108,10 @@ public class TimeDatabaseHelper extends SQLiteOpenHelper {
         DataModel dataModel = new DataModel();
         LinkedList<RecyclerViewItem> itemList = new LinkedList<>();
 
+        Log.v(TAG,"on getDataModelList...");
         Cursor cursor = null;
         try{
-            String[] columns = new String[]{taskColumn,timeElapsedColumn};
+            String[] columns = new String[]{taskColumn,timeElapsedColumn,dateColumn};
             String where = dateColumn + " < ?";
             String[] whereArg = new String[]{"date("+ getLastMondayDate() + ")"};
             String orderBy = idColumn + " DESC";
@@ -121,30 +123,27 @@ public class TimeDatabaseHelper extends SQLiteOpenHelper {
             if(cursor.moveToFirst()){
                 dates.add(cursor.getString(cursor.getColumnIndex(dateColumn)));
                 dataModel.setSectionTitle(cursor.getString(cursor.getColumnIndex(dateColumn)));
-
                 do{
+                    //The problem is that the date returns a blank value, so the List return null;
                     RecyclerViewItem item = new RecyclerViewItem();
                     item.setTaskName(cursor.getString(cursor.getColumnIndex(taskColumn)));
                     item.setTimeElapsed(cursor.getString(cursor.getColumnIndex(timeElapsedColumn)));
 
-                    String date = cursor.getString(cursor.getColumnIndex(dateColumn));
+                    DateFormat format = new SimpleDateFormat("YYYY-MM-DD");
+                    String date = format.parse(cursor.getString(cursor.getColumnIndex(dateColumn))).toString();
 
+                    Log.v(TAG,date + "============" +cursor.getString(cursor.getColumnIndex(taskColumn)));
                     if(!dates.contains(date)){
                         dates.add(date);
                         dataModel.setItemList(itemList);
                         dataModelList.add(dataModel);
                         dataModel = new DataModel();
                         dataModel.setSectionTitle(date);
-
                         itemList = new LinkedList<>();
                     }
-
                     itemList.add(item);
-
-
                 }while(cursor.moveToNext());
             }
-
         }catch (Exception e){
             Log.v(TAG, "Failed to getDataModelList...");
         }finally {
@@ -152,8 +151,6 @@ public class TimeDatabaseHelper extends SQLiteOpenHelper {
                 cursor.close();
             }
         }
-
-
         return dataModelList;
     }
 

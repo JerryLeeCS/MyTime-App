@@ -282,7 +282,7 @@ public class ChronometerFragment extends Fragment {
     }
 
     private String getCurrentDate(){
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("YYYY-MM-DD");
         Date date = new Date();
         return simpleDateFormat.format(date);
     }

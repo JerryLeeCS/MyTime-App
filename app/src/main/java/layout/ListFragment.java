@@ -4,6 +4,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -14,6 +15,7 @@ import android.view.ViewGroup;
 import com.example.jerrylee.mytime.R;
 
 import adapter.RecyclerViewAdapter;
+import adapter.RecyclerViewSectionAdapter;
 import database.TimeDatabaseHelper;
 
 /**
@@ -70,8 +72,6 @@ public class ListFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         Log.v(TAG,"onCreateView...");
-
-
         return inflater.inflate(R.layout.listfragment_list_holder, container, false);
     }
 
@@ -80,8 +80,8 @@ public class ListFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
         mRecyclerView = (RecyclerView) getView().findViewById(R.id.recyclerView);
         mRecyclerView.setHasFixedSize(false);
-
-
+        mRecyclerView.addItemDecoration(
+                new DividerItemDecoration(getContext(),1));
         setUpRecyclerView();
         Log.v(TAG, "onActivityCreated...");
 
@@ -122,11 +122,20 @@ public class ListFragment extends Fragment {
     }
 
     private void setUpRecyclerView(){
-        mLayoutManager = new LinearLayoutManager(getActivity());
-        mRecyclerView.setLayoutManager(mLayoutManager);
+        //mLayoutManager = new LinearLayoutManager(getActivity());
+        //mRecyclerView.setLayoutManager(mLayoutManager);
+
+        //TimeDatabaseHelper timeDatabaseHelper = new TimeDatabaseHelper(getContext());
+        //mAdapter = new RecyclerViewAdapter(timeDatabaseHelper.getRecyclerViewItemList());
 
         TimeDatabaseHelper timeDatabaseHelper = new TimeDatabaseHelper(getContext());
-        mAdapter = new RecyclerViewAdapter(timeDatabaseHelper.getRecyclerViewItemList());
+        mAdapter = new RecyclerViewSectionAdapter(timeDatabaseHelper.getDataModelList());
+
+        mLayoutManager = new LinearLayoutManager(getActivity());
+
+        mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setAdapter(mAdapter);
+        Log.v(TAG,"on setUpRecyclerView...");
     }
+
 }

@@ -13,7 +13,6 @@ public class DataModel {
     private List<RecyclerViewItem> itemList;
 
     public DataModel(){
-
     }
 
     public DataModel(String sectionTitle, List<RecyclerViewItem> itemList){

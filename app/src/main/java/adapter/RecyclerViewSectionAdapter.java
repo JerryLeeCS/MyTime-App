@@ -58,9 +58,9 @@ public class RecyclerViewSectionAdapter extends SectionedRecyclerViewAdapter<Rec
     }
 
     @Override
-    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int header) {
+    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v = null;
-        if(header == 0){
+        if(viewType == VIEW_TYPE_HEADER){
             v = LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.listfragment_list_section,parent,false);
             return  new SectionViewHolder(v);
@@ -74,7 +74,7 @@ public class RecyclerViewSectionAdapter extends SectionedRecyclerViewAdapter<Rec
 
     public static class SectionViewHolder extends RecyclerView.ViewHolder {
 
-        final TextView sectionTitle;
+        protected TextView sectionTitle;
 
         public SectionViewHolder(View itemView){
             super(itemView);
