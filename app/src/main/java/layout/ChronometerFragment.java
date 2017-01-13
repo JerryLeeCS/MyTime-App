@@ -146,9 +146,8 @@ public class ChronometerFragment extends Fragment {
                 timerTextView.setText(R.string.timer_text_view_empty);
 
                 if(serviceBound && !timerService.isTimerRunning()){
-                    if(Log.isLoggable(TAG,Log.VERBOSE)){
-                        Log.v(TAG,"Starting timer.....");
-                    }
+                    Log.v(TAG,"Starting timer.....");
+
                     timerService.startTimer();
                     updateUIStartRun();
                     insertItem.setStartTime(getCurrentTime());
@@ -157,9 +156,8 @@ public class ChronometerFragment extends Fragment {
                     Log.v(TAG,"getCurrentDate() =>" + getCurrentDate());
                 }
                 else if(serviceBound && timerService.isTimerRunning()){
-                    if(Log.isLoggable(TAG,Log.VERBOSE)){
-                        Log.v(TAG,"Stopping timer");
-                    }
+                    Log.v(TAG,"Stopping timer");
+
                     timerService.stopTimer();
                     updateUIStopRun();
                     insertItem.setTaskName(autoCompleteTextView.getText().toString());

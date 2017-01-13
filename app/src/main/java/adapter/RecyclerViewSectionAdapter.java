@@ -9,6 +9,8 @@ import android.widget.TextView;
 import com.afollestad.sectionedrecyclerview.SectionedRecyclerViewAdapter;
 import com.example.jerrylee.mytime.R;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 import item.DataModel;
@@ -54,7 +56,7 @@ public class RecyclerViewSectionAdapter extends SectionedRecyclerViewAdapter<Rec
         ItemViewHolder itemViewHolder = (ItemViewHolder) holder;
 
         itemViewHolder.taskView.setText(taskName);
-        itemViewHolder.timeView.setText(time);
+        itemViewHolder.timeView.setText(formattedTimer(Long.parseLong(time)));
     }
 
     @Override
@@ -95,4 +97,13 @@ public class RecyclerViewSectionAdapter extends SectionedRecyclerViewAdapter<Rec
 
     }
 
+    private String formattedTimer(long time){
+        long hour = time/3600;
+        long minutes = (time%3600)/60;
+        long seconds = time - (hour * 3600 + minutes * 60);
+
+        SimpleDateFormat simpleDateFormat =  new SimpleDateFormat("HH:mm:ss");
+        Date date = new Date(0,0,0,(int)hour,(int)minutes,(int)seconds);
+        return simpleDateFormat.format(date);
+    }
 }

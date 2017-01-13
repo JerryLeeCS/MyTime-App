@@ -130,7 +130,6 @@ public class TimeDatabaseHelper extends SQLiteOpenHelper {
                 dates.add(cursor.getString(cursor.getColumnIndex(dateColumn)));
                 dataModel.setSectionTitle(cursor.getString(cursor.getColumnIndex(dateColumn)));
                 do{
-                    //The problem is that the date returns a blank value, so the List return null;
                     RecyclerViewItem item = new RecyclerViewItem();
                     item.setTaskName(cursor.getString(cursor.getColumnIndex(taskColumn)));
                     item.setTimeElapsed(cursor.getString(cursor.getColumnIndex(timeElapsedColumn)));
