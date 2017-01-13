@@ -32,6 +32,7 @@ import java.util.Calendar;
 import java.util.Date;
 
 import database.TimeDatabaseHelper;
+import item.DatabaseInsertItem;
 import service.TimerService;
 
 /**
@@ -138,21 +139,22 @@ public class ChronometerFragment extends Fragment {
         final TimeDatabaseHelper helper = new TimeDatabaseHelper(getContext());
         Log.v(TAG,"onViewCreated...");
         timerButton.setOnClickListener(new View.OnClickListener(){
+            DatabaseInsertItem insertItem = new DatabaseInsertItem();
+
             @Override
             public void onClick(View view) {
                 timerTextView.setText(R.string.timer_text_view_empty);
-                String startTime = "";
-                String endTime = "";
-                String startDate = "";
+
                 if(serviceBound && !timerService.isTimerRunning()){
                     if(Log.isLoggable(TAG,Log.VERBOSE)){
                         Log.v(TAG,"Starting timer.....");
                     }
                     timerService.startTimer();
                     updateUIStartRun();
-                    startTime= getCurrentTime();
-                    startDate = getCurrentDate();
+                    insertItem.setStartTime(getCurrentTime());
+                    insertItem.setDate(getCurrentDate());
                     closeSoftKeyboard();
+                    Log.v(TAG,"getCurrentDate() =>" + getCurrentDate());
                 }
                 else if(serviceBound && timerService.isTimerRunning()){
                     if(Log.isLoggable(TAG,Log.VERBOSE)){
@@ -160,8 +162,10 @@ public class ChronometerFragment extends Fragment {
                     }
                     timerService.stopTimer();
                     updateUIStopRun();
-                    endTime = getCurrentTime();
-                    helper.insertContent(autoCompleteTextView.getText().toString(),timerService.elapsedTime(),startTime,endTime,startDate );
+                    insertItem.setTaskName(autoCompleteTextView.getText().toString());
+                    insertItem.setElapsedTime(timerService.elapsedTime());
+                    insertItem.setEndTime(getCurrentTime());
+                    helper.insertContent(insertItem);
                     dataChangedListener.onDataInserted();
 
                     autoCompleteTextView.setText("");
@@ -282,7 +286,7 @@ public class ChronometerFragment extends Fragment {
     }
 
     private String getCurrentDate(){
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("YYYY-MM-DD");
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-DD");
         Date date = new Date();
         return simpleDateFormat.format(date);
     }

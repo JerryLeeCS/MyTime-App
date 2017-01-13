@@ -15,6 +15,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import item.DataModel;
+import item.DatabaseInsertItem;
 import item.RecyclerViewItem;
 
 /**
@@ -51,7 +52,7 @@ public class TimeDatabaseHelper extends SQLiteOpenHelper {
                 + timeElapsedColumn +" INTEGER,"
                 + startTimeColumn + " TEXT,"
                 + endTimeColumn + " TEXT,"
-                + dateColumn + " DATE" + ");");
+                + dateColumn + " TEXT" + ");");
     }
 
     @Override
@@ -60,13 +61,14 @@ public class TimeDatabaseHelper extends SQLiteOpenHelper {
         onCreate(db);
     }
 
-    public void insertContent(String task, long elapsedTime, String startTime, String endTime, String date){
+    public void insertContent(DatabaseInsertItem insertItem){
         ContentValues values = new ContentValues();
-        values.put(taskColumn, task);
-        values.put(timeElapsedColumn,elapsedTime);
-        values.put(startTimeColumn,startTime);
-        values.put(endTimeColumn,endTime);
-        values.put(dateColumn,date);
+        values.put(taskColumn, insertItem.getTaskName());
+        values.put(timeElapsedColumn, insertItem.getElapsedTime());
+        values.put(startTimeColumn, insertItem.getStartTime());
+        values.put(endTimeColumn, insertItem.getEndTime());
+        values.put(dateColumn, insertItem.getDate());
+        Log.v(TAG,"date => " + insertItem.getDate() + " startTime => " + insertItem.getStartTime() + " endTime => " + insertItem.getEndTime());
         this.getWritableDatabase().insert(TABLE_NAME,null,values);
     }
 
@@ -103,13 +105,16 @@ public class TimeDatabaseHelper extends SQLiteOpenHelper {
     }
 
     public List<DataModel> getDataModelList(){
-        ArrayList<DataModel> dataModelList = new ArrayList<DataModel>();
         LinkedList<String> dates = new LinkedList<>();
+
+        Cursor cursor = null;
+
+        ArrayList<DataModel> dataModelList = new ArrayList<DataModel>();
         DataModel dataModel = new DataModel();
         LinkedList<RecyclerViewItem> itemList = new LinkedList<>();
 
         Log.v(TAG,"on getDataModelList...");
-        Cursor cursor = null;
+
         try{
             String[] columns = new String[]{taskColumn,timeElapsedColumn,dateColumn};
             String where = dateColumn + " < ?";
@@ -120,6 +125,7 @@ public class TimeDatabaseHelper extends SQLiteOpenHelper {
                     where,
                     whereArg,
                     null, null, orderBy);
+
             if(cursor.moveToFirst()){
                 dates.add(cursor.getString(cursor.getColumnIndex(dateColumn)));
                 dataModel.setSectionTitle(cursor.getString(cursor.getColumnIndex(dateColumn)));
@@ -129,10 +135,8 @@ public class TimeDatabaseHelper extends SQLiteOpenHelper {
                     item.setTaskName(cursor.getString(cursor.getColumnIndex(taskColumn)));
                     item.setTimeElapsed(cursor.getString(cursor.getColumnIndex(timeElapsedColumn)));
 
-                    DateFormat format = new SimpleDateFormat("YYYY-MM-DD");
-                    String date = format.parse(cursor.getString(cursor.getColumnIndex(dateColumn))).toString();
+                    String date = cursor.getString(cursor.getColumnIndex(dateColumn));
 
-                    Log.v(TAG,date + "============" +cursor.getString(cursor.getColumnIndex(taskColumn)));
                     if(!dates.contains(date)){
                         dates.add(date);
                         dataModel.setItemList(itemList);
@@ -147,6 +151,8 @@ public class TimeDatabaseHelper extends SQLiteOpenHelper {
         }catch (Exception e){
             Log.v(TAG, "Failed to getDataModelList...");
         }finally {
+            dataModel.setItemList(itemList);
+            dataModelList.add(dataModel);
             if(cursor != null && !cursor.isClosed()){
                 cursor.close();
             }
