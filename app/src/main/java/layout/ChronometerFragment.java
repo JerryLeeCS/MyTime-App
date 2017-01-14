@@ -65,6 +65,8 @@ public class ChronometerFragment extends Fragment {
     private final static int MSG_UPDATE_TIME = 0;
 
     private onDataChangedListener dataChangedListener;
+
+
     public ChronometerFragment() {
         // Required empty public constructor
     }
@@ -108,6 +110,11 @@ public class ChronometerFragment extends Fragment {
     }
 
     @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+    }
+
+    @Override
     public void onStart() {
         super.onStart();
         if(Log.isLoggable(TAG, Log.VERBOSE)){
@@ -124,6 +131,14 @@ public class ChronometerFragment extends Fragment {
         if (mListener != null) {
             mListener.onFragmentInteraction(uri);
         }
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        outState.putString("taskName", autoCompleteTextView.getText().toString());
+
     }
 
     @Override
