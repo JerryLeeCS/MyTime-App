@@ -112,6 +112,7 @@ public class ChronometerFragment extends Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+
     }
 
     @Override
@@ -136,8 +137,9 @@ public class ChronometerFragment extends Fragment {
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
+        String taskName = autoCompleteTextView.getText().toString() == null ? "" : autoCompleteTextView.getText().toString();
 
-        outState.putString("taskName", autoCompleteTextView.getText().toString());
+        outState.putString("taskName", taskName);
 
     }
 
@@ -150,6 +152,10 @@ public class ChronometerFragment extends Fragment {
         autoCompleteTextView = (AutoCompleteTextView) getView().findViewById(R.id.autoCompleteTextView);
 
         autoCompleteTextView.clearFocus();
+
+        if(savedInstanceState != null){
+            autoCompleteTextView.setText(savedInstanceState.getString("taskName"));
+        }
 
         final TimeDatabaseHelper helper = new TimeDatabaseHelper(getContext());
         Log.v(TAG,"onViewCreated...");
