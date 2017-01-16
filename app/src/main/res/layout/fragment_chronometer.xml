@@ -18,13 +18,29 @@
         android:layout_height="wrap_content"
         android:id="@+id/timer_text_view"
         android:textAlignment="center"
-        android:textSize="48sp"
+        android:textSize="74sp"
         android:padding="6dp"
         android:textColor="@color/colorPrimary"
         android:background="@android:color/background_light"
-        android:layout_marginTop="123dp"
-        android:layout_below="@+id/autoCompleteTextView"
+        android:layout_centerVertical="true"
         android:layout_alignParentStart="true" />
+
+    <Button
+        android:text="@string/timer_start_button"
+        android:id="@+id/start_button"
+        android:layout_width="wrap_content"
+        style="@style/Widget.AppCompat.Button"
+        android:textAlignment="center"
+        android:textSize="24sp"
+        android:textColor="@color/cardview_light_background"
+        android:onClick="onStartButtonClicked (ChronometerFragment)"
+        android:layout_height="wrap_content"
+        android:elevation="2dp"
+        android:backgroundTint="@color/colorPrimary"
+        android:drawableTint="@color/cardview_dark_background"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="15dp" />
 
     <AutoCompleteTextView
         android:hint="@string/auto_complete_text_view_blank"
@@ -40,26 +56,10 @@
         android:maxLines="1"
         android:inputType="text"
         android:imeOptions="actionDone"
-        android:layout_marginTop="59dp"
+        android:layout_marginTop="48dp"
+        android:freezesText="true"
         android:layout_alignParentTop="true"
-        android:layout_alignParentStart="true"
-        android:freezesText="true"/>
-
-    <Button
-        android:text="@string/timer_start_button"
-        android:id="@+id/start_button"
-        android:layout_width="wrap_content"
-        style="@style/Widget.AppCompat.Button"
-        android:textAlignment="center"
-        android:textSize="24sp"
-        android:textColor="@color/colorPrimary"
-        android:onClick="onStartButtonClicked (ChronometerFragment)"
-        android:layout_height="wrap_content"
-        android:elevation="2dp"
-        android:backgroundTint="@android:color/background_light"
-        android:drawableTint="@color/cardview_dark_background"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true" />
+        android:layout_alignParentStart="true" />
 
 
 </RelativeLayout>

@@ -19,7 +19,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <service android:name="service.TimerService"/>
+
+        <service android:name="service.TimerService" />
+
+        <activity android:name=".TimeFormActivity"></activity>
     </application>
 
 </manifest>
