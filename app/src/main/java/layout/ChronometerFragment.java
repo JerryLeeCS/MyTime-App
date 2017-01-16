@@ -66,6 +66,7 @@ public class ChronometerFragment extends Fragment {
 
     private onDataChangedListener dataChangedListener;
 
+    DatabaseInsertItem insertItem = new DatabaseInsertItem();
 
     public ChronometerFragment() {
         // Required empty public constructor
@@ -113,6 +114,13 @@ public class ChronometerFragment extends Fragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
+        Log.v(TAG,"onActivityCreated...");
+        if(savedInstanceState != null){
+            insertItem.setTaskName(savedInstanceState.getString("taskName"));
+            insertItem.setStartTime(savedInstanceState.getString("startTime"));
+            insertItem.setDate(savedInstanceState.getString("date"));
+            Log.v(TAG,"on savedInstanceState...");
+        }
     }
 
     @Override
@@ -138,29 +146,34 @@ public class ChronometerFragment extends Fragment {
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         String taskName = autoCompleteTextView.getText().toString() == null ? "" : autoCompleteTextView.getText().toString();
+        insertItem.setTaskName(taskName);
 
-        outState.putString("taskName", taskName);
+        outState.putString("taskName", insertItem.getTaskName());
+        outState.putString("startTime", insertItem.getStartTime());
+        outState.putString("date", insertItem.getDate());
 
+        Log.v(TAG,"onSaveInstanceState...");
     }
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        Log.v(TAG,"onViewCreated...");
         timerButton = (Button) getView().findViewById(R.id.start_button);
         timerTextView = (TextView) getView().findViewById(R.id.timer_text_view);
         autoCompleteTextView = (AutoCompleteTextView) getView().findViewById(R.id.autoCompleteTextView);
 
         autoCompleteTextView.clearFocus();
 
-        if(savedInstanceState != null){
-            autoCompleteTextView.setText(savedInstanceState.getString("taskName"));
+        if(savedInstanceState != null) {
+            autoCompleteTextView.setText(insertItem.getTaskName());
+            Log.v(TAG,"savedInState is not null : taskName is ->"  + insertItem.getTaskName());
         }
 
         final TimeDatabaseHelper helper = new TimeDatabaseHelper(getContext());
         Log.v(TAG,"onViewCreated...");
         timerButton.setOnClickListener(new View.OnClickListener(){
-            DatabaseInsertItem insertItem = new DatabaseInsertItem();
 
             @Override
             public void onClick(View view) {
