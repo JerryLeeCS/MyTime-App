@@ -1,30 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/activity_time_form"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context="com.example.jerrylee.mytime.TimeFormActivity"
-
-    android:orientation="vertical"
-    >
-
-    <Space
-        android:layout_width="match_parent"
-        android:layout_height="50dp" />
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:inputType="textPersonName"
-        android:text="TASK NAME"
         android:ems="10"
-        android:layout_marginTop="21dp"
-        android:id="@+id/editText"
+        android:id="@+id/taskNameEditText"
         android:textAlignment="center"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        />
+        android:hint="enter task name"/>
 
     <LinearLayout
         android:orientation="horizontal"
@@ -34,24 +20,22 @@
         <EditText
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:inputType="time"
+            android:inputType="textPersonName"
             android:ems="10"
-            android:id="@+id/editText2"
+            android:id="@+id/fromTimeEditText"
             android:layout_weight="1"
             android:hint="fromTime"
-            android:singleLine="true" />
+            android:textAlignment="center" />
 
         <EditText
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:inputType="time"
+            android:inputType="textPersonName"
             android:ems="10"
-            android:id="@+id/editText3"
+            android:id="@+id/toTimeEditText"
             android:layout_weight="1"
             android:hint="toTime"
-            android:singleLine="true" />
-
+            android:textAlignment="center" />
     </LinearLayout>
-
 
 </LinearLayout>

@@ -24,6 +24,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.jerrylee.mytime.R;
+import com.example.jerrylee.mytime.TimeFormActivity;
 
 import java.lang.ref.WeakReference;
 import java.sql.Time;
@@ -34,6 +35,8 @@ import java.util.Date;
 import database.TimeDatabaseHelper;
 import item.DatabaseInsertItem;
 import service.TimerService;
+
+import static android.app.Activity.RESULT_OK;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -187,7 +190,13 @@ public class ChronometerFragment extends Fragment {
                     insertItem.setStartTime(getCurrentTime());
                     insertItem.setDate(getCurrentDate());
                     closeSoftKeyboard();
-                    Log.v(TAG,"getCurrentDate() =>" + getCurrentDate());
+
+                    Intent intent = new Intent(getActivity(), TimeFormActivity.class);
+                    intent.putExtra(TimeFormActivity.MODE,TimeFormActivity.START_MODE);
+                    intent.putExtra(TimeFormActivity.FROM_TIME,getCurrentTime());
+
+                    startActivityForResult(intent,1);
+
                 }
                 else if(serviceBound && timerService.isTimerRunning()){
                     Log.v(TAG,"Stopping timer");
@@ -233,6 +242,17 @@ public class ChronometerFragment extends Fragment {
         }
 
 
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == 1){
+            if(resultCode == RESULT_OK){
+                autoCompleteTextView.setText(data.getStringExtra(TimeFormActivity.TASK_NAME));
+                Log.v(TAG,"onActivityResult..." + data.getStringExtra(TimeFormActivity.TASK_NAME));
+            }
+        }
     }
 
     public interface OnFragmentInteractionListener {

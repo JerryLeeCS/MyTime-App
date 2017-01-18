@@ -22,7 +22,10 @@
 
         <service android:name="service.TimerService" />
 
-        <activity android:name=".TimeFormActivity"></activity>
+        <activity android:name=".TimeFormActivity"
+            android:parentActivityName=".MainActivity"
+            android:theme="@style/AppTheme">
+        </activity>
     </application>
 
 </manifest>
