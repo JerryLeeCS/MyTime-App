@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
+import com.example.jerrylee.mytime.R;
 
 public class TimeFormActivity extends AppCompatActivity {
 
@@ -42,19 +43,44 @@ public class TimeFormActivity extends AppCompatActivity {
         if(intent.getStringExtra(MODE).equals(START_MODE)){
             Log.v(TAG,"getStringExtra(MODE) =" + intent.getStringExtra(MODE));
             toTimeEditText.setVisibility(View.INVISIBLE);
-
             fromTimeEditText.setText(intent.getStringExtra(FROM_TIME));
         }
-
     }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        Log.v(TAG,"onPause...");
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        putResult();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        Log.v(TAG,"onStop...");
+    }
+
+
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
         Log.v(TAG,"onDestroy...");
-        Intent intent = new Intent();
-        intent.putExtra(TASK_NAME, taskNameEditText.getText().toString());
-        setResult(RESULT_OK,intent);
+
+    }
+
+    private void putResult(){
+        Log.v(TAG,"putResult....");
+        Intent returnIntent = new Intent();
+        returnIntent.putExtra(TASK_NAME, taskNameEditText.getText().toString());
+        Log.v(TAG, taskNameEditText.getText().toString() + " : " + RESULT_OK);
+
+        setResult(RESULT_OK,returnIntent);
         finish();
     }
 }

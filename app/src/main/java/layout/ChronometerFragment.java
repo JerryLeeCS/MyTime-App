@@ -71,6 +71,8 @@ public class ChronometerFragment extends Fragment {
 
     DatabaseInsertItem insertItem = new DatabaseInsertItem();
 
+    private static final int TASK_NAME_REQUEST = 1;
+
     public ChronometerFragment() {
         // Required empty public constructor
     }
@@ -195,7 +197,7 @@ public class ChronometerFragment extends Fragment {
                     intent.putExtra(TimeFormActivity.MODE,TimeFormActivity.START_MODE);
                     intent.putExtra(TimeFormActivity.FROM_TIME,getCurrentTime());
 
-                    startActivityForResult(intent,1);
+                    getActivity().startActivityForResult(intent,TASK_NAME_REQUEST);
 
                 }
                 else if(serviceBound && timerService.isTimerRunning()){
@@ -247,8 +249,11 @@ public class ChronometerFragment extends Fragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode == 1){
+        Log.v(TAG,"onActivityResult...");
+        if(requestCode == TASK_NAME_REQUEST){
+            Log.v(TAG, resultCode + " == " + RESULT_OK);
             if(resultCode == RESULT_OK){
+                Log.v(TAG,"ON SET TEXTVIEW!!");
                 autoCompleteTextView.setText(data.getStringExtra(TimeFormActivity.TASK_NAME));
                 Log.v(TAG,"onActivityResult..." + data.getStringExtra(TimeFormActivity.TASK_NAME));
             }
