@@ -2,6 +2,7 @@ package com.example.jerrylee.mytime;
 
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -43,6 +44,8 @@ public class MainActivity extends AppCompatActivity  implements ChronometerFragm
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Log.v(TAG,"onCreate...");
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
@@ -59,12 +62,12 @@ public class MainActivity extends AppCompatActivity  implements ChronometerFragm
 
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(mViewPager);
-
     }
 
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
+        Log.v(TAG,"onCreateOptionMenu...");
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
@@ -72,6 +75,7 @@ public class MainActivity extends AppCompatActivity  implements ChronometerFragm
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        Log.v(TAG,"onOptionsItemSelected...");
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
@@ -86,9 +90,15 @@ public class MainActivity extends AppCompatActivity  implements ChronometerFragm
     }
 
     @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        Log.v(TAG,"onActivityResult...");
+    }
+
+    @Override
     public void onDataInserted() {
         ListFragment listFragment = (ListFragment) mSectionsPagerAdapter.getItem(1);
-        Log.v(TAG,android.support.v4.app.ListFragment.class.getSimpleName() + " onDataInserted...");
+        Log.v(TAG,"onDataInserted...");
         if(listFragment != null){
             listFragment.refreshAdapter();
         }

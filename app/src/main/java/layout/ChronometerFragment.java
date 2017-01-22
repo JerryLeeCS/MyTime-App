@@ -197,7 +197,7 @@ public class ChronometerFragment extends Fragment {
                     intent.putExtra(TimeFormActivity.MODE,TimeFormActivity.START_MODE);
                     intent.putExtra(TimeFormActivity.FROM_TIME,getCurrentTime());
 
-                    getActivity().startActivityForResult(intent,TASK_NAME_REQUEST);
+                    startActivityForResult(intent,TASK_NAME_REQUEST);
 
                 }
                 else if(serviceBound && timerService.isTimerRunning()){
@@ -250,13 +250,15 @@ public class ChronometerFragment extends Fragment {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         Log.v(TAG,"onActivityResult...");
-        if(requestCode == TASK_NAME_REQUEST){
-            Log.v(TAG, resultCode + " == " + RESULT_OK);
+        if(requestCode == TASK_NAME_REQUEST && data != null){
+            Log.v(TAG, "resultCode: " + resultCode + " compares to wanted resultCode: " + RESULT_OK);
             if(resultCode == RESULT_OK){
                 Log.v(TAG,"ON SET TEXTVIEW!!");
                 autoCompleteTextView.setText(data.getStringExtra(TimeFormActivity.TASK_NAME));
                 Log.v(TAG,"onActivityResult..." + data.getStringExtra(TimeFormActivity.TASK_NAME));
             }
+        }else{
+            Log.v(TAG,"DATA is null...");
         }
     }
 

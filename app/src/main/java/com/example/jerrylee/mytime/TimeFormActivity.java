@@ -4,8 +4,11 @@ import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.Toast;
+
 import com.example.jerrylee.mytime.R;
 
 public class TimeFormActivity extends AppCompatActivity {
@@ -38,13 +41,17 @@ public class TimeFormActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
 
-
-
         if(intent.getStringExtra(MODE).equals(START_MODE)){
             Log.v(TAG,"getStringExtra(MODE) =" + intent.getStringExtra(MODE));
             toTimeEditText.setVisibility(View.INVISIBLE);
             fromTimeEditText.setText(intent.getStringExtra(FROM_TIME));
         }
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        Log.v(TAG,"onStart...");
     }
 
     @Override
@@ -54,32 +61,42 @@ public class TimeFormActivity extends AppCompatActivity {
     }
 
     @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch(item.getItemId()){
+            case android.R.id.home:
+                Toast.makeText(getApplicationContext(),"HOME BUTTON pressed!",Toast.LENGTH_SHORT).show();
+                putResult();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    @Override
     public void onBackPressed() {
-        super.onBackPressed();
         putResult();
+        Log.v(TAG,"onBackPressed....");
+        super.onBackPressed();
     }
 
     @Override
     protected void onStop() {
         super.onStop();
         Log.v(TAG,"onStop...");
-    }
 
+    }
 
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
         Log.v(TAG,"onDestroy...");
-
     }
 
     private void putResult(){
         Log.v(TAG,"putResult....");
         Intent returnIntent = new Intent();
-        returnIntent.putExtra(TASK_NAME, taskNameEditText.getText().toString());
-        Log.v(TAG, taskNameEditText.getText().toString() + " : " + RESULT_OK);
-
+        returnIntent.putExtra(TASK_NAME,taskNameEditText.getText().toString());
         setResult(RESULT_OK,returnIntent);
         finish();
     }
