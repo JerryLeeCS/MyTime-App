@@ -1,6 +1,5 @@
 package layout;
 
-import android.app.Activity;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -12,24 +11,20 @@ import android.os.IBinder;
 import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v4.app.*;
-import android.support.v4.content.pm.ActivityInfoCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.AutoCompleteTextView;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.jerrylee.mytime.R;
 import com.example.jerrylee.mytime.TimeFormActivity;
 
 import java.lang.ref.WeakReference;
-import java.sql.Time;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
 
 import database.TimeDatabaseHelper;
@@ -61,7 +56,7 @@ public class ChronometerFragment extends Fragment {
 
     private Button timerButton;
     private TextView timerTextView;
-    private AutoCompleteTextView autoCompleteTextView;
+    private EditText taskTimeEditText;
 
     private final Handler mUpdateTimeHandler = new UIUpdateHandler(this);
 
@@ -150,7 +145,7 @@ public class ChronometerFragment extends Fragment {
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        String taskName = autoCompleteTextView.getText().toString() == null ? "" : autoCompleteTextView.getText().toString();
+        String taskName = taskTimeEditText.getText().toString() == null ? "" : taskTimeEditText.getText().toString();
         insertItem.setTaskName(taskName);
 
         outState.putString("taskName", insertItem.getTaskName());
@@ -167,12 +162,12 @@ public class ChronometerFragment extends Fragment {
         Log.v(TAG,"onViewCreated...");
         timerButton = (Button) getView().findViewById(R.id.start_button);
         timerTextView = (TextView) getView().findViewById(R.id.timer_text_view);
-        autoCompleteTextView = (AutoCompleteTextView) getView().findViewById(R.id.autoCompleteTextView);
+        taskTimeEditText = (EditText) getView().findViewById(R.id.autoCompleteTextView);
 
-        autoCompleteTextView.clearFocus();
+        taskTimeEditText.clearFocus();
 
         if(savedInstanceState != null) {
-            autoCompleteTextView.setText(insertItem.getTaskName());
+            taskTimeEditText.setText(insertItem.getTaskName());
             Log.v(TAG,"savedInState is not null : taskName is ->"  + insertItem.getTaskName());
         }
 
@@ -185,34 +180,34 @@ public class ChronometerFragment extends Fragment {
                 timerTextView.setText(R.string.timer_text_view_empty);
 
                 if(serviceBound && !timerService.isTimerRunning()){
-                    Log.v(TAG,"Starting timer.....");
+                    startTimer();
 
-                    timerService.startTimer();
-                    updateUIStartRun();
-                    insertItem.setStartTime(getCurrentTime());
-                    insertItem.setDate(getCurrentDate());
-                    closeSoftKeyboard();
+                    setStartInsertItem();
 
-                    Intent intent = new Intent(getActivity(), TimeFormActivity.class);
-                    intent.putExtra(TimeFormActivity.MODE,TimeFormActivity.START_MODE);
-                    intent.putExtra(TimeFormActivity.FROM_TIME,getCurrentTime());
-
-                    startActivityForResult(intent,TASK_NAME_REQUEST);
-
+                    onStartTimeForm();
                 }
                 else if(serviceBound && timerService.isTimerRunning()){
-                    Log.v(TAG,"Stopping timer");
+                    stopTimer();
 
-                    timerService.stopTimer();
-                    updateUIStopRun();
-                    insertItem.setTaskName(autoCompleteTextView.getText().toString());
-                    insertItem.setElapsedTime(timerService.elapsedTime());
-                    insertItem.setEndTime(getCurrentTime());
+                    setEndInsertItem();
+
                     helper.insertContent(insertItem);
                     dataChangedListener.onDataInserted();
 
-                    autoCompleteTextView.setText("");
-                    closeSoftKeyboard();
+                    taskTimeEditText.setText("");
+                }
+            }
+        });
+
+        taskTimeEditText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(serviceBound && !timerService.isTimerRunning()){
+                    startTimer();
+
+                    setStartInsertItem();
+
+                    onStartTimeForm();
                 }
             }
         });
@@ -246,6 +241,37 @@ public class ChronometerFragment extends Fragment {
 
     }
 
+    private void startTimer(){
+        Log.v(TAG,"Starting timer.....");
+        timerService.startTimer();
+        updateUIStartRun();
+    }
+
+    private void stopTimer(){
+        Log.v(TAG,"Stopping timer");
+        timerService.stopTimer();
+        updateUIStopRun();
+    }
+
+    private void setStartInsertItem(){
+        insertItem.setStartTime(getCurrentTime());
+        insertItem.setDate(getCurrentDate());
+    }
+
+    private void setEndInsertItem(){
+        insertItem.setTaskName(taskTimeEditText.getText().toString());
+        insertItem.setElapsedTime(timerService.elapsedTime());
+        insertItem.setEndTime(getCurrentTime());
+    }
+
+    private void onStartTimeForm(){
+        Intent intent = new Intent(getActivity(), TimeFormActivity.class);
+        intent.putExtra(TimeFormActivity.MODE,TimeFormActivity.START_MODE);
+        intent.putExtra(TimeFormActivity.FROM_TIME,getCurrentTime());
+
+        startActivityForResult(intent,TASK_NAME_REQUEST);
+    }
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -254,7 +280,7 @@ public class ChronometerFragment extends Fragment {
             Log.v(TAG, "resultCode: " + resultCode + " compares to wanted resultCode: " + RESULT_OK);
             if(resultCode == RESULT_OK){
                 Log.v(TAG,"ON SET TEXTVIEW!!");
-                autoCompleteTextView.setText(data.getStringExtra(TimeFormActivity.TASK_NAME));
+                taskTimeEditText.setText(data.getStringExtra(TimeFormActivity.TASK_NAME));
                 Log.v(TAG,"onActivityResult..." + data.getStringExtra(TimeFormActivity.TASK_NAME));
             }
         }else{
@@ -354,11 +380,5 @@ public class ChronometerFragment extends Fragment {
         public void onDataInserted();
     }
 
-    private  void closeSoftKeyboard(){
-        InputMethodManager inputMethodManager = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-        if(autoCompleteTextView.isEnabled()) {
-            inputMethodManager.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
-        }
-    }
 
 }
