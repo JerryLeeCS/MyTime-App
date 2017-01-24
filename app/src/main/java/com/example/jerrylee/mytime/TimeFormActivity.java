@@ -64,7 +64,6 @@ public class TimeFormActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch(item.getItemId()){
             case android.R.id.home:
-                Toast.makeText(getApplicationContext(),"HOME BUTTON pressed!",Toast.LENGTH_SHORT).show();
                 putResult();
                 return true;
             default:

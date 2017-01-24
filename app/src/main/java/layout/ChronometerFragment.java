@@ -19,6 +19,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.jerrylee.mytime.R;
 import com.example.jerrylee.mytime.TimeFormActivity;
@@ -114,12 +115,15 @@ public class ChronometerFragment extends Fragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
+
         Log.v(TAG,"onActivityCreated...");
         if(savedInstanceState != null){
             insertItem.setTaskName(savedInstanceState.getString("taskName"));
             insertItem.setStartTime(savedInstanceState.getString("startTime"));
             insertItem.setDate(savedInstanceState.getString("date"));
-            Log.v(TAG,"on savedInstanceState...");
+            Log.v(TAG,"on savedInstanceState Restored...");
+        }else{
+            Log.v(TAG,"on savedInstanceState is null....");
         }
     }
 
@@ -152,7 +156,7 @@ public class ChronometerFragment extends Fragment {
         outState.putString("startTime", insertItem.getStartTime());
         outState.putString("date", insertItem.getDate());
 
-        Log.v(TAG,"onSaveInstanceState...");
+        Log.v(TAG,"onSaveInstanceState... ");
     }
 
     @Override
@@ -180,11 +184,11 @@ public class ChronometerFragment extends Fragment {
                 timerTextView.setText(R.string.timer_text_view_empty);
 
                 if(serviceBound && !timerService.isTimerRunning()){
+                    onStartTimeForm();
+
                     startTimer();
 
                     setStartInsertItem();
-
-                    onStartTimeForm();
                 }
                 else if(serviceBound && timerService.isTimerRunning()){
                     stopTimer();
