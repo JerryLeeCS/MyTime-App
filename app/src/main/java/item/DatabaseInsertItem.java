@@ -1,10 +1,12 @@
 package item;
 
+import java.io.Serializable;
+
 /**
  * Created by Jerry on 1/13/2017.
  */
 
-public class DatabaseInsertItem {
+public class DatabaseInsertItem implements Serializable {
 
     private String taskName;
     private long elapsedTime;

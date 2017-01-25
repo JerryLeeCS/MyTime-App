@@ -4,6 +4,7 @@ package com.example.jerrylee.mytime;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
+import android.os.PersistableBundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -42,6 +43,8 @@ public class MainActivity extends AppCompatActivity  implements ChronometerFragm
      */
     private ViewPager mViewPager;
 
+    Fragment[] fragments;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         Log.v(TAG,"onCreate...");
@@ -62,8 +65,14 @@ public class MainActivity extends AppCompatActivity  implements ChronometerFragm
 
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(mViewPager);
+
     }
 
+    @Override
+    public void onSaveInstanceState(Bundle outState, PersistableBundle outPersistentState) {
+        super.onSaveInstanceState(outState, outPersistentState);
+        Log.v(TAG,"onSaveInstanceState...");
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -111,7 +120,6 @@ public class MainActivity extends AppCompatActivity  implements ChronometerFragm
      */
     public class SectionsPagerAdapter extends FragmentPagerAdapter {
 
-        Fragment[] fragments;
 
         public SectionsPagerAdapter(FragmentManager fm) {
             super(fm);

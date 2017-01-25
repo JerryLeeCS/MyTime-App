@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
+import android.provider.ContactsContract;
 import android.support.annotation.Nullable;
 import android.support.v4.app.*;
 import android.util.Log;
@@ -24,6 +25,7 @@ import android.widget.Toast;
 import com.example.jerrylee.mytime.R;
 import com.example.jerrylee.mytime.TimeFormActivity;
 
+import java.io.Serializable;
 import java.lang.ref.WeakReference;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -57,7 +59,7 @@ public class ChronometerFragment extends Fragment {
 
     private Button timerButton;
     private TextView timerTextView;
-    private EditText taskTimeEditText;
+    private TextView taskTimeEditText;
 
     private final Handler mUpdateTimeHandler = new UIUpdateHandler(this);
 
@@ -65,7 +67,7 @@ public class ChronometerFragment extends Fragment {
 
     private onDataChangedListener dataChangedListener;
 
-    DatabaseInsertItem insertItem = new DatabaseInsertItem();
+    DatabaseInsertItem insertItem;
 
     private static final int TASK_NAME_REQUEST = 1;
 
@@ -96,6 +98,7 @@ public class ChronometerFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         if (getArguments() != null) {
             section = getArguments().getString(ARG_SECTION);
         }
@@ -111,21 +114,7 @@ public class ChronometerFragment extends Fragment {
         return inflater.inflate(R.layout.fragment_chronometer, container, false);
     }
 
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
 
-
-        Log.v(TAG,"onActivityCreated...");
-        if(savedInstanceState != null){
-            insertItem.setTaskName(savedInstanceState.getString("taskName"));
-            insertItem.setStartTime(savedInstanceState.getString("startTime"));
-            insertItem.setDate(savedInstanceState.getString("date"));
-            Log.v(TAG,"on savedInstanceState Restored...");
-        }else{
-            Log.v(TAG,"on savedInstanceState is null....");
-        }
-    }
 
     @Override
     public void onStart() {
@@ -152,11 +141,13 @@ public class ChronometerFragment extends Fragment {
         String taskName = taskTimeEditText.getText().toString() == null ? "" : taskTimeEditText.getText().toString();
         insertItem.setTaskName(taskName);
 
+        outState.putSerializable("insertItem", (Serializable) insertItem);
+
+        /*
         outState.putString("taskName", insertItem.getTaskName());
         outState.putString("startTime", insertItem.getStartTime());
         outState.putString("date", insertItem.getDate());
-
-        Log.v(TAG,"onSaveInstanceState... ");
+        */
     }
 
     @Override
@@ -166,14 +157,12 @@ public class ChronometerFragment extends Fragment {
         Log.v(TAG,"onViewCreated...");
         timerButton = (Button) getView().findViewById(R.id.start_button);
         timerTextView = (TextView) getView().findViewById(R.id.timer_text_view);
-        taskTimeEditText = (EditText) getView().findViewById(R.id.autoCompleteTextView);
+        taskTimeEditText = (TextView) getView().findViewById(R.id.taskNameTextView);
 
         taskTimeEditText.clearFocus();
 
-        if(savedInstanceState != null) {
-            taskTimeEditText.setText(insertItem.getTaskName());
-            Log.v(TAG,"savedInState is not null : taskName is ->"  + insertItem.getTaskName());
-        }
+
+
 
         final TimeDatabaseHelper helper = new TimeDatabaseHelper(getContext());
         Log.v(TAG,"onViewCreated...");
@@ -215,6 +204,31 @@ public class ChronometerFragment extends Fragment {
                 }
             }
         });
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
+        Log.v(TAG,"onActivityCreated...");
+        if(savedInstanceState != null){
+            /*
+            insertItem.setTaskName(savedInstanceState.getString("taskName"));
+            insertItem.setStartTime(savedInstanceState.getString("startTime"));
+            insertItem.setDate(savedInstanceState.getString("date"));
+            */
+            insertItem = (DatabaseInsertItem) savedInstanceState.getSerializable("insertItem");
+
+            Log.v(TAG,"on savedInstanceState Restored...");
+            Toast.makeText(getContext(),"savedInstanceState is restored...",Toast.LENGTH_LONG).show();
+        }else{
+            Log.v(TAG,"on savedInstanceState is null....");
+            if(insertItem != null){
+
+            }else{
+                insertItem = new DatabaseInsertItem();
+            }
+        }
     }
 
     @Override
@@ -281,11 +295,8 @@ public class ChronometerFragment extends Fragment {
         super.onActivityResult(requestCode, resultCode, data);
         Log.v(TAG,"onActivityResult...");
         if(requestCode == TASK_NAME_REQUEST && data != null){
-            Log.v(TAG, "resultCode: " + resultCode + " compares to wanted resultCode: " + RESULT_OK);
             if(resultCode == RESULT_OK){
-                Log.v(TAG,"ON SET TEXTVIEW!!");
                 taskTimeEditText.setText(data.getStringExtra(TimeFormActivity.TASK_NAME));
-                Log.v(TAG,"onActivityResult..." + data.getStringExtra(TimeFormActivity.TASK_NAME));
             }
         }else{
             Log.v(TAG,"DATA is null...");

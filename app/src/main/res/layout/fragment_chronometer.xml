@@ -41,11 +41,11 @@
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="15dp" />
 
-    <EditText
+    <TextView
         android:hint="@string/auto_complete_text_view_blank"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/autoCompleteTextView"
+        android:id="@+id/taskNameTextView"
         android:background="@android:color/background_light"
         android:textAlignment="center"
         android:textSize="32sp"
