@@ -124,7 +124,7 @@ public class TimerService extends Service {
         NotificationCompat.Builder builder = (NotificationCompat.Builder) new NotificationCompat.Builder(this);
 
         builder.setSmallIcon(R.mipmap.ic_launcher);
-        builder.setContentTitle("Hello from Timer App");
+        builder.setContentTitle(taskName == null ? "" : taskName);
         builder.setContentText("tap to return to the app");
 
         Intent resultIntent = new Intent(this, MainActivity.class);

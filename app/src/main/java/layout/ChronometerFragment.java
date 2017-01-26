@@ -19,6 +19,7 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.jerrylee.mytime.MainActivity;
 import com.example.jerrylee.mytime.R;
 import com.example.jerrylee.mytime.TimeFormActivity;
 
@@ -140,11 +141,6 @@ public class ChronometerFragment extends Fragment {
 
         outState.putSerializable("insertItem", (Serializable) insertItem);
 
-        /*
-        outState.putString("taskName", insertItem.getTaskName());
-        outState.putString("startTime", insertItem.getStartTime());
-        outState.putString("date", insertItem.getDate());
-        */
     }
 
     @Override
@@ -291,7 +287,6 @@ public class ChronometerFragment extends Fragment {
             if(resultCode == RESULT_OK){
                 taskNameEditText.setText(data.getStringExtra(TimeFormActivity.TASK_NAME));
                 timerService.setTaskName(data.getStringExtra(TimeFormActivity.TASK_NAME));
-
             }
         }else{
             Log.v(TAG,"DATA is null...");
