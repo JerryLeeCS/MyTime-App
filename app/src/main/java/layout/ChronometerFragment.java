@@ -152,7 +152,6 @@ public class ChronometerFragment extends Fragment {
         timerTextView = (TextView) getView().findViewById(R.id.timer_text_view);
         taskNameEditText = (TextView) getView().findViewById(R.id.taskNameTextView);
 
-        //taskNameEditText.clearFocus();
 
         final TimeDatabaseHelper helper = new TimeDatabaseHelper(getContext());
         Log.v(TAG,"onViewCreated...");
