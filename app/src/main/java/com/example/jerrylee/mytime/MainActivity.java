@@ -120,9 +120,9 @@ public class MainActivity extends AppCompatActivity  implements ChronometerFragm
      */
     public class SectionsPagerAdapter extends FragmentPagerAdapter {
 
-
         public SectionsPagerAdapter(FragmentManager fm) {
             super(fm);
+            Log.v(TAG,"on setting new fragments.....");
             fragments = new Fragment[getCount()];
             fragments[0] = ChronometerFragment.newInstance("1");
             fragments[1] = ListFragment.newInstance("2");

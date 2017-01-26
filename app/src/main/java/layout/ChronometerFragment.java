@@ -9,16 +9,13 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
-import android.provider.ContactsContract;
 import android.support.annotation.Nullable;
 import android.support.v4.app.*;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -59,7 +56,7 @@ public class ChronometerFragment extends Fragment {
 
     private Button timerButton;
     private TextView timerTextView;
-    private TextView taskTimeEditText;
+    private TextView taskNameEditText;
 
     private final Handler mUpdateTimeHandler = new UIUpdateHandler(this);
 
@@ -138,7 +135,7 @@ public class ChronometerFragment extends Fragment {
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        String taskName = taskTimeEditText.getText().toString() == null ? "" : taskTimeEditText.getText().toString();
+        String taskName = taskNameEditText.getText().toString() == null ? "" : taskNameEditText.getText().toString();
         insertItem.setTaskName(taskName);
 
         outState.putSerializable("insertItem", (Serializable) insertItem);
@@ -157,12 +154,9 @@ public class ChronometerFragment extends Fragment {
         Log.v(TAG,"onViewCreated...");
         timerButton = (Button) getView().findViewById(R.id.start_button);
         timerTextView = (TextView) getView().findViewById(R.id.timer_text_view);
-        taskTimeEditText = (TextView) getView().findViewById(R.id.taskNameTextView);
+        taskNameEditText = (TextView) getView().findViewById(R.id.taskNameTextView);
 
-        taskTimeEditText.clearFocus();
-
-
-
+        //taskNameEditText.clearFocus();
 
         final TimeDatabaseHelper helper = new TimeDatabaseHelper(getContext());
         Log.v(TAG,"onViewCreated...");
@@ -187,12 +181,12 @@ public class ChronometerFragment extends Fragment {
                     helper.insertContent(insertItem);
                     dataChangedListener.onDataInserted();
 
-                    taskTimeEditText.setText("");
+                    taskNameEditText.setText("");
                 }
             }
         });
 
-        taskTimeEditText.setOnClickListener(new View.OnClickListener() {
+        taskNameEditText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if(serviceBound && !timerService.isTimerRunning()){
@@ -212,11 +206,6 @@ public class ChronometerFragment extends Fragment {
 
         Log.v(TAG,"onActivityCreated...");
         if(savedInstanceState != null){
-            /*
-            insertItem.setTaskName(savedInstanceState.getString("taskName"));
-            insertItem.setStartTime(savedInstanceState.getString("startTime"));
-            insertItem.setDate(savedInstanceState.getString("date"));
-            */
             insertItem = (DatabaseInsertItem) savedInstanceState.getSerializable("insertItem");
 
             Log.v(TAG,"on savedInstanceState Restored...");
@@ -274,10 +263,14 @@ public class ChronometerFragment extends Fragment {
     private void setStartInsertItem(){
         insertItem.setStartTime(getCurrentTime());
         insertItem.setDate(getCurrentDate());
+        timerService.setStartTimeInclock(getCurrentTime());
+        timerService.setStartDate(getCurrentDate());
     }
 
     private void setEndInsertItem(){
-        insertItem.setTaskName(taskTimeEditText.getText().toString());
+        insertItem.setTaskName(timerService.getTaskName() == null ? "" : timerService.getTaskName());
+        insertItem.setStartTime(timerService.getStartTimeInclock() == null ? "" : timerService.getStartTimeInclock());
+        insertItem.setDate(timerService.getStartDate() == null ? "" : timerService.getStartDate());
         insertItem.setElapsedTime(timerService.elapsedTime());
         insertItem.setEndTime(getCurrentTime());
     }
@@ -296,7 +289,9 @@ public class ChronometerFragment extends Fragment {
         Log.v(TAG,"onActivityResult...");
         if(requestCode == TASK_NAME_REQUEST && data != null){
             if(resultCode == RESULT_OK){
-                taskTimeEditText.setText(data.getStringExtra(TimeFormActivity.TASK_NAME));
+                taskNameEditText.setText(data.getStringExtra(TimeFormActivity.TASK_NAME));
+                timerService.setTaskName(data.getStringExtra(TimeFormActivity.TASK_NAME));
+
             }
         }else{
             Log.v(TAG,"DATA is null...");
@@ -334,11 +329,14 @@ public class ChronometerFragment extends Fragment {
     };
 
     private void updateUIStartRun(){
+        Log.v(TAG,"updateUIStartRun....");
         mUpdateTimeHandler.sendEmptyMessage(MSG_UPDATE_TIME);
         timerButton.setText(R.string.timer_stop_button);
+        taskNameEditText.setText(timerService.getTaskName() == null ? "" : timerService.getTaskName());
     }
 
     private void updateUIStopRun(){
+        Log.v(TAG,"updateUIStopRun...");
         mUpdateTimeHandler.removeMessages(MSG_UPDATE_TIME);
         timerButton.setText(R.string.timer_start_button);
     }

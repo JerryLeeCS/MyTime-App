@@ -29,6 +29,9 @@ public class TimerService extends Service {
 
     private static final int NOTIFICATION_ID = 1;
 
+    private String taskName;
+    private String startTimeInclock;
+    private String startDate;
 
     private final IBinder serviceBinder = new RunServiceBinder();
 
@@ -135,5 +138,29 @@ public class TimerService extends Service {
         return builder.build();
     }
 
+
+    public void setTaskName(String taskName){
+        this.taskName = taskName;
+    }
+
+    public String getTaskName(){
+        return taskName;
+    }
+
+    public void setStartTimeInclock(String startTimeInclock){
+        this.startTimeInclock = startTimeInclock;
+    }
+
+    public String getStartTimeInclock(){
+        return startTimeInclock;
+    }
+
+    public void setStartDate(String startDate){
+        this.startDate = startDate;
+    }
+
+    public String getStartDate(){
+        return startDate;
+    }
 
 }
