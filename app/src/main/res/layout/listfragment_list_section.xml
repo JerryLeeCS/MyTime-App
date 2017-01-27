@@ -8,5 +8,6 @@
         android:text="TextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/sectionTextView" />
+        android:id="@+id/sectionTextView"
+        android:padding="7dp"/>
 </LinearLayout>

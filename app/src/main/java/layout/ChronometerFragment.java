@@ -87,7 +87,6 @@ public class ChronometerFragment extends Fragment {
         Log.v(TAG,"onAttach..." +this.getTag());
         try{
             dataChangedListener = (onDataChangedListener) context;
-
         }catch (ClassCastException e){
             e.printStackTrace();
         }

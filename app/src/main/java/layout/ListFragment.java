@@ -11,10 +11,10 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.example.jerrylee.mytime.R;
 
-import adapter.RecyclerViewAdapter;
 import adapter.RecyclerViewSectionAdapter;
 import database.TimeDatabaseHelper;
 
@@ -84,7 +84,6 @@ public class ListFragment extends Fragment {
                 new DividerItemDecoration(getContext(),1));
         setUpRecyclerView();
         Log.v(TAG, "onActivityCreated...");
-
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -128,6 +127,7 @@ public class ListFragment extends Fragment {
     }
 
     private void setUpRecyclerView(){
+        Log.v(TAG,"on setUpRecyclerView...");
         TimeDatabaseHelper timeDatabaseHelper = new TimeDatabaseHelper(getContext());
         mAdapter = new RecyclerViewSectionAdapter(timeDatabaseHelper.getDataModelList());
 
@@ -135,6 +135,6 @@ public class ListFragment extends Fragment {
 
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setAdapter(mAdapter);
-        Log.v(TAG,"on setUpRecyclerView...");
+
     }
 }

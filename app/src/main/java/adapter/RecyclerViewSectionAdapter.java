@@ -1,14 +1,18 @@
 package adapter;
 
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.afollestad.sectionedrecyclerview.SectionedRecyclerViewAdapter;
 import com.example.jerrylee.mytime.R;
+import com.example.jerrylee.mytime.TimeFormActivity;
 
+import java.sql.Time;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -48,15 +52,26 @@ public class RecyclerViewSectionAdapter extends SectionedRecyclerViewAdapter<Rec
     }
 
     @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder holder, int section, int relativePosition, int absolutePosition) {
-        List<RecyclerViewItem> itemsInSection = allData.get(section).getItemList();
+    public void onBindViewHolder(RecyclerView.ViewHolder holder, final int section, final int relativePosition, final int absolutePosition) {
+        final List<RecyclerViewItem> itemsInSection = allData.get(section).getItemList();
         String taskName = itemsInSection.get(relativePosition).getTaskName();
         String time = itemsInSection.get(relativePosition).getTimeElapsed();
 
-        ItemViewHolder itemViewHolder = (ItemViewHolder) holder;
+        final ItemViewHolder itemViewHolder = (ItemViewHolder) holder;
 
         itemViewHolder.taskView.setText(taskName);
         itemViewHolder.timeView.setText(formattedTimer(Long.parseLong(time)));
+
+        itemViewHolder.taskView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                RecyclerViewItem viewItem= itemsInSection.get(relativePosition);
+
+                Intent intent = new Intent(itemViewHolder.taskView.getContext(), TimeFormActivity.class);
+                intent.putExtra(TimeFormActivity.MODE,TimeFormActivity.EDIT_MODE);
+
+            }
+        });
     }
 
     @Override
@@ -71,8 +86,9 @@ public class RecyclerViewSectionAdapter extends SectionedRecyclerViewAdapter<Rec
                     .inflate(R.layout.listfragment_list_item,parent,false);
             return new ItemViewHolder(v);
         }
-
     }
+
+
 
     public static class SectionViewHolder extends RecyclerView.ViewHolder {
 
@@ -80,7 +96,6 @@ public class RecyclerViewSectionAdapter extends SectionedRecyclerViewAdapter<Rec
 
         public SectionViewHolder(View itemView){
             super(itemView);
-
             sectionTitle = (TextView) itemView.findViewById(R.id.sectionTextView);
         }
     }

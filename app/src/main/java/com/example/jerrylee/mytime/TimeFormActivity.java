@@ -45,6 +45,8 @@ public class TimeFormActivity extends AppCompatActivity {
             Log.v(TAG,"getStringExtra(MODE) =" + intent.getStringExtra(MODE));
             toTimeEditText.setVisibility(View.INVISIBLE);
             fromTimeEditText.setText(intent.getStringExtra(FROM_TIME));
+        }else if(intent.getStringExtra(MODE).equals(EDIT_MODE)){
+
         }
     }
 
