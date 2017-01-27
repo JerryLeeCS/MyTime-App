@@ -8,13 +8,24 @@ import java.io.Serializable;
 
 public class DatabaseInsertItem implements Serializable {
 
+
+    private String databaseID;
     private String taskName;
     private long elapsedTime;
+    private String elapsedTimeString;
     private String startTime;
     private String endTime;
     private String date;
 
     public DatabaseInsertItem(){
+    }
+
+    public void setDatabaseID(String databaseID){
+        this.databaseID = databaseID;
+    }
+
+    public String getDatabaseID(){
+        return databaseID;
     }
 
     public void setTaskName(String taskName){
@@ -29,9 +40,18 @@ public class DatabaseInsertItem implements Serializable {
         this.elapsedTime = elapsedTime;
     }
 
+    public void setElapsedTimeString(String elapsedTimeString){
+        this.elapsedTimeString = elapsedTimeString;
+    }
+
     public long getElapsedTime(){
         return elapsedTime;
     }
+
+    public String getElapsedTimeString(){
+        return elapsedTimeString;
+    }
+
 
     public void setStartTime(String startTime){
         this.startTime = startTime;

@@ -111,12 +111,12 @@ public class TimeDatabaseHelper extends SQLiteOpenHelper {
 
         ArrayList<DataModel> dataModelList = new ArrayList<DataModel>();
         DataModel dataModel = new DataModel();
-        LinkedList<RecyclerViewItem> itemList = new LinkedList<>();
+        LinkedList<DatabaseInsertItem> itemList = new LinkedList<>();
 
         Log.v(TAG,"on getDataModelList...");
 
         try{
-            String[] columns = new String[]{taskColumn,timeElapsedColumn,dateColumn};
+            String[] columns = new String[]{idColumn, taskColumn,timeElapsedColumn,dateColumn,startTimeColumn,endTimeColumn};
             String where = dateColumn + " < ?";
             String[] whereArg = new String[]{"date("+ getLastMondayDate() + ")"};
             String orderBy = idColumn + " DESC";
@@ -130,9 +130,12 @@ public class TimeDatabaseHelper extends SQLiteOpenHelper {
                 dates.add(cursor.getString(cursor.getColumnIndex(dateColumn)));
                 dataModel.setSectionTitle(cursor.getString(cursor.getColumnIndex(dateColumn)));
                 do{
-                    RecyclerViewItem item = new RecyclerViewItem();
+                    DatabaseInsertItem item = new DatabaseInsertItem();
+                    item.setDatabaseID(cursor.getString(cursor.getColumnIndex(idColumn)));
                     item.setTaskName(cursor.getString(cursor.getColumnIndex(taskColumn)));
-                    item.setTimeElapsed(cursor.getString(cursor.getColumnIndex(timeElapsedColumn)));
+                    item.setElapsedTimeString(cursor.getString(cursor.getColumnIndex(timeElapsedColumn)));
+                    item.setStartTime(cursor.getString(cursor.getColumnIndex(startTimeColumn)));
+                    item.setEndTime(cursor.getString(cursor.getColumnIndex(endTimeColumn)));
 
                     String date = cursor.getString(cursor.getColumnIndex(dateColumn));
 

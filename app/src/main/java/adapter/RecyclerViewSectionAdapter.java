@@ -18,6 +18,7 @@ import java.util.Date;
 import java.util.List;
 
 import item.DataModel;
+import item.DatabaseInsertItem;
 import item.RecyclerViewItem;
 
 /**
@@ -53,22 +54,24 @@ public class RecyclerViewSectionAdapter extends SectionedRecyclerViewAdapter<Rec
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, final int section, final int relativePosition, final int absolutePosition) {
-        final List<RecyclerViewItem> itemsInSection = allData.get(section).getItemList();
+        final List<DatabaseInsertItem> itemsInSection = allData.get(section).getItemList();
         String taskName = itemsInSection.get(relativePosition).getTaskName();
-        String time = itemsInSection.get(relativePosition).getTimeElapsed();
+        String time = itemsInSection.get(relativePosition).getElapsedTimeString();
 
         final ItemViewHolder itemViewHolder = (ItemViewHolder) holder;
 
         itemViewHolder.taskView.setText(taskName);
         itemViewHolder.timeView.setText(formattedTimer(Long.parseLong(time)));
 
+
         itemViewHolder.taskView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                RecyclerViewItem viewItem= itemsInSection.get(relativePosition);
+                //DatabaseInsertItem viewItem= itemsInSection.get(relativePosition);
+                DatabaseInsertItem item = itemsInSection.get(relativePosition);
+                //Intent intent = new Intent(itemViewHolder.taskView.getContext(), TimeFormActivity.class);
+                //intent.putExtra(TimeFormActivity.MODE,TimeFormActivity.EDIT_MODE);
 
-                Intent intent = new Intent(itemViewHolder.taskView.getContext(), TimeFormActivity.class);
-                intent.putExtra(TimeFormActivity.MODE,TimeFormActivity.EDIT_MODE);
 
             }
         });

@@ -10,12 +10,12 @@ import java.util.List;
 
 public class DataModel {
     private String sectionTitle;
-    private List<RecyclerViewItem> itemList;
+    private List<DatabaseInsertItem> itemList;
 
     public DataModel(){
     }
 
-    public DataModel(String sectionTitle, List<RecyclerViewItem> itemList){
+    public DataModel(String sectionTitle, List<DatabaseInsertItem> itemList){
         this.sectionTitle = sectionTitle;
         this.itemList = itemList;
     }
@@ -28,11 +28,11 @@ public class DataModel {
         this.sectionTitle = sectionTitle;
     }
 
-    public List<RecyclerViewItem> getItemList(){
+    public List<DatabaseInsertItem> getItemList(){
         return itemList;
     }
 
-    public void setItemList(List<RecyclerViewItem> itemList){
+    public void setItemList(List<DatabaseInsertItem> itemList){
         this.itemList = itemList;
     }
 }
