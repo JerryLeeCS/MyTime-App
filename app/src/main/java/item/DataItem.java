@@ -6,7 +6,7 @@ import java.io.Serializable;
  * Created by Jerry on 1/13/2017.
  */
 
-public class DatabaseInsertItem implements Serializable {
+public class DataItem implements Serializable {
 
 
     private String databaseID;
@@ -17,7 +17,7 @@ public class DatabaseInsertItem implements Serializable {
     private String endTime;
     private String date;
 
-    public DatabaseInsertItem(){
+    public DataItem(){
     }
 
     public void setDatabaseID(String databaseID){

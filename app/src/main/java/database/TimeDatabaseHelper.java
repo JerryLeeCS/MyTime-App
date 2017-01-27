@@ -7,16 +7,14 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.LinkedList;
 import java.util.List;
 
+import item.DataItem;
 import item.DataModel;
-import item.DatabaseInsertItem;
-import item.RecyclerViewItem;
 
 /**
  * Created by jerrylee on 12/26/16.
@@ -61,7 +59,7 @@ public class TimeDatabaseHelper extends SQLiteOpenHelper {
         onCreate(db);
     }
 
-    public void insertContent(DatabaseInsertItem insertItem){
+    public void insertContent(DataItem insertItem){
         ContentValues values = new ContentValues();
         values.put(taskColumn, insertItem.getTaskName());
         values.put(timeElapsedColumn, insertItem.getElapsedTime());
@@ -72,37 +70,6 @@ public class TimeDatabaseHelper extends SQLiteOpenHelper {
         this.getWritableDatabase().insert(TABLE_NAME,null,values);
     }
 
-    public List<RecyclerViewItem> getRecyclerViewItemList(){
-        LinkedList<RecyclerViewItem> itemList = new LinkedList<>();
-        Cursor cursor = null;
-        try{
-            String[] columns = new String[]{taskColumn,timeElapsedColumn};
-            String where = dateColumn + " < ?";
-            String[] whereArg = new String[]{"date("+ getLastMondayDate() + ")"};
-            String orderBy = idColumn + " DESC";
-            cursor = this.getReadableDatabase().query(TABLE_NAME,
-                                                    columns,
-                                                    where,
-                                                    whereArg,
-                                                    null, null, orderBy);
-            if(cursor.moveToFirst()){
-                do{
-                    RecyclerViewItem item = new RecyclerViewItem();
-                    item.setTaskName(cursor.getString(cursor.getColumnIndex(taskColumn)));
-                    item.setTimeElapsed(cursor.getString(cursor.getColumnIndex(timeElapsedColumn)));
-
-                    itemList.add(item);
-                }while(cursor.moveToNext());
-            }
-        }catch(Exception e){
-            Log.v(TAG,"Failed to getRecyclerViewItemList....");
-        }finally {
-            if(cursor != null && !cursor.isClosed()){
-                cursor.close();
-            }
-        }
-        return itemList;
-    }
 
     public List<DataModel> getDataModelList(){
         LinkedList<String> dates = new LinkedList<>();
@@ -111,7 +78,7 @@ public class TimeDatabaseHelper extends SQLiteOpenHelper {
 
         ArrayList<DataModel> dataModelList = new ArrayList<DataModel>();
         DataModel dataModel = new DataModel();
-        LinkedList<DatabaseInsertItem> itemList = new LinkedList<>();
+        LinkedList<DataItem> itemList = new LinkedList<>();
 
         Log.v(TAG,"on getDataModelList...");
 
@@ -130,7 +97,7 @@ public class TimeDatabaseHelper extends SQLiteOpenHelper {
                 dates.add(cursor.getString(cursor.getColumnIndex(dateColumn)));
                 dataModel.setSectionTitle(cursor.getString(cursor.getColumnIndex(dateColumn)));
                 do{
-                    DatabaseInsertItem item = new DatabaseInsertItem();
+                    DataItem item = new DataItem();
                     item.setDatabaseID(cursor.getString(cursor.getColumnIndex(idColumn)));
                     item.setTaskName(cursor.getString(cursor.getColumnIndex(taskColumn)));
                     item.setElapsedTimeString(cursor.getString(cursor.getColumnIndex(timeElapsedColumn)));

@@ -19,7 +19,6 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.jerrylee.mytime.MainActivity;
 import com.example.jerrylee.mytime.R;
 import com.example.jerrylee.mytime.TimeFormActivity;
 
@@ -29,7 +28,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import database.TimeDatabaseHelper;
-import item.DatabaseInsertItem;
+import item.DataItem;
 import service.TimerService;
 
 import static android.app.Activity.RESULT_OK;
@@ -65,7 +64,7 @@ public class ChronometerFragment extends Fragment {
 
     private onDataChangedListener dataChangedListener;
 
-    DatabaseInsertItem insertItem;
+    DataItem insertItem;
 
     private static final int TASK_NAME_REQUEST = 1;
 
@@ -200,7 +199,7 @@ public class ChronometerFragment extends Fragment {
 
         Log.v(TAG,"onActivityCreated...");
         if(savedInstanceState != null){
-            insertItem = (DatabaseInsertItem) savedInstanceState.getSerializable("insertItem");
+            insertItem = (DataItem) savedInstanceState.getSerializable("insertItem");
 
             Log.v(TAG,"on savedInstanceState Restored...");
             Toast.makeText(getContext(),"savedInstanceState is restored...",Toast.LENGTH_LONG).show();
@@ -209,7 +208,7 @@ public class ChronometerFragment extends Fragment {
             if(insertItem != null){
 
             }else{
-                insertItem = new DatabaseInsertItem();
+                insertItem = new DataItem();
             }
         }
     }

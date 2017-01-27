@@ -1,7 +1,5 @@
 package item;
 
-import android.provider.ContactsContract;
-
 import java.util.List;
 
 /**
@@ -10,12 +8,12 @@ import java.util.List;
 
 public class DataModel {
     private String sectionTitle;
-    private List<DatabaseInsertItem> itemList;
+    private List<DataItem> itemList;
 
     public DataModel(){
     }
 
-    public DataModel(String sectionTitle, List<DatabaseInsertItem> itemList){
+    public DataModel(String sectionTitle, List<DataItem> itemList){
         this.sectionTitle = sectionTitle;
         this.itemList = itemList;
     }
@@ -28,11 +26,11 @@ public class DataModel {
         this.sectionTitle = sectionTitle;
     }
 
-    public List<DatabaseInsertItem> getItemList(){
+    public List<DataItem> getItemList(){
         return itemList;
     }
 
-    public void setItemList(List<DatabaseInsertItem> itemList){
+    public void setItemList(List<DataItem> itemList){
         this.itemList = itemList;
     }
 }

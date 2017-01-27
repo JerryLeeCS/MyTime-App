@@ -1,25 +1,20 @@
 package adapter;
 
-import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.afollestad.sectionedrecyclerview.SectionedRecyclerViewAdapter;
 import com.example.jerrylee.mytime.R;
-import com.example.jerrylee.mytime.TimeFormActivity;
 
-import java.sql.Time;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
+import item.DataItem;
 import item.DataModel;
-import item.DatabaseInsertItem;
-import item.RecyclerViewItem;
 
 /**
  * Created by Jerry on 1/12/2017.
@@ -54,7 +49,7 @@ public class RecyclerViewSectionAdapter extends SectionedRecyclerViewAdapter<Rec
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, final int section, final int relativePosition, final int absolutePosition) {
-        final List<DatabaseInsertItem> itemsInSection = allData.get(section).getItemList();
+        final List<DataItem> itemsInSection = allData.get(section).getItemList();
         String taskName = itemsInSection.get(relativePosition).getTaskName();
         String time = itemsInSection.get(relativePosition).getElapsedTimeString();
 
@@ -67,8 +62,8 @@ public class RecyclerViewSectionAdapter extends SectionedRecyclerViewAdapter<Rec
         itemViewHolder.taskView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //DatabaseInsertItem viewItem= itemsInSection.get(relativePosition);
-                DatabaseInsertItem item = itemsInSection.get(relativePosition);
+                //DataItem viewItem= itemsInSection.get(relativePosition);
+                DataItem item = itemsInSection.get(relativePosition);
                 //Intent intent = new Intent(itemViewHolder.taskView.getContext(), TimeFormActivity.class);
                 //intent.putExtra(TimeFormActivity.MODE,TimeFormActivity.EDIT_MODE);
 
