@@ -119,7 +119,7 @@ public class ListFragment extends Fragment {
     public void refreshAdapter(){
         Log.v(TAG,"setmRecyclerView....");
         TimeDatabaseHelper timeDatabaseHelper = new TimeDatabaseHelper(getContext());
-        mAdapter = new RecyclerViewSectionAdapter(timeDatabaseHelper.getDataModelList());
+        mAdapter = new RecyclerViewSectionAdapter(timeDatabaseHelper.getDataModelList(),getContext());
 
         mRecyclerView.setAdapter(mAdapter);
 
@@ -129,7 +129,7 @@ public class ListFragment extends Fragment {
     private void setUpRecyclerView(){
         Log.v(TAG,"on setUpRecyclerView...");
         TimeDatabaseHelper timeDatabaseHelper = new TimeDatabaseHelper(getContext());
-        mAdapter = new RecyclerViewSectionAdapter(timeDatabaseHelper.getDataModelList());
+        mAdapter = new RecyclerViewSectionAdapter(timeDatabaseHelper.getDataModelList(),getContext());
 
         mLayoutManager = new LinearLayoutManager(getActivity());
 

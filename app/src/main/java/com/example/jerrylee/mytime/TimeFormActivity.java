@@ -11,6 +11,8 @@ import android.widget.Toast;
 
 import com.example.jerrylee.mytime.R;
 
+import item.DataItem;
+
 public class TimeFormActivity extends AppCompatActivity {
 
     private static final String TAG = TimeFormActivity.class.getSimpleName();
@@ -19,8 +21,7 @@ public class TimeFormActivity extends AppCompatActivity {
     public static final String START_MODE= "START";
     public static final String EDIT_MODE = "EDIT";
 
-    public static final String FROM_TIME = "TIME_FORM_FROM_TIME";
-    public static final String TO_TIME = "TIME_FORM_TO_TIME";
+    public static final String ITEM = "DAT_ITEM";
 
     public static final String TASK_NAME = "TASK_NAME";
 
@@ -41,12 +42,15 @@ public class TimeFormActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
 
-        if(intent.getStringExtra(MODE).equals(START_MODE)){
-            Log.v(TAG,"getStringExtra(MODE) =" + intent.getStringExtra(MODE));
-            toTimeEditText.setVisibility(View.INVISIBLE);
-            fromTimeEditText.setText(intent.getStringExtra(FROM_TIME));
-        }else if(intent.getStringExtra(MODE).equals(EDIT_MODE)){
+        DataItem dataItem = (DataItem)intent.getSerializableExtra(ITEM);
 
+        if(intent.getStringExtra(MODE).equals(START_MODE)){
+            toTimeEditText.setVisibility(View.INVISIBLE);
+            fromTimeEditText.setText(dataItem.getStartTime());
+        }else if(intent.getStringExtra(MODE).equals(EDIT_MODE)){
+            taskNameEditText.setText(dataItem.getTaskName());
+            fromTimeEditText.setText(dataItem.getStartTime());
+            toTimeEditText.setText(dataItem.getEndTime());
         }
     }
 

@@ -269,9 +269,12 @@ public class ChronometerFragment extends Fragment {
     }
 
     private void onStartTimeForm(){
+        DataItem dataItem = new DataItem();
+        dataItem.setStartTime(getCurrentTime());
+
         Intent intent = new Intent(getActivity(), TimeFormActivity.class);
         intent.putExtra(TimeFormActivity.MODE,TimeFormActivity.START_MODE);
-        intent.putExtra(TimeFormActivity.FROM_TIME,getCurrentTime());
+        intent.putExtra(TimeFormActivity.ITEM,dataItem);
 
         startActivityForResult(intent,TASK_NAME_REQUEST);
     }

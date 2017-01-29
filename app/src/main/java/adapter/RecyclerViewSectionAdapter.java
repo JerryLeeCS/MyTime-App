@@ -1,5 +1,7 @@
 package adapter;
 
+import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,6 +10,7 @@ import android.widget.TextView;
 
 import com.afollestad.sectionedrecyclerview.SectionedRecyclerViewAdapter;
 import com.example.jerrylee.mytime.R;
+import com.example.jerrylee.mytime.TimeFormActivity;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -23,11 +26,12 @@ import item.DataModel;
 public class RecyclerViewSectionAdapter extends SectionedRecyclerViewAdapter<RecyclerView.ViewHolder> {
     private List<DataModel> allData;
 
+    private Context context;
 
-    public RecyclerViewSectionAdapter(List<DataModel> itemList){
+    public RecyclerViewSectionAdapter(List<DataModel> itemList,Context context){
         this.allData = itemList;
+        this.context = context;
     }
-
 
     @Override
     public int getSectionCount() {
@@ -62,12 +66,13 @@ public class RecyclerViewSectionAdapter extends SectionedRecyclerViewAdapter<Rec
         itemViewHolder.taskView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //DataItem viewItem= itemsInSection.get(relativePosition);
+
                 DataItem item = itemsInSection.get(relativePosition);
-                //Intent intent = new Intent(itemViewHolder.taskView.getContext(), TimeFormActivity.class);
-                //intent.putExtra(TimeFormActivity.MODE,TimeFormActivity.EDIT_MODE);
+                Intent intent = new Intent(itemViewHolder.taskView.getContext(), TimeFormActivity.class);
+                intent.putExtra(TimeFormActivity.MODE,TimeFormActivity.EDIT_MODE);
+                intent.putExtra(TimeFormActivity.ITEM,item);
 
-
+                context.startActivity(intent);
             }
         });
     }
