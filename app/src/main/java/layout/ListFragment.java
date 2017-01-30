@@ -1,5 +1,6 @@
 package layout;
 
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -98,6 +99,11 @@ public class ListFragment extends Fragment {
         super.onDetach();
         mListener = null;
         Log.v(TAG,"onDetach...");
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
     }
 
     /**

@@ -1,6 +1,7 @@
 package com.example.jerrylee.mytime;
 
 import android.content.Intent;
+import android.provider.ContactsContract;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -25,6 +26,10 @@ public class TimeFormActivity extends AppCompatActivity {
 
     public static final String TASK_NAME = "TASK_NAME";
 
+    private DataItem dataItem;
+
+    private boolean editMode;
+
     private EditText taskNameEditText;
     private EditText fromTimeEditText;
     private EditText toTimeEditText;
@@ -42,12 +47,20 @@ public class TimeFormActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
 
-        DataItem dataItem = (DataItem)intent.getSerializableExtra(ITEM);
-
         if(intent.getStringExtra(MODE).equals(START_MODE)){
+            editMode = false;
+        }else{
+            editMode = true;
+        }
+
+        dataItem = (DataItem)intent.getSerializableExtra(ITEM);
+
+        if(!editMode){
+            editMode = false;
             toTimeEditText.setVisibility(View.INVISIBLE);
             fromTimeEditText.setText(dataItem.getStartTime());
         }else if(intent.getStringExtra(MODE).equals(EDIT_MODE)){
+            editMode = true;
             taskNameEditText.setText(dataItem.getTaskName());
             fromTimeEditText.setText(dataItem.getStartTime());
             toTimeEditText.setText(dataItem.getEndTime());
@@ -100,8 +113,21 @@ public class TimeFormActivity extends AppCompatActivity {
 
     private void putResult(){
         Log.v(TAG,"putResult....");
+        DataItem returnItem = new DataItem();
+
         Intent returnIntent = new Intent();
-        returnIntent.putExtra(TASK_NAME,taskNameEditText.getText().toString());
+
+        returnItem.setTaskName(taskNameEditText.getText().toString());
+        //returnIntent.putExtra(TASK_NAME,taskNameEditText.getText().toString());
+        if(editMode){
+            returnItem.setStartTime(fromTimeEditText.getText().toString());
+            returnItem.setEndTime(toTimeEditText.getText().toString());
+            returnItem.setDate(dataItem.getDate());
+            returnItem.setDatabaseID(dataItem.getDatabaseID());
+            
+        }
+
+        returnIntent.putExtra(ITEM,returnItem);
         setResult(RESULT_OK,returnIntent);
         finish();
     }
