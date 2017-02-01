@@ -40,7 +40,7 @@ public class DataItem implements Serializable {
         this.elapsedTime = elapsedTime;
     }
 
-    public void setElapsedTimeString(String elapsedTimeString){
+    public void setElapsedTime(String elapsedTimeString){
         this.elapsedTimeString = elapsedTimeString;
     }
 

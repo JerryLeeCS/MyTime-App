@@ -101,7 +101,6 @@ public class TimeFormActivity extends AppCompatActivity {
     protected void onStop() {
         super.onStop();
         Log.v(TAG,"onStop...");
-
     }
 
 
@@ -124,7 +123,7 @@ public class TimeFormActivity extends AppCompatActivity {
             returnItem.setEndTime(toTimeEditText.getText().toString());
             returnItem.setDate(dataItem.getDate());
             returnItem.setDatabaseID(dataItem.getDatabaseID());
-            
+            //have to check how the elapsed time is stored... Need a fix that makes the dataItem universal
         }
 
         returnIntent.putExtra(ITEM,returnItem);

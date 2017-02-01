@@ -100,7 +100,7 @@ public class TimeDatabaseHelper extends SQLiteOpenHelper {
                     DataItem item = new DataItem();
                     item.setDatabaseID(cursor.getString(cursor.getColumnIndex(idColumn)));
                     item.setTaskName(cursor.getString(cursor.getColumnIndex(taskColumn)));
-                    item.setElapsedTimeString(cursor.getString(cursor.getColumnIndex(timeElapsedColumn)));
+                    item.setElapsedTime(cursor.getString(cursor.getColumnIndex(timeElapsedColumn)));
                     item.setStartTime(cursor.getString(cursor.getColumnIndex(startTimeColumn)));
                     item.setEndTime(cursor.getString(cursor.getColumnIndex(endTimeColumn)));
 
