@@ -133,6 +133,7 @@ public class ListFragment extends Fragment {
                 DataItem dataItem = (DataItem) data.getSerializableExtra(TimeFormActivity.ITEM);
                 helper.updateContent(dataItem);
                 dataChangedListener.onDataInserted();
+                helper.close();
             }
         }
     }
@@ -158,6 +159,7 @@ public class ListFragment extends Fragment {
         TimeDatabaseHelper timeDatabaseHelper = new TimeDatabaseHelper(getContext());
         mAdapter = new RecyclerViewSectionAdapter(timeDatabaseHelper.getDataModelList(),this);
 
+
         mRecyclerView.setAdapter(mAdapter);
 
         mRecyclerView.invalidate();
@@ -172,6 +174,5 @@ public class ListFragment extends Fragment {
 
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setAdapter(mAdapter);
-
     }
 }

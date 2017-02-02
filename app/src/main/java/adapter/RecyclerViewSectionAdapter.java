@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,6 +23,7 @@ import java.util.List;
 import item.DataItem;
 import item.DataModel;
 
+
 /**
  * Created by Jerry on 1/12/2017.
  */
@@ -30,6 +32,8 @@ public class RecyclerViewSectionAdapter extends SectionedRecyclerViewAdapter<Rec
     private List<DataModel> allData;
 
     private layout.ListFragment listFragment;
+
+    private static final String TAG = RecyclerViewSectionAdapter.class.getSimpleName();
 
     public RecyclerViewSectionAdapter(List<DataModel> itemList, layout.ListFragment listFragment){
         this.allData = itemList;

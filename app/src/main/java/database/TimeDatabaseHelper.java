@@ -55,6 +55,7 @@ public class TimeDatabaseHelper extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int i, int i1) {
+        Log.v(TAG,"onUpgrade...");
         this.getWritableDatabase().execSQL("DROP TABLE IF EXISTS " + TABLE_NAME);
         onCreate(db);
     }
@@ -89,8 +90,8 @@ public class TimeDatabaseHelper extends SQLiteOpenHelper {
             String orderBy = idColumn + " DESC";
             cursor = this.getReadableDatabase().query(TABLE_NAME,
                     columns,
-                    where,
-                    whereArg,
+                    null /**/,
+                    null/**/,
                     null, null, orderBy);
 
             if(cursor.moveToFirst()){
@@ -138,7 +139,17 @@ public class TimeDatabaseHelper extends SQLiteOpenHelper {
         values.put(endTimeColumn, dataItem.getEndTime());
         values.put(dateColumn, dataItem.getDate());
 
-        this.getWritableDatabase().update(TABLE_NAME,values,idColumn + " = " + dataItem.getDatabaseID(), null);
+        String where = idColumn + " LIKE " + dataItem.getDatabaseID();
+
+        try {
+            Log.v(TAG,String.valueOf(this.getWritableDatabase().update(TABLE_NAME,values,where,null)));
+            this.getWritableDatabase().update(TABLE_NAME,values,where,null);
+
+        }catch (Exception e){
+            Log.v(TAG,e.toString());
+        }finally {
+            this.close();
+        }
     }
 
     private String getLastMondayDate(){
