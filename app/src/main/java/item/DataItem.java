@@ -12,7 +12,6 @@ public class DataItem implements Serializable {
     private String databaseID;
     private String taskName;
     private long elapsedTime;
-    private String elapsedTimeString;
     private String startTime;
     private String endTime;
     private String date;
@@ -41,7 +40,7 @@ public class DataItem implements Serializable {
     }
 
     public void setElapsedTime(String elapsedTimeString){
-        this.elapsedTimeString = elapsedTimeString;
+        this.elapsedTime = Long.parseLong(elapsedTimeString);
     }
 
     public long getElapsedTime(){
@@ -49,7 +48,7 @@ public class DataItem implements Serializable {
     }
 
     public String getElapsedTimeString(){
-        return elapsedTimeString;
+        return String.valueOf(elapsedTime);
     }
 
 

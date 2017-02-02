@@ -117,13 +117,13 @@ public class TimeFormActivity extends AppCompatActivity {
         Intent returnIntent = new Intent();
 
         returnItem.setTaskName(taskNameEditText.getText().toString());
-        //returnIntent.putExtra(TASK_NAME,taskNameEditText.getText().toString());
+
         if(editMode){
             returnItem.setStartTime(fromTimeEditText.getText().toString());
             returnItem.setEndTime(toTimeEditText.getText().toString());
             returnItem.setDate(dataItem.getDate());
             returnItem.setDatabaseID(dataItem.getDatabaseID());
-            //have to check how the elapsed time is stored... Need a fix that makes the dataItem universal
+            returnItem.setElapsedTime(dataItem.getElapsedTime());
         }
 
         returnIntent.putExtra(ITEM,returnItem);

@@ -70,7 +70,6 @@ public class TimeDatabaseHelper extends SQLiteOpenHelper {
         this.getWritableDatabase().insert(TABLE_NAME,null,values);
     }
 
-
     public List<DataModel> getDataModelList(){
         LinkedList<String> dates = new LinkedList<>();
 

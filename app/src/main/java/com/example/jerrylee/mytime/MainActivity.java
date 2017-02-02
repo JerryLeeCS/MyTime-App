@@ -102,6 +102,9 @@ public class MainActivity extends AppCompatActivity  implements ChronometerFragm
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         Log.v(TAG,"onActivityResult...");
+        if(requestCode == ListFragment.REQUEST_FOR_EDIT){
+            Log.v(TAG,"requestCode is REQUEST_FOR_EDIT");
+        }
     }
 
     @Override

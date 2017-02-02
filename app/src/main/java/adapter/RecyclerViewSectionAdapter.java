@@ -1,7 +1,10 @@
 package adapter;
 
+import android.app.Activity;
+import android.app.ListFragment;
 import android.content.Context;
 import android.content.Intent;
+import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -26,11 +29,11 @@ import item.DataModel;
 public class RecyclerViewSectionAdapter extends SectionedRecyclerViewAdapter<RecyclerView.ViewHolder> {
     private List<DataModel> allData;
 
-    private Context context;
+    private layout.ListFragment listFragment;
 
-    public RecyclerViewSectionAdapter(List<DataModel> itemList,Context context){
+    public RecyclerViewSectionAdapter(List<DataModel> itemList, layout.ListFragment listFragment){
         this.allData = itemList;
-        this.context = context;
+        this.listFragment = listFragment;
     }
 
     @Override
@@ -55,12 +58,12 @@ public class RecyclerViewSectionAdapter extends SectionedRecyclerViewAdapter<Rec
     public void onBindViewHolder(RecyclerView.ViewHolder holder, final int section, final int relativePosition, final int absolutePosition) {
         final List<DataItem> itemsInSection = allData.get(section).getItemList();
         String taskName = itemsInSection.get(relativePosition).getTaskName();
-        String time = itemsInSection.get(relativePosition).getElapsedTimeString();
+        long time = itemsInSection.get(relativePosition).getElapsedTime();
 
         final ItemViewHolder itemViewHolder = (ItemViewHolder) holder;
 
         itemViewHolder.taskView.setText(taskName);
-        itemViewHolder.timeView.setText(formattedTimer(Long.parseLong(time)));
+        itemViewHolder.timeView.setText(formattedTimer(time));
 
 
         itemViewHolder.taskView.setOnClickListener(new View.OnClickListener() {
@@ -72,7 +75,8 @@ public class RecyclerViewSectionAdapter extends SectionedRecyclerViewAdapter<Rec
                 intent.putExtra(TimeFormActivity.MODE,TimeFormActivity.EDIT_MODE);
                 intent.putExtra(TimeFormActivity.ITEM,item);
 
-                context.startActivity(intent);
+                listFragment.startActivityForResult(intent, layout.ListFragment.REQUEST_FOR_EDIT);
+
             }
         });
     }
@@ -114,6 +118,7 @@ public class RecyclerViewSectionAdapter extends SectionedRecyclerViewAdapter<Rec
         }
 
     }
+
 
     private String formattedTimer(long time){
         long hour = time/3600;
