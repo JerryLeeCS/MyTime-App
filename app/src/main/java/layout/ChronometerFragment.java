@@ -29,6 +29,7 @@ import java.util.Date;
 
 import database.TimeDatabaseHelper;
 import item.DataItem;
+import listener.onDataChangedListener;
 import service.TimerService;
 
 import static android.app.Activity.RESULT_OK;
@@ -285,8 +286,10 @@ public class ChronometerFragment extends Fragment {
         Log.v(TAG,"onActivityResult...");
         if(requestCode == TASK_NAME_REQUEST && data != null){
             if(resultCode == RESULT_OK){
-                taskNameEditText.setText(data.getStringExtra(TimeFormActivity.TASK_NAME));
-                timerService.setTaskName(data.getStringExtra(TimeFormActivity.TASK_NAME));
+                DataItem dataItem = (DataItem)data.getSerializableExtra(TimeFormActivity.ITEM);
+
+                taskNameEditText.setText(dataItem.getTaskName());
+                timerService.setTaskName(dataItem.getTaskName());
             }
         }else{
             Log.v(TAG,"DATA is null...");
@@ -382,10 +385,6 @@ public class ChronometerFragment extends Fragment {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-DD");
         Date date = new Date();
         return simpleDateFormat.format(date);
-    }
-
-    public interface onDataChangedListener{
-        public void onDataInserted();
     }
 
 

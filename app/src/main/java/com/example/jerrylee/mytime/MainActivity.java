@@ -24,8 +24,9 @@ import java.util.List;
 import layout.ChronometerFragment;
 import layout.ExtraFragment;
 import layout.ListFragment;
+import listener.onDataChangedListener;
 
-public class MainActivity extends AppCompatActivity  implements ChronometerFragment.onDataChangedListener{
+public class MainActivity extends AppCompatActivity  implements onDataChangedListener {
 
     /**
      * The {@link android.support.v4.view.PagerAdapter} that will provide

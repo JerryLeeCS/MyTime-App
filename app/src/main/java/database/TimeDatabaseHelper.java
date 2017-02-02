@@ -60,6 +60,7 @@ public class TimeDatabaseHelper extends SQLiteOpenHelper {
     }
 
     public void insertContent(DataItem insertItem){
+        Log.v(TAG,"insertContent...");
         ContentValues values = new ContentValues();
         values.put(taskColumn, insertItem.getTaskName());
         values.put(timeElapsedColumn, insertItem.getElapsedTime());
@@ -126,6 +127,18 @@ public class TimeDatabaseHelper extends SQLiteOpenHelper {
             }
         }
         return dataModelList;
+    }
+
+    public void updateContent(DataItem dataItem){
+        Log.v(TAG,"updateContent...");
+        ContentValues values = new ContentValues();
+        values.put(taskColumn, dataItem.getTaskName());
+        values.put(timeElapsedColumn, dataItem.getElapsedTime());
+        values.put(startTimeColumn, dataItem.getStartTime());
+        values.put(endTimeColumn, dataItem.getEndTime());
+        values.put(dateColumn, dataItem.getDate());
+
+        this.getWritableDatabase().update(TABLE_NAME,values,idColumn + " = " + dataItem.getDatabaseID(), null);
     }
 
     private String getLastMondayDate(){

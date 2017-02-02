@@ -1,5 +1,6 @@
 package layout;
 
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -20,6 +21,7 @@ import com.example.jerrylee.mytime.TimeFormActivity;
 import adapter.RecyclerViewSectionAdapter;
 import database.TimeDatabaseHelper;
 import item.DataItem;
+import listener.onDataChangedListener;
 
 import static android.app.Activity.RESULT_OK;
 
@@ -40,6 +42,8 @@ public class ListFragment extends Fragment {
     private String section;
 
     private OnFragmentInteractionListener mListener;
+
+    private onDataChangedListener dataChangedListener;
 
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mAdapter;
@@ -66,6 +70,18 @@ public class ListFragment extends Fragment {
         if (getArguments() != null) {
             section = getArguments().getString(ARG_SECTION);
         }
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        Log.v(TAG,"onAttack...");
+        try{
+            dataChangedListener = (onDataChangedListener) context;
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+
     }
 
     @Override
@@ -113,11 +129,12 @@ public class ListFragment extends Fragment {
         Log.v(TAG,"onActivityResult...");
         if(requestCode == ListFragment.REQUEST_FOR_EDIT && data != null){
             if(resultCode == RESULT_OK){
+                TimeDatabaseHelper helper = new TimeDatabaseHelper(getContext());
                 DataItem dataItem = (DataItem) data.getSerializableExtra(TimeFormActivity.ITEM);
-                Log.v(TAG,dataItem.getTaskName() + " ><><><>");
+                helper.updateContent(dataItem);
+                dataChangedListener.onDataInserted();
             }
         }
-
     }
 
     /**
