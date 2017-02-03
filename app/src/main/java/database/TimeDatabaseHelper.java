@@ -62,13 +62,14 @@ public class TimeDatabaseHelper extends SQLiteOpenHelper {
 
     public void insertContent(DataItem insertItem){
         Log.v(TAG,"insertContent...");
+
         ContentValues values = new ContentValues();
         values.put(taskColumn, insertItem.getTaskName());
         values.put(timeElapsedColumn, insertItem.getElapsedTime());
         values.put(startTimeColumn, insertItem.getStartTime());
         values.put(endTimeColumn, insertItem.getEndTime());
         values.put(dateColumn, insertItem.getDate());
-        Log.v(TAG,"date => " + insertItem.getDate() + " startTime => " + insertItem.getStartTime() + " endTime => " + insertItem.getEndTime());
+
         this.getWritableDatabase().insert(TABLE_NAME,null,values);
     }
 
@@ -90,8 +91,8 @@ public class TimeDatabaseHelper extends SQLiteOpenHelper {
             String orderBy = idColumn + " DESC";
             cursor = this.getReadableDatabase().query(TABLE_NAME,
                     columns,
-                    null /**/,
-                    null/**/,
+                    null ,
+                    null ,
                     null, null, orderBy);
 
             if(cursor.moveToFirst()){
@@ -104,9 +105,9 @@ public class TimeDatabaseHelper extends SQLiteOpenHelper {
                     item.setElapsedTime(cursor.getString(cursor.getColumnIndex(timeElapsedColumn)));
                     item.setStartTime(cursor.getString(cursor.getColumnIndex(startTimeColumn)));
                     item.setEndTime(cursor.getString(cursor.getColumnIndex(endTimeColumn)));
+                    item.setDate(cursor.getString(cursor.getColumnIndex(dateColumn)));
 
                     String date = cursor.getString(cursor.getColumnIndex(dateColumn));
-
                     if(!dates.contains(date)){
                         dates.add(date);
                         dataModel.setItemList(itemList);
