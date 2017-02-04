@@ -376,13 +376,13 @@ public class ChronometerFragment extends Fragment {
     }
 
     private String getCurrentTime(){
-        String format = "h:mm a";
+        String format = "h:mm:ss";
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat(format);
         return  simpleDateFormat.format(new Date());
     }
 
     private String getCurrentDate(){
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-DD");
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
         Date date = new Date();
         return simpleDateFormat.format(date);
     }

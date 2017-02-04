@@ -1,16 +1,25 @@
 package com.example.jerrylee.mytime;
 
+import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.provider.ContactsContract;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.TextView;
+import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.example.jerrylee.mytime.R;
+
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
 
 import item.DataItem;
 
@@ -31,8 +40,8 @@ public class TimeFormActivity extends AppCompatActivity {
     private boolean editMode;
 
     private EditText taskNameEditText;
-    private EditText fromTimeEditText;
-    private EditText toTimeEditText;
+    private TextView fromTimeEditText;
+    private TextView toTimeEditText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,8 +51,8 @@ public class TimeFormActivity extends AppCompatActivity {
         Log.v(TAG,"onCreate...");
 
         taskNameEditText = (EditText) findViewById(R.id.taskNameEditText);
-        fromTimeEditText = (EditText) findViewById(R.id.fromTimeEditText);
-        toTimeEditText = (EditText) findViewById(R.id.toTimeEditText);
+        fromTimeEditText = (TextView) findViewById(R.id.fromTimeEditText);
+        toTimeEditText = (TextView) findViewById(R.id.toTimeEditText);
 
         Intent intent = getIntent();
 
@@ -65,6 +74,32 @@ public class TimeFormActivity extends AppCompatActivity {
             fromTimeEditText.setText(dataItem.getStartTime());
             toTimeEditText.setText(dataItem.getEndTime());
         }
+
+        fromTimeEditText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String time[] = dataItem.getStartTime().split(":");
+                int hour = Integer.parseInt(time[0]);
+                int minute = Integer.parseInt(time[1]);
+                final int second = Integer.parseInt(time[2]);
+
+                TimePickerDialog timePickerDialog = new TimePickerDialog(TimeFormActivity.this, new TimePickerDialog.OnTimeSetListener() {
+                    @Override
+                    public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+                        fromTimeEditText.setText(hourOfDay + ":" + minute + ":" + second);
+                    }
+                },hour, minute,false);
+                timePickerDialog.setTitle("Select Time");
+                timePickerDialog.show();
+            }
+        });
+
+        toTimeEditText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
     }
 
     @Override
@@ -123,11 +158,29 @@ public class TimeFormActivity extends AppCompatActivity {
             returnItem.setEndTime(toTimeEditText.getText().toString());
             returnItem.setDate(dataItem.getDate());
             returnItem.setDatabaseID(dataItem.getDatabaseID());
-            returnItem.setElapsedTime(dataItem.getElapsedTime());
+            returnItem.setElapsedTime(getValidElapsedTime());
         }
 
         returnIntent.putExtra(ITEM,returnItem);
         setResult(RESULT_OK,returnIntent);
         finish();
     }
+
+
+    private long getValidElapsedTime(){
+        try {
+            Date startTime = new SimpleDateFormat("h:mm:ss", Locale.ENGLISH).parse(fromTimeEditText.getText().toString());
+            Date endTime = new SimpleDateFormat("h:mm:ss", Locale.ENGLISH).parse(toTimeEditText.getText().toString());
+            long elapsedTime = (endTime.getTime() - startTime.getTime())/1000;
+
+            Log.v(TAG,"getValidElapsedTime...." + elapsedTime);
+            return elapsedTime;
+        }catch (Exception e){
+            Log.e(TAG,e.toString());
+        }
+
+        return 0;
+    }
 }
+
+
