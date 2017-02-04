@@ -9,9 +9,13 @@ import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.support.v7.app.NotificationCompat;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.example.jerrylee.mytime.MainActivity;
 import com.example.jerrylee.mytime.R;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import layout.ChronometerFragment;
 
@@ -81,6 +85,10 @@ public class TimerService extends Service {
     public void startTimer(){
         if(!isTimerRunning){
             startTime = System.currentTimeMillis();
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("h:mm:ss");
+            Date resultDate = new Date(startTime);
+            Toast.makeText(TimerService.this,"Test currentTimeMillis(): " +simpleDateFormat.format(resultDate),Toast.LENGTH_SHORT).show();
+
             isTimerRunning = true;
         }else{
             Log.e(TAG,"startTimer request for an already running timer");
@@ -101,7 +109,6 @@ public class TimerService extends Service {
     }
 
     public long elapsedTime(){
-
         return endTime > startTime ?
                 (endTime - startTime) / 1000 :
                 (System.currentTimeMillis() - startTime) / 1000;

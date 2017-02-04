@@ -75,12 +75,14 @@ public class TimeFormActivity extends AppCompatActivity {
             toTimeEditText.setText(dataItem.getEndTime());
         }
 
+
+
         fromTimeEditText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 String time[] = dataItem.getStartTime().split(":");
-                int hour = Integer.parseInt(time[0]);
-                int minute = Integer.parseInt(time[1]);
+                final int hour = Integer.parseInt(time[0]);
+                final int minute = Integer.parseInt(time[1]);
                 final int second = Integer.parseInt(time[2]);
 
                 TimePickerDialog timePickerDialog = new TimePickerDialog(TimeFormActivity.this, new TimePickerDialog.OnTimeSetListener() {
@@ -97,7 +99,19 @@ public class TimeFormActivity extends AppCompatActivity {
         toTimeEditText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                String time[] = dataItem.getEndTime().split(":");
+                final int hour = Integer.parseInt(time[0]);
+                final int minute = Integer.parseInt(time[1]);
+                final int second = Integer.parseInt(time[2]);
 
+                TimePickerDialog timePickerDialog = new TimePickerDialog(TimeFormActivity.this, new TimePickerDialog.OnTimeSetListener() {
+                    @Override
+                    public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+                        toTimeEditText.setText(hourOfDay + ":" + minute + ":" + second);
+                    }
+                },hour, minute,false);
+                timePickerDialog.setTitle("Select Time");
+                timePickerDialog.show();
             }
         });
     }
@@ -152,9 +166,9 @@ public class TimeFormActivity extends AppCompatActivity {
         Intent returnIntent = new Intent();
 
         returnItem.setTaskName(taskNameEditText.getText().toString());
+        returnItem.setStartTime(fromTimeEditText.getText().toString());
 
         if(editMode){
-            returnItem.setStartTime(fromTimeEditText.getText().toString());
             returnItem.setEndTime(toTimeEditText.getText().toString());
             returnItem.setDate(dataItem.getDate());
             returnItem.setDatabaseID(dataItem.getDatabaseID());
