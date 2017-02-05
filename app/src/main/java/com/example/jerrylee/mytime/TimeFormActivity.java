@@ -76,44 +76,45 @@ public class TimeFormActivity extends AppCompatActivity {
         }
 
 
+        if(editMode) {
+            fromTimeEditText.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    String time[] = dataItem.getStartTime().split(":");
+                    final int hour = Integer.parseInt(time[0]);
+                    final int minute = Integer.parseInt(time[1]);
+                    final int second = Integer.parseInt(time[2]);
 
-        fromTimeEditText.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String time[] = dataItem.getStartTime().split(":");
-                final int hour = Integer.parseInt(time[0]);
-                final int minute = Integer.parseInt(time[1]);
-                final int second = Integer.parseInt(time[2]);
+                    TimePickerDialog timePickerDialog = new TimePickerDialog(TimeFormActivity.this, new TimePickerDialog.OnTimeSetListener() {
+                        @Override
+                        public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+                            fromTimeEditText.setText(hourOfDay + ":" + minute + ":" + second);
+                        }
+                    }, hour, minute, false);
+                    timePickerDialog.setTitle("Select Time");
+                    timePickerDialog.show();
+                }
+            });
 
-                TimePickerDialog timePickerDialog = new TimePickerDialog(TimeFormActivity.this, new TimePickerDialog.OnTimeSetListener() {
-                    @Override
-                    public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-                        fromTimeEditText.setText(hourOfDay + ":" + minute + ":" + second);
-                    }
-                },hour, minute,false);
-                timePickerDialog.setTitle("Select Time");
-                timePickerDialog.show();
-            }
-        });
+            toTimeEditText.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    String time[] = dataItem.getEndTime().split(":");
+                    final int hour = Integer.parseInt(time[0]);
+                    final int minute = Integer.parseInt(time[1]);
+                    final int second = Integer.parseInt(time[2]);
 
-        toTimeEditText.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String time[] = dataItem.getEndTime().split(":");
-                final int hour = Integer.parseInt(time[0]);
-                final int minute = Integer.parseInt(time[1]);
-                final int second = Integer.parseInt(time[2]);
-
-                TimePickerDialog timePickerDialog = new TimePickerDialog(TimeFormActivity.this, new TimePickerDialog.OnTimeSetListener() {
-                    @Override
-                    public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-                        toTimeEditText.setText(hourOfDay + ":" + minute + ":" + second);
-                    }
-                },hour, minute,false);
-                timePickerDialog.setTitle("Select Time");
-                timePickerDialog.show();
-            }
-        });
+                    TimePickerDialog timePickerDialog = new TimePickerDialog(TimeFormActivity.this, new TimePickerDialog.OnTimeSetListener() {
+                        @Override
+                        public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+                            toTimeEditText.setText(hourOfDay + ":" + minute + ":" + second);
+                        }
+                    }, hour, minute, false);
+                    timePickerDialog.setTitle("Select Time");
+                    timePickerDialog.show();
+                }
+            });
+        }
     }
 
     @Override

@@ -8,6 +8,7 @@ import java.util.List;
 
 public class DataModel {
     private String sectionTitle;
+    private int totalTimeElapsed;
     private List<DataItem> itemList;
 
     public DataModel(){
@@ -24,6 +25,14 @@ public class DataModel {
 
     public void setSectionTitle(String sectionTitle){
         this.sectionTitle = sectionTitle;
+    }
+
+    public int getTotalTimeElapsed(){
+        return totalTimeElapsed;
+    }
+
+    public void setTotalTimeElapsed(int totalTimeElapsed){
+        this.totalTimeElapsed = totalTimeElapsed;
     }
 
     public List<DataItem> getItemList(){

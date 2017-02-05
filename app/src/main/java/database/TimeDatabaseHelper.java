@@ -98,6 +98,7 @@ public class TimeDatabaseHelper extends SQLiteOpenHelper {
             if(cursor.moveToFirst()){
                 dates.add(cursor.getString(cursor.getColumnIndex(dateColumn)));
                 dataModel.setSectionTitle(cursor.getString(cursor.getColumnIndex(dateColumn)));
+                int totalElapsedTime = 0;
                 do{
                     DataItem item = new DataItem();
                     item.setDatabaseID(cursor.getString(cursor.getColumnIndex(idColumn)));
@@ -107,12 +108,18 @@ public class TimeDatabaseHelper extends SQLiteOpenHelper {
                     item.setEndTime(cursor.getString(cursor.getColumnIndex(endTimeColumn)));
                     item.setDate(cursor.getString(cursor.getColumnIndex(dateColumn)));
 
+                    if(dataModel.getSectionTitle().equals(cursor.getString(cursor.getColumnIndex(dateColumn)))) {
+                        totalElapsedTime += cursor.getInt(cursor.getColumnIndex(timeElapsedColumn));
+                    }
+                    Log.v(TAG,cursor.getString(cursor.getColumnIndex(dateColumn))  + " totalElapsedTime: " + totalElapsedTime + " timeElapsedColumn: " + cursor.getInt(cursor.getColumnIndex(timeElapsedColumn)));
                     String date = cursor.getString(cursor.getColumnIndex(dateColumn));
                     if(!dates.contains(date)){
                         dates.add(date);
+                        dataModel.setTotalTimeElapsed(totalElapsedTime);
                         dataModel.setItemList(itemList);
                         dataModelList.add(dataModel);
                         dataModel = new DataModel();
+                        totalElapsedTime = 0;
                         dataModel.setSectionTitle(date);
                         itemList = new LinkedList<>();
                     }

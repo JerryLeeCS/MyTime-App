@@ -85,15 +85,16 @@ public class TimerService extends Service {
     public void startTimer(){
         if(!isTimerRunning){
             startTime = System.currentTimeMillis();
+
             SimpleDateFormat simpleDateFormat = new SimpleDateFormat("h:mm:ss");
             Date resultDate = new Date(startTime);
-            Toast.makeText(TimerService.this,"Test currentTimeMillis(): " +simpleDateFormat.format(resultDate),Toast.LENGTH_SHORT).show();
 
             isTimerRunning = true;
         }else{
             Log.e(TAG,"startTimer request for an already running timer");
         }
     }
+
 
     public void stopTimer(){
         if(isTimerRunning){

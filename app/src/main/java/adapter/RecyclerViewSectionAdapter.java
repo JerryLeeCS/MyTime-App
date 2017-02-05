@@ -16,6 +16,8 @@ import com.afollestad.sectionedrecyclerview.SectionedRecyclerViewAdapter;
 import com.example.jerrylee.mytime.R;
 import com.example.jerrylee.mytime.TimeFormActivity;
 
+import org.w3c.dom.Text;
+
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -54,8 +56,11 @@ public class RecyclerViewSectionAdapter extends SectionedRecyclerViewAdapter<Rec
     public void onBindHeaderViewHolder(RecyclerView.ViewHolder holder, int section) {
 
         String sectionName = allData.get(section).getSectionTitle();
+        int totalElapsedTime = allData.get(section).getTotalTimeElapsed();
         SectionViewHolder sectionViewHolder = (SectionViewHolder) holder;
         sectionViewHolder.sectionTitle.setText(sectionName);
+
+        sectionViewHolder.totalElapsedTimeView.setText(String.valueOf(totalElapsedTime));
     }
 
     @Override
@@ -67,7 +72,7 @@ public class RecyclerViewSectionAdapter extends SectionedRecyclerViewAdapter<Rec
         final ItemViewHolder itemViewHolder = (ItemViewHolder) holder;
 
         itemViewHolder.taskView.setText(taskName);
-        itemViewHolder.timeView.setText(formattedTimer(time));
+        itemViewHolder.timeView.setText(String.valueOf(time));
 
 
         itemViewHolder.taskView.setOnClickListener(new View.OnClickListener() {
@@ -80,7 +85,6 @@ public class RecyclerViewSectionAdapter extends SectionedRecyclerViewAdapter<Rec
                 intent.putExtra(TimeFormActivity.ITEM,item);
 
                 listFragment.startActivityForResult(intent, layout.ListFragment.REQUEST_FOR_EDIT);
-
             }
         });
     }
@@ -104,10 +108,12 @@ public class RecyclerViewSectionAdapter extends SectionedRecyclerViewAdapter<Rec
     public static class SectionViewHolder extends RecyclerView.ViewHolder {
 
         protected TextView sectionTitle;
+        protected  TextView totalElapsedTimeView;
 
         public SectionViewHolder(View itemView){
             super(itemView);
             sectionTitle = (TextView) itemView.findViewById(R.id.sectionTextView);
+            totalElapsedTimeView = (TextView) itemView.findViewById(R.id.totalElapsedTime);
         }
     }
 
