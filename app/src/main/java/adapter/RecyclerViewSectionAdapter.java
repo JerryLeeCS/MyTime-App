@@ -60,7 +60,7 @@ public class RecyclerViewSectionAdapter extends SectionedRecyclerViewAdapter<Rec
         SectionViewHolder sectionViewHolder = (SectionViewHolder) holder;
         sectionViewHolder.sectionTitle.setText(sectionName);
 
-        sectionViewHolder.totalElapsedTimeView.setText(String.valueOf(totalElapsedTime));
+        sectionViewHolder.totalElapsedTimeView.setText(formattedTimer(totalElapsedTime));
     }
 
     @Override
@@ -72,8 +72,7 @@ public class RecyclerViewSectionAdapter extends SectionedRecyclerViewAdapter<Rec
         final ItemViewHolder itemViewHolder = (ItemViewHolder) holder;
 
         itemViewHolder.taskView.setText(taskName);
-        itemViewHolder.timeView.setText(String.valueOf(time));
-
+        itemViewHolder.timeView.setText(formattedTimer(time));
 
         itemViewHolder.taskView.setOnClickListener(new View.OnClickListener() {
             @Override
