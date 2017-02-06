@@ -60,7 +60,7 @@ public class RecyclerViewSectionAdapter extends SectionedRecyclerViewAdapter<Rec
         SectionViewHolder sectionViewHolder = (SectionViewHolder) holder;
         sectionViewHolder.sectionTitle.setText(sectionName);
 
-        sectionViewHolder.totalElapsedTimeView.setText(formattedTimer(totalElapsedTime));
+        sectionViewHolder.totalElapsedTimeView.setText(formattedTotalTime(totalElapsedTime));
     }
 
     @Override
@@ -137,5 +137,13 @@ public class RecyclerViewSectionAdapter extends SectionedRecyclerViewAdapter<Rec
         SimpleDateFormat simpleDateFormat =  new SimpleDateFormat("HH:mm:ss");
         Date date = new Date(0,0,0,(int)hour,(int)minutes,(int)seconds);
         return simpleDateFormat.format(date);
+    }
+
+    private String formattedTotalTime(long time){
+        long hour = time/3600;
+        long minutes = (time%3600)/60;
+        long seconds = time - (hour * 3600 + minutes * 60);
+
+        return hour + " hours " + minutes + " minutes";
     }
 }
