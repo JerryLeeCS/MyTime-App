@@ -36,8 +36,6 @@ public class TimeDatabaseHelper extends SQLiteOpenHelper {
     private static final String endTimeColumn = "END_TIME";
     private static final String dateColumn = "DATE";
 
-
-
     public TimeDatabaseHelper(Context context) {
         super(context, DB_NAME, null, DB_VERSION);
     }

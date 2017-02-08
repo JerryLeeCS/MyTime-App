@@ -1,13 +1,11 @@
 package com.example.jerrylee.mytime;
 
 
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.os.PersistableBundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.support.v4.app.FragmentManager;
@@ -18,11 +16,9 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import java.util.List;
-
 
 import layout.ChronometerFragment;
-import layout.ExtraFragment;
+import layout.ChartFragment;
 import layout.ListFragment;
 import listener.onDataChangedListener;
 
@@ -130,7 +126,7 @@ public class MainActivity extends AppCompatActivity  implements onDataChangedLis
             fragments = new Fragment[getCount()];
             fragments[0] = ChronometerFragment.newInstance("1");
             fragments[1] = ListFragment.newInstance("2");
-            fragments[2] = ExtraFragment.newInstance("3");
+            fragments[2] = ChartFragment.newInstance("3");
         }
 
         @Override
