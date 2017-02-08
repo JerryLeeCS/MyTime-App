@@ -4,7 +4,9 @@ import android.graphics.Color;
 import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,12 +15,14 @@ import com.example.jerrylee.mytime.R;
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.data.BarData;
+import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
 import com.github.mikephil.charting.utils.ColorTemplate;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -31,6 +35,8 @@ import java.util.ArrayList;
 public class ChartFragment extends Fragment {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_SECTION = "section3";
+
+    private static final String TAG = ChartFragment.class.getSimpleName();
 
     private String section;
 
@@ -64,36 +70,29 @@ public class ChartFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        pieChart = (PieChart) container.findViewById(R.id.pieChart);
-        pieChart.getDescription().setEnabled(false);
-
-        Typeface typeface = Typeface.createFromAsset(getActivity().getAssets(), "OpenSans-Light.ttf");
-
-        pieChart.setCenterTextTypeface(typeface);
-        pieChart.setCenterTextSize(10f);
-        pieChart.setCenterTextTypeface(typeface);
-
-        pieChart.setHoleRadius(45f);
-        pieChart.setTransparentCircleRadius(50f);
-
-        Legend legend = pieChart.getLegend();
-        legend.setVerticalAlignment(Legend.LegendVerticalAlignment.TOP);
-        legend.setHorizontalAlignment(Legend.LegendHorizontalAlignment.RIGHT);
-        legend.setOrientation(Legend.LegendOrientation.VERTICAL);
-        legend.setDrawInside(false);
-
-
-
-        pieChart.setData(generatePieData());
 
         return inflater.inflate(R.layout.fragment_chart, container, false);
     }
 
-    protected PieData generatePieData(){
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        pieChart = (PieChart) getView().findViewById(R.id.pieChart);
+
+        if(pieChart != null) {
+            pieChart.setData(generatePieData());
+            pieChart.invalidate();
+        }else{
+            Log.v(TAG, "Pie Chart is null <>><><><<><><<>");
+        }
+    }
+
+    private PieData generatePieData(){
 
         int count = 4;
 
-        ArrayList<PieEntry> entries = new ArrayList<PieEntry>();
+        ArrayList<PieEntry> entries = new ArrayList<>();
 
         for(int i = 0; i < count; i++){
             entries.add(new PieEntry((float) ((Math.random() * 60) + 40), "Quarter " + (i+1)));
@@ -105,10 +104,7 @@ public class ChartFragment extends Fragment {
         ds1.setValueTextColor(Color.WHITE);
         ds1.setValueTextSize(12f);
 
-        Typeface typeface = Typeface.createFromAsset(getActivity().getAssets(), "OpenSans-Regular.ttf");
-
         PieData d = new PieData(ds1);
-        d.setValueTypeface(typeface);
 
         return d;
 
