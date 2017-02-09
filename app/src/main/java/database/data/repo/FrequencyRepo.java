@@ -21,7 +21,7 @@ public class FrequencyRepo {
     public static String createTable(){
         return "CREATE TABLE " + Frequency.TABLE + "("
                 + Frequency.TASK_COLUMN + " PRIMARY KEY ,"
-                + Frequency.FREQUENCY_COLUMN + " INTEGER )";
+                + Frequency.FREQUENCY_COLUMN + " INTEGER );";
     }
 
     public int insert(Frequency frequency){

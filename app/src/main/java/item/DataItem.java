@@ -47,11 +47,6 @@ public class DataItem implements Serializable {
         return elapsedTime;
     }
 
-    public String getElapsedTimeString(){
-        return String.valueOf(elapsedTime);
-    }
-
-
     public void setStartTime(String startTime){
         this.startTime = startTime;
     }
