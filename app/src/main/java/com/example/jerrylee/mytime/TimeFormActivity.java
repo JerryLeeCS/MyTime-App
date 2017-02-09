@@ -5,11 +5,13 @@ import android.content.Intent;
 import android.provider.ContactsContract;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutCompat;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
@@ -42,6 +44,7 @@ public class TimeFormActivity extends AppCompatActivity {
     private EditText taskNameEditText;
     private TextView fromTimeEditText;
     private TextView toTimeEditText;
+    private LinearLayout linearLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,7 +56,8 @@ public class TimeFormActivity extends AppCompatActivity {
         taskNameEditText = (EditText) findViewById(R.id.taskNameEditText);
         fromTimeEditText = (TextView) findViewById(R.id.fromTimeEditText);
         toTimeEditText = (TextView) findViewById(R.id.toTimeEditText);
-
+        linearLayout = (LinearLayout) findViewById(R.id.scrollLinearLayout);
+        
         Intent intent = getIntent();
 
         if(intent.getStringExtra(MODE).equals(START_MODE)){
@@ -74,7 +78,6 @@ public class TimeFormActivity extends AppCompatActivity {
             fromTimeEditText.setText(dataItem.getStartTime());
             toTimeEditText.setText(dataItem.getEndTime());
         }
-
 
         if(editMode) {
             fromTimeEditText.setOnClickListener(new View.OnClickListener() {
