@@ -2,28 +2,21 @@ package com.example.jerrylee.mytime;
 
 import android.app.TimePickerDialog;
 import android.content.Intent;
-import android.provider.ContactsContract;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.LinearLayoutCompat;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.TimePicker;
-import android.widget.Toast;
-
-import com.example.jerrylee.mytime.R;
 
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
-import item.DataItem;
+import database.data.model.TaskInfo;
 
 public class TimeFormActivity extends AppCompatActivity {
 
@@ -37,7 +30,7 @@ public class TimeFormActivity extends AppCompatActivity {
 
     public static final String TASK_NAME = "TASK_NAME";
 
-    private DataItem dataItem;
+    private TaskInfo dataItem;
 
     private boolean editMode;
 
@@ -66,7 +59,7 @@ public class TimeFormActivity extends AppCompatActivity {
             editMode = true;
         }
 
-        dataItem = (DataItem)intent.getSerializableExtra(ITEM);
+        dataItem = (TaskInfo) intent.getSerializableExtra(ITEM);
 
         if(!editMode){
             editMode = false;
@@ -165,7 +158,7 @@ public class TimeFormActivity extends AppCompatActivity {
 
     private void putResult(){
         Log.v(TAG,"putResult....");
-        DataItem returnItem = new DataItem();
+        TaskInfo returnItem = new TaskInfo();
 
         Intent returnIntent = new Intent();
 
@@ -175,7 +168,7 @@ public class TimeFormActivity extends AppCompatActivity {
         if(editMode){
             returnItem.setEndTime(toTimeEditText.getText().toString());
             returnItem.setDate(dataItem.getDate());
-            returnItem.setDatabaseID(dataItem.getDatabaseID());
+            returnItem.setID(dataItem.getID());
             returnItem.setElapsedTime(getValidElapsedTime());
         }
 

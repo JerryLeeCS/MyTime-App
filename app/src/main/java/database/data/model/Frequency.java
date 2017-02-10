@@ -11,9 +11,11 @@ public class Frequency {
 
     public static final String TASK_COLUMN = "TASK";
     public static final String FREQUENCY_COLUMN = "FREQUENCY";
+    public static final String TOTAL_TIME_COLUMN = "TOTAL_TIME";
 
     private String taskName;
     private int frequency;
+    private long totalTime;
 
     public String getTaskName(){
         return taskName;
@@ -29,6 +31,14 @@ public class Frequency {
 
     public void setFrequency(int frequency){
         this.frequency = frequency;
+    }
+
+    public long getTotalTime(){
+        return totalTime;
+    }
+
+    public void setTotalTime(long totalTime){
+        this.totalTime = totalTime;
     }
 
 }

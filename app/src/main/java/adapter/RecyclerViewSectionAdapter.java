@@ -1,12 +1,7 @@
 package adapter;
 
-import android.app.Activity;
-import android.app.ListFragment;
-import android.content.Context;
 import android.content.Intent;
-import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,13 +11,11 @@ import com.afollestad.sectionedrecyclerview.SectionedRecyclerViewAdapter;
 import com.example.jerrylee.mytime.R;
 import com.example.jerrylee.mytime.TimeFormActivity;
 
-import org.w3c.dom.Text;
-
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
-import item.DataItem;
+import database.data.model.TaskInfo;
 import item.DataModel;
 
 
@@ -65,7 +58,7 @@ public class RecyclerViewSectionAdapter extends SectionedRecyclerViewAdapter<Rec
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, final int section, final int relativePosition, final int absolutePosition) {
-        final List<DataItem> itemsInSection = allData.get(section).getItemList();
+        final List<TaskInfo> itemsInSection = allData.get(section).getItemList();
         String taskName = itemsInSection.get(relativePosition).getTaskName();
         long time = itemsInSection.get(relativePosition).getElapsedTime();
 
@@ -78,7 +71,7 @@ public class RecyclerViewSectionAdapter extends SectionedRecyclerViewAdapter<Rec
             @Override
             public void onClick(View v) {
 
-                DataItem item = itemsInSection.get(relativePosition);
+                TaskInfo item = itemsInSection.get(relativePosition);
                 Intent intent = new Intent(itemViewHolder.taskView.getContext(), TimeFormActivity.class);
                 intent.putExtra(TimeFormActivity.MODE,TimeFormActivity.EDIT_MODE);
                 intent.putExtra(TimeFormActivity.ITEM,item);
@@ -125,7 +118,6 @@ public class RecyclerViewSectionAdapter extends SectionedRecyclerViewAdapter<Rec
             this.taskView = (TextView) itemView.findViewById(R.id.taskNameView);
             this.timeView = (TextView) itemView.findViewById(R.id.timeElapsedView);
         }
-
     }
 
 

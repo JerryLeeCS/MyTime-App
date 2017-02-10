@@ -1,10 +1,12 @@
 package database.data.model;
 
+import java.io.Serializable;
+
 /**
  * Created by jerrylee on 2/9/17.
  */
 
-public class TaskInfo {
+public class TaskInfo implements Serializable{
 
     public static final String TAG = TaskInfo.class.getSimpleName();
     public static final String TABLE = "TASK_INFO_TABLE";
@@ -69,5 +71,13 @@ public class TaskInfo {
 
     public void setDate(String date){
         this.date = date;
+    }
+
+    public Frequency getTaskAndTime(){
+        Frequency frequency = new Frequency();
+        frequency.setTaskName(taskName);
+        frequency.setTotalTime(elapsedTime);
+
+        return frequency;
     }
 }

@@ -13,7 +13,6 @@ import java.util.List;
 
 import database.TimeDatabaseHelper;
 import database.data.model.TaskInfo;
-import item.DataItem;
 import item.DataModel;
 
 /**
@@ -70,7 +69,7 @@ public class TaskInfoRepo {
 
         ArrayList<DataModel> dataModelList = new ArrayList<DataModel>();
         DataModel dataModel = new DataModel();
-        LinkedList<DataItem> itemList = new LinkedList<>();
+        LinkedList<TaskInfo> itemList = new LinkedList<>();
 
         Log.v(TAG,"on getDataModelList...");
 
@@ -92,10 +91,10 @@ public class TaskInfoRepo {
                 dataModel.setSectionTitle(cursor.getString(cursor.getColumnIndex(TaskInfo.DATE_COLUMN)));
                 int totalElapsedTime = 0;
                 do{
-                    DataItem item = new DataItem();
-                    item.setDatabaseID(cursor.getString(cursor.getColumnIndex(TaskInfo.ID_COLUMN)));
+                    TaskInfo item = new TaskInfo();
+                    item.setID(cursor.getString(cursor.getColumnIndex(TaskInfo.ID_COLUMN)));
                     item.setTaskName(cursor.getString(cursor.getColumnIndex(TaskInfo.TASK_COLUMN)));
-                    item.setElapsedTime(cursor.getString(cursor.getColumnIndex(TaskInfo.TIME_ELAPSED_COLUMN)));
+                    item.setElapsedTime(Long.parseLong(cursor.getString(cursor.getColumnIndex(TaskInfo.TIME_ELAPSED_COLUMN))));
                     item.setStartTime(cursor.getString(cursor.getColumnIndex(TaskInfo.START_TIME_COLUMN)));
                     item.setEndTime(cursor.getString(cursor.getColumnIndex(TaskInfo.END_TIME_COLUMN)));
                     item.setDate(cursor.getString(cursor.getColumnIndex(TaskInfo.DATE_COLUMN)));
@@ -114,6 +113,7 @@ public class TaskInfoRepo {
                     totalElapsedTime += cursor.getInt(cursor.getColumnIndex(TaskInfo.TIME_ELAPSED_COLUMN));
                     itemList.add(item);
                 }while(cursor.moveToNext());
+                timeDatabaseHelper.close();
             }
         }catch (Exception e){
             Log.v(TAG, "Failed to getDataModelList...");
@@ -127,6 +127,30 @@ public class TaskInfoRepo {
         return dataModelList;
     }
 
+    public void updateContent(TaskInfo dataItem){
+        Log.v(TAG,"updateContent...");
+        ContentValues values = new ContentValues();
+        values.put(TaskInfo.TASK_COLUMN, dataItem.getTaskName());
+        values.put(TaskInfo.TIME_ELAPSED_COLUMN, dataItem.getElapsedTime());
+        values.put(TaskInfo.START_TIME_COLUMN, dataItem.getStartTime());
+        values.put(TaskInfo.END_TIME_COLUMN, dataItem.getEndTime());
+        values.put(TaskInfo.DATE_COLUMN, dataItem.getDate());
+
+        String where = TaskInfo.ID_COLUMN + " LIKE " + dataItem.getID();
+
+        TimeDatabaseHelper timeDatabaseHelper = new TimeDatabaseHelper(context);
+
+        try {
+
+            Log.v(TAG,String.valueOf(timeDatabaseHelper.getWritableDatabase().update(TaskInfo.TABLE,values,where,null)));
+            timeDatabaseHelper.getWritableDatabase().update(TaskInfo.TABLE,values,where,null);
+
+        }catch (Exception e){
+            Log.v(TAG,e.toString());
+        }finally {
+            timeDatabaseHelper.close();
+        }
+    }
 
     private String getLastMondayDate(){
         Calendar calendar = Calendar.getInstance();

@@ -2,6 +2,8 @@ package item;
 
 import java.util.List;
 
+import database.data.model.TaskInfo;
+
 /**
  * Created by Jerry on 1/12/2017.
  */
@@ -9,12 +11,12 @@ import java.util.List;
 public class DataModel {
     private String sectionTitle;
     private int totalTimeElapsed;
-    private List<DataItem> itemList;
+    private List<TaskInfo> itemList;
 
     public DataModel(){
     }
 
-    public DataModel(String sectionTitle, List<DataItem> itemList){
+    public DataModel(String sectionTitle, List<TaskInfo> itemList){
         this.sectionTitle = sectionTitle;
         this.itemList = itemList;
     }
@@ -35,11 +37,11 @@ public class DataModel {
         this.totalTimeElapsed = totalTimeElapsed;
     }
 
-    public List<DataItem> getItemList(){
+    public List<TaskInfo> getItemList(){
         return itemList;
     }
 
-    public void setItemList(List<DataItem> itemList){
+    public void setItemList(List<TaskInfo> itemList){
         this.itemList = itemList;
     }
 }

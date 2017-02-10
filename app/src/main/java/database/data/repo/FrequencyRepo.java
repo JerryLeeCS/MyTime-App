@@ -21,7 +21,8 @@ public class FrequencyRepo {
     public static String createTable(){
         return "CREATE TABLE " + Frequency.TABLE + "("
                 + Frequency.TASK_COLUMN + " PRIMARY KEY ,"
-                + Frequency.FREQUENCY_COLUMN + " INTEGER );";
+                + Frequency.FREQUENCY_COLUMN + " INTEGER,"
+                + Frequency.TOTAL_TIME_COLUMN +" INTEGER );";
     }
 
     public int insert(Frequency frequency){
@@ -31,6 +32,7 @@ public class FrequencyRepo {
         ContentValues contentValues = new ContentValues();
         contentValues.put(Frequency.TASK_COLUMN, frequency.getTaskName());
         contentValues.put(Frequency.FREQUENCY_COLUMN, frequency.getFrequency());
+        contentValues.put(Frequency.TOTAL_TIME_COLUMN, frequency.getTotalTime());
 
         majorInt = (int) timeDatabaseHelper.getWritableDatabase().insert(Frequency.TABLE, null,contentValues);
 

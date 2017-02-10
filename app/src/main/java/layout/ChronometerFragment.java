@@ -27,8 +27,8 @@ import java.lang.ref.WeakReference;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import database.TimeDatabaseHelper;
-import item.DataItem;
+import database.data.model.TaskInfo;
+import database.data.repo.TaskInfoRepo;
 import listener.onDataChangedListener;
 import service.TimerService;
 
@@ -65,7 +65,7 @@ public class ChronometerFragment extends Fragment {
 
     private onDataChangedListener dataChangedListener;
 
-    DataItem insertItem;
+    TaskInfo insertItem;
 
     private static final int TASK_NAME_REQUEST = 1;
 
@@ -152,7 +152,7 @@ public class ChronometerFragment extends Fragment {
         taskNameEditText = (TextView) getView().findViewById(R.id.taskNameTextView);
 
 
-        final TimeDatabaseHelper helper = new TimeDatabaseHelper(getContext());
+        final TaskInfoRepo taskInfoRepo = new TaskInfoRepo(getContext());
         Log.v(TAG,"onViewCreated...");
         timerButton.setOnClickListener(new View.OnClickListener(){
 
@@ -172,7 +172,7 @@ public class ChronometerFragment extends Fragment {
 
                     setEndInsertItem();
 
-                    helper.insertContent(insertItem);
+                    taskInfoRepo.insert(insertItem);
                     dataChangedListener.onDataInserted();
 
                     taskNameEditText.setText("");
@@ -200,7 +200,7 @@ public class ChronometerFragment extends Fragment {
 
         Log.v(TAG,"onActivityCreated...");
         if(savedInstanceState != null){
-            insertItem = (DataItem) savedInstanceState.getSerializable("insertItem");
+            insertItem = (TaskInfo) savedInstanceState.getSerializable("insertItem");
 
             Log.v(TAG,"on savedInstanceState Restored...");
             Toast.makeText(getContext(),"savedInstanceState is restored...",Toast.LENGTH_LONG).show();
@@ -209,7 +209,7 @@ public class ChronometerFragment extends Fragment {
             if(insertItem != null){
 
             }else{
-                insertItem = new DataItem();
+                insertItem = new TaskInfo();
             }
         }
     }
@@ -270,7 +270,7 @@ public class ChronometerFragment extends Fragment {
     }
 
     private void onStartTimeForm(){
-        DataItem dataItem = new DataItem();
+        TaskInfo dataItem = new TaskInfo();
         dataItem.setStartTime(getCurrentTime());
 
         Intent intent = new Intent(getActivity(), TimeFormActivity.class);
@@ -286,7 +286,7 @@ public class ChronometerFragment extends Fragment {
         Log.v(TAG,"onActivityResult...");
         if(requestCode == TASK_NAME_REQUEST && data != null){
             if(resultCode == RESULT_OK){
-                DataItem dataItem = (DataItem)data.getSerializableExtra(TimeFormActivity.ITEM);
+                TaskInfo dataItem = (TaskInfo) data.getSerializableExtra(TimeFormActivity.ITEM);
 
                 taskNameEditText.setText(dataItem.getTaskName());
                 timerService.setTaskName(dataItem.getTaskName());
