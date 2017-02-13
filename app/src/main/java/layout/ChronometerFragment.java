@@ -137,7 +137,6 @@ public class ChronometerFragment extends Fragment {
         insertItem.setTaskName(taskName);
 
         outState.putSerializable("insertItem", (Serializable) insertItem);
-
     }
 
     @Override
@@ -148,7 +147,6 @@ public class ChronometerFragment extends Fragment {
         timerButton = (Button) getView().findViewById(R.id.start_button);
         timerTextView = (TextView) getView().findViewById(R.id.timer_text_view);
         taskNameEditText = (TextView) getView().findViewById(R.id.taskNameTextView);
-
 
         final TimeDatabaseHelper timeDatabaseHelper = new TimeDatabaseHelper(getContext());
 

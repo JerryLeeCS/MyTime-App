@@ -161,7 +161,6 @@ public class TimeDatabaseHelper extends SQLiteOpenHelper {
                     taskList.add(cursor.getString(cursor.getColumnIndex(Frequency.TASK_COLUMN)));
                 }while(cursor.moveToNext());
             }
-
         }catch (Exception e){
             Log.e(TAG,e.toString());
         }finally {

@@ -2,11 +2,13 @@ package com.example.jerrylee.mytime;
 
 import android.app.TimePickerDialog;
 import android.content.Intent;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -14,8 +16,10 @@ import android.widget.TimePicker;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
+import database.TimeDatabaseHelper;
 import item.TaskInfo;
 
 public class TimeFormActivity extends AppCompatActivity {
@@ -37,7 +41,7 @@ public class TimeFormActivity extends AppCompatActivity {
     private EditText taskNameEditText;
     private TextView fromTimeEditText;
     private TextView toTimeEditText;
-    private LinearLayout linearLayout;
+    private LinearLayout buttonLinearLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,8 +53,8 @@ public class TimeFormActivity extends AppCompatActivity {
         taskNameEditText = (EditText) findViewById(R.id.taskNameEditText);
         fromTimeEditText = (TextView) findViewById(R.id.fromTimeEditText);
         toTimeEditText = (TextView) findViewById(R.id.toTimeEditText);
-        linearLayout = (LinearLayout) findViewById(R.id.scrollLinearLayout);
-        
+        buttonLinearLayout = (LinearLayout) findViewById(R.id.scrollLinearLayout);
+
         Intent intent = getIntent();
 
         if(intent.getStringExtra(MODE).equals(START_MODE)){
@@ -62,11 +66,10 @@ public class TimeFormActivity extends AppCompatActivity {
         dataItem = (TaskInfo) intent.getSerializableExtra(ITEM);
 
         if(!editMode){
-            editMode = false;
             toTimeEditText.setVisibility(View.INVISIBLE);
             fromTimeEditText.setText(dataItem.getStartTime());
-        }else if(intent.getStringExtra(MODE).equals(EDIT_MODE)){
-            editMode = true;
+            setUpButtonLinearLayout();
+        }else{
             taskNameEditText.setText(dataItem.getTaskName());
             fromTimeEditText.setText(dataItem.getStartTime());
             toTimeEditText.setText(dataItem.getEndTime());
@@ -191,6 +194,27 @@ public class TimeFormActivity extends AppCompatActivity {
         }
 
         return 0;
+    }
+
+    private void setUpButtonLinearLayout(){
+        TimeDatabaseHelper helper = new TimeDatabaseHelper(this);
+        final List<String> taskList = helper.getMostFrequentTaskList();
+
+        for(int i = 0; i < taskList.size();i++){
+            Button button = new Button(this);
+            final String task = taskList.get(i);
+            button.setText(task);
+
+            button.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    taskNameEditText.setText(task);
+                }
+            });
+
+            buttonLinearLayout.addView(button);
+        }
+
     }
 }
 
