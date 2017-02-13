@@ -136,6 +136,38 @@ public class TimeDatabaseHelper extends SQLiteOpenHelper {
         }
     }
 
+    public List<String> getMostFrequentTaskList(){
+        Log.v(TAG,"getMostFrequentTaskList....");
+        LinkedList<String> taskList = new LinkedList<>();
+
+        Cursor cursor = null;
+
+        try{
+            String[] columns = new String[]{Frequency.TASK_COLUMN};
+
+            cursor = getReadableDatabase().query(
+                    Frequency.TABLE,
+                    columns,
+                    null,
+                    null,
+                    null,
+                    null,
+                    Frequency.FREQUENCY_COLUMN + " DESC",
+                    "7"
+            );
+
+            if(cursor.moveToFirst()){
+                do{
+                    taskList.add(cursor.getString(cursor.getColumnIndex(Frequency.TASK_COLUMN)));
+                }while(cursor.moveToNext());
+            }
+
+        }catch (Exception e){
+            Log.e(TAG,e.toString());
+        }finally {
+            return taskList;
+        }
+    }
 
     public int insertTaskInfo(TaskInfo taskInfo){
         int majorId;
