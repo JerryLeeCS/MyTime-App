@@ -2,8 +2,6 @@ package item;
 
 import java.util.List;
 
-import database.data.model.TaskInfo;
-
 /**
  * Created by Jerry on 1/12/2017.
  */

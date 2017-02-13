@@ -1,4 +1,4 @@
-package database.data.model;
+package item;
 
 import java.io.Serializable;
 
@@ -76,7 +76,6 @@ public class TaskInfo implements Serializable{
     public Frequency getTaskAndTime(){
         Frequency frequency = new Frequency();
         frequency.setTaskName(taskName);
-        frequency.setTotalTime(elapsedTime);
 
         return frequency;
     }

@@ -27,8 +27,8 @@ import java.lang.ref.WeakReference;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import database.data.model.TaskInfo;
-import database.data.repo.TaskInfoRepo;
+import database.TimeDatabaseHelper;
+import item.TaskInfo;
 import listener.onDataChangedListener;
 import service.TimerService;
 
@@ -111,8 +111,6 @@ public class ChronometerFragment extends Fragment {
         return inflater.inflate(R.layout.fragment_chronometer, container, false);
     }
 
-
-
     @Override
     public void onStart() {
         super.onStart();
@@ -152,7 +150,8 @@ public class ChronometerFragment extends Fragment {
         taskNameEditText = (TextView) getView().findViewById(R.id.taskNameTextView);
 
 
-        final TaskInfoRepo taskInfoRepo = new TaskInfoRepo(getContext());
+        final TimeDatabaseHelper timeDatabaseHelper = new TimeDatabaseHelper(getContext());
+
         Log.v(TAG,"onViewCreated...");
         timerButton.setOnClickListener(new View.OnClickListener(){
 
@@ -172,7 +171,9 @@ public class ChronometerFragment extends Fragment {
 
                     setEndInsertItem();
 
-                    taskInfoRepo.insert(insertItem);
+                    timeDatabaseHelper.insertTaskInfo(insertItem);
+                    timeDatabaseHelper.addFrequency(insertItem.getTaskAndTime());
+
                     dataChangedListener.onDataInserted();
 
                     taskNameEditText.setText("");

@@ -16,7 +16,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
-import database.data.model.TaskInfo;
+import item.TaskInfo;
 
 public class TimeFormActivity extends AppCompatActivity {
 

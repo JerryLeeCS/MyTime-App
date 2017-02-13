@@ -18,8 +18,8 @@ import com.example.jerrylee.mytime.R;
 import com.example.jerrylee.mytime.TimeFormActivity;
 
 import adapter.RecyclerViewSectionAdapter;
-import database.data.model.TaskInfo;
-import database.data.repo.TaskInfoRepo;
+import database.TimeDatabaseHelper;
+import item.TaskInfo;
 import listener.onDataChangedListener;
 
 import static android.app.Activity.RESULT_OK;
@@ -128,10 +128,10 @@ public class ListFragment extends Fragment {
         Log.v(TAG,"onActivityResult...");
         if(requestCode == ListFragment.REQUEST_FOR_EDIT && data != null){
             if(resultCode == RESULT_OK){
-                TaskInfoRepo taskInfoRepo = new TaskInfoRepo(getContext());
+                TimeDatabaseHelper timeDatabaseHelper = new TimeDatabaseHelper(getContext());
                 TaskInfo dataItem = (TaskInfo) data.getSerializableExtra(TimeFormActivity.ITEM);
 
-                taskInfoRepo.updateContent(dataItem);
+                timeDatabaseHelper.updateTaskInfo(dataItem);
                 dataChangedListener.onDataInserted();
             }
         }
@@ -155,9 +155,9 @@ public class ListFragment extends Fragment {
 
     public void refreshAdapter(){
         Log.v(TAG,"setmRecyclerView....");
-        TaskInfoRepo taskInfoRepo = new TaskInfoRepo(getContext());
+        TimeDatabaseHelper timeDatabaseHelper = new TimeDatabaseHelper(getContext());
 
-        mAdapter = new RecyclerViewSectionAdapter(taskInfoRepo.getDataModelList(),this);
+        mAdapter = new RecyclerViewSectionAdapter(timeDatabaseHelper.getDataModelListTaskInfo(),this);
 
         mRecyclerView.setAdapter(mAdapter);
 
@@ -166,9 +166,9 @@ public class ListFragment extends Fragment {
 
     private void setUpRecyclerView(){
         Log.v(TAG,"on setUpRecyclerView...");
-        TaskInfoRepo taskInfoRepo = new TaskInfoRepo(getContext());
+        TimeDatabaseHelper timeDatabaseHelper = new TimeDatabaseHelper(getContext());
 
-        mAdapter = new RecyclerViewSectionAdapter(taskInfoRepo.getDataModelList(),this);
+        mAdapter = new RecyclerViewSectionAdapter(timeDatabaseHelper.getDataModelListTaskInfo(),this);
 
         mLayoutManager = new LinearLayoutManager(getActivity());
 
