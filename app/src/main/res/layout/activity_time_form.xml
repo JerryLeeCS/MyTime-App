@@ -3,6 +3,10 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="40dp" />
+
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -24,6 +28,10 @@
 
         </LinearLayout>
     </HorizontalScrollView>
+
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="40dp" />
 
     <LinearLayout
         android:orientation="horizontal"
