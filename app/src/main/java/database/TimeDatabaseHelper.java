@@ -16,6 +16,7 @@ import java.util.List;
 import item.Frequency;
 import item.TaskInfo;
 import item.DataModel;
+import item.TotalTime;
 
 /**
  * Created by jerrylee on 12/26/16.
@@ -30,7 +31,7 @@ public class TimeDatabaseHelper extends SQLiteOpenHelper {
 
     private static final String createFrequencyTable =
             "CREATE TABLE " + Frequency.TABLE + "("
-            + Frequency.TASK_ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
+            + Frequency.ID_COLUMN + " INTEGER PRIMARY KEY AUTOINCREMENT,"
             + Frequency.TASK_COLUMN + " TEXT,"
             + Frequency.FREQUENCY_COLUMN + " INTEGER);";
 
@@ -42,6 +43,13 @@ public class TimeDatabaseHelper extends SQLiteOpenHelper {
                     + TaskInfo.START_TIME_COLUMN + " TEXT, "
                     + TaskInfo.END_TIME_COLUMN + " TEXT, "
                     + TaskInfo.DATE_COLUMN + " TEXT);";
+
+    private static final String createTotalTimeTable =
+            "CREATE TABLE " + TotalTime.TABLE + " ("
+            + TotalTime.ID_COLUMN + " INTEGER PRIMARY KEY AUTOINCREMENT,"
+            + TotalTime.TASK_COLUMN + " TEXT, "
+            + TotalTime.TIME_COLUMN + " INTEGER, "
+            + TotalTime.DATE_COLUMN + " TEXT);";
 
 
     public TimeDatabaseHelper(Context context) {
@@ -55,6 +63,7 @@ public class TimeDatabaseHelper extends SQLiteOpenHelper {
 
         db.execSQL(createFrequencyTable);
         db.execSQL(createTaskInfoTable);
+        db.execSQL(createTotalTimeTable);
     }
 
     @Override
@@ -63,21 +72,23 @@ public class TimeDatabaseHelper extends SQLiteOpenHelper {
 
         db.execSQL("DROP TABLE IF EXISTS " + Frequency.TABLE);
         db.execSQL("DROP TABLE IF EXISTS " + TaskInfo.TABLE);
+        db.execSQL("DROP TABLE IF EXISTS " + TotalTime.TABLE);
         onCreate(db);
     }
 
     public void addFrequency(Frequency frequency){
         Log.v(TAG,"addFrequency...");
 
-        if(getFrequency(frequency) == 0) {
+        int frequencyOfTask = getFrequency(frequency);
+        if(frequencyOfTask == 0) {
             insertFrequency(frequency);
         }else{
-            updateFrequency(frequency, getFrequency(frequency));
+            updateFrequency(frequency, frequencyOfTask);
         }
     }
 
     private void insertFrequency(Frequency frequency){
-        Log.v(TAG, "insert...");
+        Log.v(TAG, "insertFrequency...");
 
         ContentValues contentValues = new ContentValues();
         contentValues.put(Frequency.TASK_COLUMN, frequency.getTaskName());
@@ -272,6 +283,78 @@ public class TimeDatabaseHelper extends SQLiteOpenHelper {
         }finally {
             close();
         }
+    }
+
+    public void addTotalTime(TotalTime totalTime){
+        Log.v(TAG,"addTotalTime...");
+
+        int totalTimeOfTask = getTotalTime(totalTime);
+        if(totalTimeOfTask == 0){
+            insertTotalTime(totalTime);
+        }else {
+            updateTotalTime(totalTime,totalTimeOfTask);
+        }
+    }
+
+    private void insertTotalTime(TotalTime totalTime){
+        Log.v(TAG,"addTotalTime...");
+
+        ContentValues values = new ContentValues();
+        values.put(TotalTime.TIME_COLUMN, totalTime.getTotalTime());
+        values.put(TotalTime.TASK_COLUMN, totalTime.getTask());
+        values.put(TotalTime.DATE_COLUMN, totalTime.getDate());
+
+        getWritableDatabase().insert(TotalTime.TABLE, null, values);
+        close();
+    }
+
+    private void updateTotalTime(TotalTime totalTime, int totalTimeOfTask){
+        Log.v(TAG, "updateTotalTime...");
+
+        ContentValues values = new ContentValues();
+        values.put(TotalTime.TIME_COLUMN, totalTimeOfTask + totalTime.getTotalTime());
+
+        String selection = TotalTime.TASK_COLUMN + " LIKE ? AND" + TotalTime.DATE_COLUMN + " LIKE ?";
+        String[] selectionArgs = {totalTime.getTask(), totalTime.getDate()};
+
+        getWritableDatabase().update(
+                TotalTime.TABLE,
+                values,
+                selection,
+                selectionArgs
+        );
+
+        close();
+    }
+
+    private int getTotalTime(TotalTime totalTime){
+        Log.v(TAG, "getTotalTime...");
+
+        String[] projection = {
+                TotalTime.TIME_COLUMN
+        };
+
+        String selection = TotalTime.TASK_COLUMN + " = ? AND " + TotalTime.DATE_COLUMN + " = ?";
+        String[] selectionArgs = {totalTime.getTask(), totalTime.getDate()};
+
+        Cursor cursor  =  getReadableDatabase().query(
+                TotalTime.TABLE,
+                projection,
+                selection,
+                selectionArgs,
+                null,
+                null,
+                null,
+                null
+        );
+
+        if(cursor.getCount() > 0 ){
+            cursor.moveToFirst();
+            return cursor.getInt(cursor.getColumnIndex(TotalTime.TIME_COLUMN));
+        }else{
+            return 0;
+        }
+
     }
 
     private String getLastMondayDate(){

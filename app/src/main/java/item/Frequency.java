@@ -9,7 +9,7 @@ public class Frequency {
     public static final String TAG = Frequency.class.getSimpleName();
     public static final String TABLE = "FREQUENCY_TABLE";
 
-    public static final String TASK_ID = "ID";
+    public static final String ID_COLUMN = "ID";
     public static final String TASK_COLUMN = "TASK_COL";
     public static final String FREQUENCY_COLUMN = "FREQUENCY_COL";
 
