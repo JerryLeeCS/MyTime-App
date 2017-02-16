@@ -314,7 +314,7 @@ public class TimeDatabaseHelper extends SQLiteOpenHelper {
         ContentValues values = new ContentValues();
         values.put(TotalTime.TIME_COLUMN, totalTimeOfTask + totalTime.getTotalTime());
 
-        String selection = TotalTime.TASK_COLUMN + " LIKE ? AND" + TotalTime.DATE_COLUMN + " LIKE ?";
+        String selection = TotalTime.TASK_COLUMN + " LIKE ? AND " + TotalTime.DATE_COLUMN + " LIKE ?";
         String[] selectionArgs = {totalTime.getTask(), totalTime.getDate()};
 
         getWritableDatabase().update(

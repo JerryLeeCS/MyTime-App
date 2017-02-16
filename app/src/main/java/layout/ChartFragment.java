@@ -48,8 +48,6 @@ public class ChartFragment extends Fragment {
         // Required empty public constructor
     }
 
-
-
     public static ChartFragment newInstance(String param1) {
         ChartFragment fragment = new ChartFragment();
         Bundle args = new Bundle();

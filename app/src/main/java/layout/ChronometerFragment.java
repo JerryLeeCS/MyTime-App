@@ -171,6 +171,7 @@ public class ChronometerFragment extends Fragment {
 
                     timeDatabaseHelper.insertTaskInfo(insertItem);
                     timeDatabaseHelper.addFrequency(insertItem.getTaskAndTime());
+                    timeDatabaseHelper.addTotalTime(insertItem.getTotalTime());
 
                     dataChangedListener.onDataInserted();
 

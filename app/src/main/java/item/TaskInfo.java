@@ -79,4 +79,13 @@ public class TaskInfo implements Serializable{
 
         return frequency;
     }
+
+    public TotalTime getTotalTime(){
+        TotalTime totalTime = new TotalTime();
+        totalTime.setDate(date);
+        totalTime.setTask(taskName);
+        totalTime.setTotalTime(elapsedTime);
+
+        return totalTime;
+    }
 }

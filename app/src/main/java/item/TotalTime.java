@@ -15,7 +15,7 @@ public class TotalTime {
 
     private int timeID;
     private String task;
-    private String totalTime;
+    private long totalTime;
     private String date;
 
     public void setTimeID(int timeID){
@@ -34,11 +34,11 @@ public class TotalTime {
         return task;
     }
 
-    public void setTotalTime(String totalTime){
+    public void setTotalTime(long totalTime){
         this.totalTime = totalTime;
     }
 
-    public String getTotalTime(){
+    public long getTotalTime(){
         return totalTime;
     }
 
