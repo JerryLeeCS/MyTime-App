@@ -137,12 +137,17 @@ public class ListFragment extends Fragment {
 
                 if(changedType == TimeFormActivity.DataChanged.TASK_AND_ELAPSED_TIME_CHANGED){
                     Toast.makeText(getContext(), "task and elapsed time changed....", Toast.LENGTH_SHORT).show();
+                    //update Frequency Table based on the old Taskname and new Taskname.
+                    //update TotalTime based on the (old time && old taskname) and (new time && new taskname);
                 }else if(changedType == TimeFormActivity.DataChanged.TASK_CHANGED){
                     Toast.makeText(getContext(), "task changed...", Toast.LENGTH_SHORT).show();
+                    //update the Frequency Table based on the old taskname and new taskname.
+                    //update the TotalTime Table based on the old taskname and new taskname.
                 }else if(changedType == TimeFormActivity.DataChanged.ELAPSED_CHANGED){
                     Toast.makeText(getContext(), "elapsed time changed...", Toast.LENGTH_SHORT).show();
+                    //update the TotalTime Table based on the elasped time difference.
                 }
-
+                //update TaskInfo Table based on the dataItem
 
 
                 timeDatabaseHelper.updateTaskInfo(dataItem);

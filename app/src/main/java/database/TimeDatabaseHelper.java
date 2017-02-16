@@ -76,14 +76,23 @@ public class TimeDatabaseHelper extends SQLiteOpenHelper {
         onCreate(db);
     }
 
-    public void addFrequency(Frequency frequency){
-        Log.v(TAG,"addFrequency...");
+    public void addOneFrequency(Frequency frequency){
+        Log.v(TAG,"addOneFrequency...");
 
         int frequencyOfTask = getFrequency(frequency);
         if(frequencyOfTask == 0) {
             insertFrequency(frequency);
         }else{
-            updateFrequency(frequency, frequencyOfTask);
+            updateFrequency(frequency, frequencyOfTask + 1);
+        }
+    }
+
+    public void removeOneFrequency(Frequency frequency){
+        Log.v(TAG,"removeFrequency...");
+
+        int frequencyOfTask = getFrequency(frequency);
+        if(frequencyOfTask > 0){
+            updateFrequency(frequency, frequencyOfTask - 1);
         }
     }
 
@@ -98,11 +107,11 @@ public class TimeDatabaseHelper extends SQLiteOpenHelper {
         close();
     }
 
-    private void updateFrequency(Frequency frequency, int frequencyOfTask){
+    private void updateFrequency(Frequency frequency, int destinatedFrequency){
         Log.v(TAG, "updateFrequency...");
 
         ContentValues values = new ContentValues();
-        values.put(Frequency.FREQUENCY_COLUMN, frequencyOfTask + 1);
+        values.put(Frequency.FREQUENCY_COLUMN, destinatedFrequency);
 
         String selection = Frequency.TASK_COLUMN + " LIKE ?";
         String[] selectionArgs = {frequency.getTaskName()};
@@ -116,7 +125,6 @@ public class TimeDatabaseHelper extends SQLiteOpenHelper {
 
         close();
     }
-
 
     private int getFrequency(Frequency frequency){
         Log.v(TAG, "getFrequency...");
@@ -292,7 +300,16 @@ public class TimeDatabaseHelper extends SQLiteOpenHelper {
         if(totalTimeOfTask == 0){
             insertTotalTime(totalTime);
         }else {
-            updateTotalTime(totalTime,totalTimeOfTask);
+            updateTotalTime(totalTime,totalTimeOfTask + totalTime.getTotalTime());
+        }
+    }
+
+    public void removeTotalTime(TotalTime totalTime){
+        Log.v(TAG,"removeTotalTime....");
+
+        int totalTimeOfTask = getTotalTime(totalTime);
+        if(totalTimeOfTask > 0){
+            updateTotalTime(totalTime, totalTimeOfTask - totalTime.getTotalTime());
         }
     }
 
@@ -308,11 +325,11 @@ public class TimeDatabaseHelper extends SQLiteOpenHelper {
         close();
     }
 
-    private void updateTotalTime(TotalTime totalTime, int totalTimeOfTask){
+    private void updateTotalTime(TotalTime totalTime, long destinatedTotalTime){
         Log.v(TAG, "updateTotalTime...");
 
         ContentValues values = new ContentValues();
-        values.put(TotalTime.TIME_COLUMN, totalTimeOfTask + totalTime.getTotalTime());
+        values.put(TotalTime.TIME_COLUMN, destinatedTotalTime);
 
         String selection = TotalTime.TASK_COLUMN + " LIKE ? AND " + TotalTime.DATE_COLUMN + " LIKE ?";
         String[] selectionArgs = {totalTime.getTask(), totalTime.getDate()};

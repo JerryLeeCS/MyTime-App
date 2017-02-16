@@ -40,6 +40,7 @@ public class TimeFormActivity extends AppCompatActivity {
     public static final String TASK_CHANGED_FROM = "TASK_CHANGED_FROM";
 
     public static final String CHANGED_ELAPSED_TIME_DIFFERENCE = "CHANGED_ELAPSED_TIME_DIFFERENCE";
+    public static final String ELAPSED_TIME_MINUS = "ELAPSED_TIME_MINUS";
 
     private TaskInfo dataItem;
 
@@ -193,7 +194,7 @@ public class TimeFormActivity extends AppCompatActivity {
                 && getElapsedTimeDifference(dataItem.getElapsedTime(), returnItem.getElapsedTime()) != 0){
             returnIntent.putExtra(DATA_CHANGED_TYPE, DataChanged.TASK_AND_ELAPSED_TIME_CHANGED);
             returnIntent.putExtra(TASK_CHANGED_FROM, dataItem.getTaskName());
-            returnIntent.putExtra(CHANGED_ELAPSED_TIME_DIFFERENCE, -dataItem.getElapsedTime());
+            returnIntent.putExtra(ELAPSED_TIME_MINUS, dataItem.getElapsedTime());
         }else {
             if (!dataItem.getTaskName().equals(returnItem.getTaskName())) {
                 returnIntent.putExtra(DATA_CHANGED_TYPE, DataChanged.TASK_CHANGED);
