@@ -13,6 +13,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.example.jerrylee.mytime.R;
 import com.example.jerrylee.mytime.TimeFormActivity;
@@ -130,6 +131,19 @@ public class ListFragment extends Fragment {
             if(resultCode == RESULT_OK){
                 TimeDatabaseHelper timeDatabaseHelper = new TimeDatabaseHelper(getContext());
                 TaskInfo dataItem = (TaskInfo) data.getSerializableExtra(TimeFormActivity.ITEM);
+                //<><><>
+                TimeFormActivity.DataChanged changedType = (TimeFormActivity.DataChanged) data.getSerializableExtra(TimeFormActivity.DATA_CHANGED_TYPE);
+
+
+                if(changedType == TimeFormActivity.DataChanged.TASK_AND_ELAPSED_TIME_CHANGED){
+                    Toast.makeText(getContext(), "task and elapsed time changed....", Toast.LENGTH_SHORT).show();
+                }else if(changedType == TimeFormActivity.DataChanged.TASK_CHANGED){
+                    Toast.makeText(getContext(), "task changed...", Toast.LENGTH_SHORT).show();
+                }else if(changedType == TimeFormActivity.DataChanged.ELAPSED_CHANGED){
+                    Toast.makeText(getContext(), "elapsed time changed...", Toast.LENGTH_SHORT).show();
+                }
+
+
 
                 timeDatabaseHelper.updateTaskInfo(dataItem);
                 dataChangedListener.onDataInserted();

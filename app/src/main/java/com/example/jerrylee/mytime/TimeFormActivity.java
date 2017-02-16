@@ -2,6 +2,7 @@ package com.example.jerrylee.mytime;
 
 import android.app.TimePickerDialog;
 import android.content.Intent;
+import android.provider.ContactsContract;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -13,6 +14,7 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.TimePicker;
+import android.widget.Toast;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -32,16 +34,21 @@ public class TimeFormActivity extends AppCompatActivity {
 
     public static final String ITEM = "DAT_ITEM";
 
+    public static final String DATA_CHANGED_TYPE = "DATA_CHANGED_TYPE";
+
     public static final String TASK_NAME = "TASK_NAME";
-    public static final String TASK_CHANGED = "TASK_CHANGED";
     public static final String TASK_CHANGED_FROM = "TASK_CHANGED_FROM";
 
-    public static final String ELAPSED_TIME_CHANGED = "ELAPSED_TIME_CHANGED";
     public static final String CHANGED_ELAPSED_TIME_DIFFERENCE = "CHANGED_ELAPSED_TIME_DIFFERENCE";
 
-    public static final String TASK_AND_ELAPSED_TIME_CHANGED = "TASK_AND_ELAPSED_TIME_CHANGED";
-
     private TaskInfo dataItem;
+
+    public enum DataChanged{
+        TASK_CHANGED,
+        ELAPSED_CHANGED,
+        TASK_AND_ELAPSED_TIME_CHANGED,
+        NOTHING_CHANGED
+    }
 
     private boolean editMode;
 
@@ -182,19 +189,20 @@ public class TimeFormActivity extends AppCompatActivity {
             returnItem.setElapsedTime(getValidElapsedTime());
         }
 
-        if(dataItem.getTaskName().equals(returnItem.getTaskName())
+        if(!dataItem.getTaskName().equals(returnItem.getTaskName())
                 && getElapsedTimeDifference(dataItem.getElapsedTime(), returnItem.getElapsedTime()) != 0){
-            returnIntent.putExtra(TASK_AND_ELAPSED_TIME_CHANGED, true);
+            returnIntent.putExtra(DATA_CHANGED_TYPE, DataChanged.TASK_AND_ELAPSED_TIME_CHANGED);
             returnIntent.putExtra(TASK_CHANGED_FROM, dataItem.getTaskName());
             returnIntent.putExtra(CHANGED_ELAPSED_TIME_DIFFERENCE, -dataItem.getElapsedTime());
         }else {
-
             if (!dataItem.getTaskName().equals(returnItem.getTaskName())) {
-                returnIntent.putExtra(TASK_CHANGED, true);
+                returnIntent.putExtra(DATA_CHANGED_TYPE, DataChanged.TASK_CHANGED);
                 returnIntent.putExtra(TASK_CHANGED_FROM, dataItem.getTaskName());
             } else if (getElapsedTimeDifference(dataItem.getElapsedTime(), returnItem.getElapsedTime()) != 0) {
-                returnIntent.putExtra(ELAPSED_TIME_CHANGED, true);
+                returnIntent.putExtra(DATA_CHANGED_TYPE, DataChanged.ELAPSED_CHANGED);
                 returnIntent.putExtra(CHANGED_ELAPSED_TIME_DIFFERENCE, getElapsedTimeDifference(dataItem.getElapsedTime(), returnItem.getElapsedTime()));
+            }else{
+                returnIntent.putExtra(DATA_CHANGED_TYPE,DataChanged.NOTHING_CHANGED);
             }
         }
 
