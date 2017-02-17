@@ -73,7 +73,7 @@ public class TaskInfo implements Serializable{
         this.date = date;
     }
 
-    public Frequency getTaskAndTime(){
+    public Frequency getFraquency(){
         Frequency frequency = new Frequency();
         frequency.setTaskName(taskName);
 

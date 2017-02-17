@@ -38,7 +38,7 @@ public class TotalTime {
         this.totalTime = totalTime;
     }
 
-    public long getTotalTime(){
+    public long getElapsedTime(){
         return totalTime;
     }
 

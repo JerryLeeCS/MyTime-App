@@ -21,6 +21,7 @@ import com.example.jerrylee.mytime.TimeFormActivity;
 import adapter.RecyclerViewSectionAdapter;
 import database.TimeDatabaseHelper;
 import item.TaskInfo;
+import item.TotalTime;
 import listener.onDataChangedListener;
 
 import static android.app.Activity.RESULT_OK;
@@ -137,19 +138,36 @@ public class ListFragment extends Fragment {
 
                 if(changedType == TimeFormActivity.DataChanged.TASK_AND_ELAPSED_TIME_CHANGED){
                     Toast.makeText(getContext(), "task and elapsed time changed....", Toast.LENGTH_SHORT).show();
+                    String fromTaskName = data.getStringExtra(TimeFormActivity.TASK_CHANGED_FROM);
+                    TotalTime removeTotalTime = new TotalTime();
+                    removeTotalTime.setTask(fromTaskName);
+                    removeTotalTime.setTotalTime(data.getLongExtra(TimeFormActivity.ELAPSED_TIME_MINUS,0));
                     //update Frequency Table based on the old Taskname and new Taskname.
+                    timeDatabaseHelper.addOneFrequency(dataItem.getTaskName());
+                    timeDatabaseHelper.removeOneFrequency(fromTaskName);
                     //update TotalTime based on the (old time && old taskname) and (new time && new taskname);
+                    timeDatabaseHelper.addTotalTime(dataItem.getTotalTime());
+                    timeDatabaseHelper.removeTotalTime(removeTotalTime);
                 }else if(changedType == TimeFormActivity.DataChanged.TASK_CHANGED){
                     Toast.makeText(getContext(), "task changed...", Toast.LENGTH_SHORT).show();
+                    String fromTaskName = data.getStringExtra(TimeFormActivity.TASK_CHANGED_FROM);
+                    TotalTime removeTotalTime = new TotalTime();
+                    removeTotalTime.setTask(fromTaskName);
+                    removeTotalTime.setTotalTime(dataItem.getTotalTime().getElapsedTime());
+
                     //update the Frequency Table based on the old taskname and new taskname.
+                    timeDatabaseHelper.addOneFrequency(dataItem.getTaskName());
+                    timeDatabaseHelper.removeOneFrequency(fromTaskName);
+
                     //update the TotalTime Table based on the old taskname and new taskname.
+                    timeDatabaseHelper.addTotalTime(dataItem.getTotalTime());
+                    timeDatabaseHelper.removeTotalTime(removeTotalTime);
                 }else if(changedType == TimeFormActivity.DataChanged.ELAPSED_CHANGED){
                     Toast.makeText(getContext(), "elapsed time changed...", Toast.LENGTH_SHORT).show();
                     //update the TotalTime Table based on the elasped time difference.
+
                 }
                 //update TaskInfo Table based on the dataItem
-
-
                 timeDatabaseHelper.updateTaskInfo(dataItem);
                 dataChangedListener.onDataInserted();
             }

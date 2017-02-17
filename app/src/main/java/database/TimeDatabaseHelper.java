@@ -76,45 +76,45 @@ public class TimeDatabaseHelper extends SQLiteOpenHelper {
         onCreate(db);
     }
 
-    public void addOneFrequency(Frequency frequency){
+    public void addOneFrequency(String taskName){
         Log.v(TAG,"addOneFrequency...");
 
-        int frequencyOfTask = getFrequency(frequency);
+        int frequencyOfTask = getFrequency(taskName);
         if(frequencyOfTask == 0) {
-            insertFrequency(frequency);
+            insertFrequency(taskName);
         }else{
-            updateFrequency(frequency, frequencyOfTask + 1);
+            updateFrequency(taskName, frequencyOfTask + 1);
         }
     }
 
-    public void removeOneFrequency(Frequency frequency){
+    public void removeOneFrequency(String taskName){
         Log.v(TAG,"removeFrequency...");
 
-        int frequencyOfTask = getFrequency(frequency);
+        int frequencyOfTask = getFrequency(taskName);
         if(frequencyOfTask > 0){
-            updateFrequency(frequency, frequencyOfTask - 1);
+            updateFrequency(taskName, frequencyOfTask - 1);
         }
     }
 
-    private void insertFrequency(Frequency frequency){
+    private void insertFrequency(String taskName){
         Log.v(TAG, "insertFrequency...");
 
         ContentValues contentValues = new ContentValues();
-        contentValues.put(Frequency.TASK_COLUMN, frequency.getTaskName());
+        contentValues.put(Frequency.TASK_COLUMN, taskName);
         contentValues.put(Frequency.FREQUENCY_COLUMN, 1);
 
         getWritableDatabase().insert(Frequency.TABLE,null,contentValues);
         close();
     }
 
-    private void updateFrequency(Frequency frequency, int destinatedFrequency){
+    private void updateFrequency(String taskName, int destinatedFrequency){
         Log.v(TAG, "updateFrequency...");
 
         ContentValues values = new ContentValues();
         values.put(Frequency.FREQUENCY_COLUMN, destinatedFrequency);
 
         String selection = Frequency.TASK_COLUMN + " LIKE ?";
-        String[] selectionArgs = {frequency.getTaskName()};
+        String[] selectionArgs = {taskName};
 
         getWritableDatabase().update(
                 Frequency.TABLE,
@@ -126,7 +126,7 @@ public class TimeDatabaseHelper extends SQLiteOpenHelper {
         close();
     }
 
-    private int getFrequency(Frequency frequency){
+    private int getFrequency(String taskName){
         Log.v(TAG, "getFrequency...");
 
         String[] projection = {
@@ -134,7 +134,7 @@ public class TimeDatabaseHelper extends SQLiteOpenHelper {
         };
 
         String selection = Frequency.TASK_COLUMN + " = ?";
-        String[] selectionArgs = {frequency.getTaskName()};
+        String[] selectionArgs = {taskName};
 
         Cursor cursor = getReadableDatabase().query(
                 Frequency.TABLE,
@@ -269,8 +269,6 @@ public class TimeDatabaseHelper extends SQLiteOpenHelper {
     }
 
     public void updateTaskInfo(TaskInfo dataItem){
-
-
         Log.v(TAG,"updateContent...");
         ContentValues values = new ContentValues();
         values.put(TaskInfo.TASK_COLUMN, dataItem.getTaskName());
@@ -300,7 +298,7 @@ public class TimeDatabaseHelper extends SQLiteOpenHelper {
         if(totalTimeOfTask == 0){
             insertTotalTime(totalTime);
         }else {
-            updateTotalTime(totalTime,totalTimeOfTask + totalTime.getTotalTime());
+            updateTotalTime(totalTime,totalTimeOfTask + totalTime.getElapsedTime());
         }
     }
 
@@ -309,7 +307,7 @@ public class TimeDatabaseHelper extends SQLiteOpenHelper {
 
         int totalTimeOfTask = getTotalTime(totalTime);
         if(totalTimeOfTask > 0){
-            updateTotalTime(totalTime, totalTimeOfTask - totalTime.getTotalTime());
+            updateTotalTime(totalTime, totalTimeOfTask - totalTime.getElapsedTime());
         }
     }
 
@@ -317,7 +315,7 @@ public class TimeDatabaseHelper extends SQLiteOpenHelper {
         Log.v(TAG,"addTotalTime...");
 
         ContentValues values = new ContentValues();
-        values.put(TotalTime.TIME_COLUMN, totalTime.getTotalTime());
+        values.put(TotalTime.TIME_COLUMN, totalTime.getElapsedTime());
         values.put(TotalTime.TASK_COLUMN, totalTime.getTask());
         values.put(TotalTime.DATE_COLUMN, totalTime.getDate());
 
@@ -340,12 +338,11 @@ public class TimeDatabaseHelper extends SQLiteOpenHelper {
                 selection,
                 selectionArgs
         );
-
         close();
     }
 
-    private int getTotalTime(TotalTime totalTime){
-        Log.v(TAG, "getTotalTime...");
+    private int getTotalTime(TotalTime totalTime){//Error causing needs review
+        Log.v(TAG, "getElapsedTime...");
 
         String[] projection = {
                 TotalTime.TIME_COLUMN
@@ -353,25 +350,35 @@ public class TimeDatabaseHelper extends SQLiteOpenHelper {
 
         String selection = TotalTime.TASK_COLUMN + " = ? AND " + TotalTime.DATE_COLUMN + " = ?";
         String[] selectionArgs = {totalTime.getTask(), totalTime.getDate()};
-
-        Cursor cursor  =  getReadableDatabase().query(
-                TotalTime.TABLE,
-                projection,
-                selection,
-                selectionArgs,
-                null,
-                null,
-                null,
-                null
-        );
-
-        if(cursor.getCount() > 0 ){
-            cursor.moveToFirst();
-            return cursor.getInt(cursor.getColumnIndex(TotalTime.TIME_COLUMN));
-        }else{
-            return 0;
+        Cursor cursor = null;
+        try {
+            cursor = getReadableDatabase().query(
+                    TotalTime.TABLE,
+                    projection,
+                    selection,
+                    selectionArgs,
+                    null,
+                    null,
+                    null,
+                    null
+            );
+        }catch (Exception e){
+            Log.e(TAG,e.toString());
         }
 
+        if(cursor!= null && cursor.getCount() > 0 ){
+            cursor.moveToFirst();
+            int returnTotalTime = cursor.getInt(cursor.getColumnIndex(TotalTime.TIME_COLUMN));
+            if(!cursor.isClosed()) {
+                cursor.close();
+            }
+            return returnTotalTime;
+        }else{
+            if(cursor != null && !cursor.isClosed()){
+                cursor.close();
+            }
+            return 0;
+        }
     }
 
     private String getLastMondayDate(){
