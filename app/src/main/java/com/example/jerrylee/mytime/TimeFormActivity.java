@@ -207,7 +207,6 @@ public class TimeFormActivity extends AppCompatActivity {
                 }
             }
         }
-
         returnIntent.putExtra(ITEM,returnItem);
         setResult(RESULT_OK,returnIntent);
         finish();

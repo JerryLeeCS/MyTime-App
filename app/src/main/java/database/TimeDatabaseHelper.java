@@ -7,6 +7,9 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
+import com.github.mikephil.charting.data.PieData;
+import com.github.mikephil.charting.data.PieEntry;
+
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -42,14 +45,14 @@ public class TimeDatabaseHelper extends SQLiteOpenHelper {
                     + TaskInfo.TIME_ELAPSED_COLUMN + " INTEGER, "
                     + TaskInfo.START_TIME_COLUMN + " TEXT, "
                     + TaskInfo.END_TIME_COLUMN + " TEXT, "
-                    + TaskInfo.DATE_COLUMN + " TEXT);";
+                    + TaskInfo.DATE_COLUMN + " DATE);";
 
     private static final String createTotalTimeTable =
             "CREATE TABLE " + TotalTime.TABLE + " ("
             + TotalTime.ID_COLUMN + " INTEGER PRIMARY KEY AUTOINCREMENT,"
             + TotalTime.TASK_COLUMN + " TEXT, "
-            + TotalTime.TIME_COLUMN + " INTEGER, "
-            + TotalTime.DATE_COLUMN + " TEXT);";
+            + TotalTime.TIME_ELAPSED_COLUMN + " INTEGER, "
+            + TotalTime.DATE_COLUMN + " DATE);";
 
 
     public TimeDatabaseHelper(Context context) {
@@ -218,14 +221,16 @@ public class TimeDatabaseHelper extends SQLiteOpenHelper {
 
             String[] columns = new String[]{TaskInfo.ID_COLUMN, TaskInfo.TASK_COLUMN,TaskInfo.TIME_ELAPSED_COLUMN,TaskInfo.DATE_COLUMN,TaskInfo.START_TIME_COLUMN,TaskInfo.END_TIME_COLUMN};
             String where = TaskInfo.DATE_COLUMN + " < ?";
-            String[] whereArg = new String[]{"date("+ getLastMondayDate() + ")"};
+            String[] whereArg = new String[]{"Date("+ getLastMondayDate() + ")"};
             String orderBy = TaskInfo.ID_COLUMN + " DESC";
             cursor = getReadableDatabase().query(
                     TaskInfo.TABLE,
                     columns,
-                    null ,
-                    null ,
-                    null, null, orderBy);
+                    where,
+                    whereArg,
+                    null,
+                    null,
+                    orderBy);
 
             if(cursor.moveToFirst()){
                 dates.add(cursor.getString(cursor.getColumnIndex(TaskInfo.DATE_COLUMN)));
@@ -254,7 +259,6 @@ public class TimeDatabaseHelper extends SQLiteOpenHelper {
                     totalElapsedTime += cursor.getInt(cursor.getColumnIndex(TaskInfo.TIME_ELAPSED_COLUMN));
                     itemList.add(item);
                 }while(cursor.moveToNext());
-                close();
             }
         }catch (Exception e){
             Log.v(TAG, "Failed to getDataModelList...");
@@ -264,6 +268,7 @@ public class TimeDatabaseHelper extends SQLiteOpenHelper {
             if(cursor != null && !cursor.isClosed()){
                 cursor.close();
             }
+            close();
         }
         return dataModelList;
     }
@@ -280,12 +285,10 @@ public class TimeDatabaseHelper extends SQLiteOpenHelper {
         String where = TaskInfo.ID_COLUMN + " LIKE " + dataItem.getID();
 
         try {
-
             Log.v(TAG,String.valueOf(getWritableDatabase().update(TaskInfo.TABLE,values,where,null)));
             getWritableDatabase().update(TaskInfo.TABLE,values,where,null);
-
         }catch (Exception e){
-            Log.v(TAG,e.toString());
+            Log.v(TAG,"updateTaskInfo error: " + e.toString());
         }finally {
             close();
         }
@@ -311,11 +314,53 @@ public class TimeDatabaseHelper extends SQLiteOpenHelper {
         }
     }
 
+    public List<PieEntry> getTotalTimePieDataList(){//<><><><><<><><><><><><<><><><><><><><>
+        Log.v(TAG, "getTotalTimePieDataList...");
+        LinkedList<PieEntry> pieDataList = new LinkedList<>();
+
+        Cursor cursor = null;
+
+        try{
+            String[] columns = new String[]{TotalTime.TASK_COLUMN, TotalTime.TIME_ELAPSED_COLUMN};
+            String where = TotalTime.DATE_COLUMN + " < ?";
+            String[] whereArg = new String[]{"Date("+ getLastMondayDate() + ")"};
+
+            cursor = getReadableDatabase().query(
+                    TotalTime.TABLE,
+                    columns,
+                    where,
+                    whereArg,
+                    null,
+                    null,
+                    null
+            );
+
+            if(cursor.moveToFirst()){
+                do{
+                    long timeElapsed = cursor.getLong(cursor.getColumnIndex(TotalTime.TIME_ELAPSED_COLUMN));
+                    String taskName = cursor.getString(cursor.getColumnIndex(TotalTime.TASK_COLUMN));
+
+                    Log.v(TAG,"timeELapsed: " + timeElapsed + " taskName: " + taskName + "<><><><><><>");
+                    PieEntry pieData = new PieEntry(timeElapsed, taskName);
+                    pieDataList.add(pieData);
+                }while(cursor.moveToNext());
+            }
+        }catch (Exception e){
+            Log.e(TAG, "getTotalTimePieDataList error: " + e.toString());
+        }finally {
+            if(cursor != null && !cursor.isClosed()){
+                cursor.close();
+            }
+            close();
+        }
+        return  pieDataList;
+    }
+
     private void insertTotalTime(TotalTime totalTime){
         Log.v(TAG,"addTotalTime...");
 
         ContentValues values = new ContentValues();
-        values.put(TotalTime.TIME_COLUMN, totalTime.getElapsedTime());
+        values.put(TotalTime.TIME_ELAPSED_COLUMN, totalTime.getElapsedTime());
         values.put(TotalTime.TASK_COLUMN, totalTime.getTask());
         values.put(TotalTime.DATE_COLUMN, totalTime.getDate());
 
@@ -327,17 +372,21 @@ public class TimeDatabaseHelper extends SQLiteOpenHelper {
         Log.v(TAG, "updateTotalTime...");
 
         ContentValues values = new ContentValues();
-        values.put(TotalTime.TIME_COLUMN, destinatedTotalTime);
+        values.put(TotalTime.TIME_ELAPSED_COLUMN, destinatedTotalTime);
 
         String selection = TotalTime.TASK_COLUMN + " LIKE ? AND " + TotalTime.DATE_COLUMN + " LIKE ?";
         String[] selectionArgs = {totalTime.getTask(), totalTime.getDate()};
 
-        getWritableDatabase().update(
-                TotalTime.TABLE,
-                values,
-                selection,
-                selectionArgs
-        );
+        try {
+            getWritableDatabase().update(
+                    TotalTime.TABLE,
+                    values,
+                    selection,
+                    selectionArgs
+            );
+        }catch (Exception e){
+            Log.e(TAG,"updateTotalTime: " + e.toString());
+        }
         close();
     }
 
@@ -345,7 +394,7 @@ public class TimeDatabaseHelper extends SQLiteOpenHelper {
         Log.v(TAG, "getElapsedTime...");
 
         String[] projection = {
-                TotalTime.TIME_COLUMN
+                TotalTime.TIME_ELAPSED_COLUMN
         };
 
         String selection = TotalTime.TASK_COLUMN + " = ? AND " + TotalTime.DATE_COLUMN + " = ?";
@@ -363,20 +412,22 @@ public class TimeDatabaseHelper extends SQLiteOpenHelper {
                     null
             );
         }catch (Exception e){
-            Log.e(TAG,e.toString());
+            Log.e(TAG,"getTotalTime error: " + e.toString());
         }
 
         if(cursor!= null && cursor.getCount() > 0 ){
             cursor.moveToFirst();
-            int returnTotalTime = cursor.getInt(cursor.getColumnIndex(TotalTime.TIME_COLUMN));
+            int returnTotalTime = cursor.getInt(cursor.getColumnIndex(TotalTime.TIME_ELAPSED_COLUMN));
             if(!cursor.isClosed()) {
                 cursor.close();
             }
+            close();
             return returnTotalTime;
         }else{
             if(cursor != null && !cursor.isClosed()){
                 cursor.close();
             }
+            close();
             return 0;
         }
     }
@@ -384,9 +435,9 @@ public class TimeDatabaseHelper extends SQLiteOpenHelper {
     private String getLastMondayDate(){
         Calendar calendar = Calendar.getInstance();
         int diff = Calendar.MONDAY - calendar.get(Calendar.DAY_OF_WEEK);
-
-        calendar.add(Calendar.DAY_OF_MONTH,diff);
+        calendar.add(Calendar.DAY_OF_MONTH,diff == 1 ? -6 : diff );
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        Log.v(TAG,"getLastMondayDate: " + simpleDateFormat.format(calendar.getTime()));
         return simpleDateFormat.format(calendar.getTime());
     }
 

@@ -24,6 +24,8 @@ import com.github.mikephil.charting.utils.ColorTemplate;
 import java.util.ArrayList;
 import java.util.List;
 
+import database.TimeDatabaseHelper;
+
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
@@ -80,6 +82,8 @@ public class ChartFragment extends Fragment {
 
         if(pieChart != null) {
             pieChart.setData(generatePieData());
+            pieChart.setTouchEnabled(false);
+            pieChart.setDrawHoleEnabled(false);
             pieChart.invalidate();
         }else{
             Log.v(TAG, "Pie Chart is null <>><><><<><><<>");
@@ -92,9 +96,8 @@ public class ChartFragment extends Fragment {
 
         ArrayList<PieEntry> entries = new ArrayList<>();
 
-        for(int i = 0; i < count; i++){
-            entries.add(new PieEntry((float) ((Math.random() * 60) + 40), "Quarter " + (i+1)));
-        }
+        TimeDatabaseHelper timeDatabaseHelper = new TimeDatabaseHelper(getContext());
+        entries.addAll(timeDatabaseHelper.getTotalTimePieDataList());
 
         PieDataSet ds1 = new PieDataSet(entries, "Quarterly Revenues 2017");
         ds1.setColors(ColorTemplate.VORDIPLOM_COLORS);

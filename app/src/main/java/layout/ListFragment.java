@@ -135,7 +135,6 @@ public class ListFragment extends Fragment {
                 //<><><>
                 TimeFormActivity.DataChanged changedType = (TimeFormActivity.DataChanged) data.getSerializableExtra(TimeFormActivity.DATA_CHANGED_TYPE);
 
-
                 if(changedType == TimeFormActivity.DataChanged.TASK_AND_ELAPSED_TIME_CHANGED){
                     Toast.makeText(getContext(), "task and elapsed time changed....", Toast.LENGTH_SHORT).show();
                     String fromTaskName = data.getStringExtra(TimeFormActivity.TASK_CHANGED_FROM);

@@ -10,7 +10,7 @@ public class TotalTime {
 
     public static final String ID_COLUMN = "_ID";
     public static final String TASK_COLUMN = "_TASK";
-    public static final String TIME_COLUMN = "TOTAL_TIME";
+    public static final String TIME_ELAPSED_COLUMN = "TOTAL_TIME";
     public static final String DATE_COLUMN = "_DATE";
 
     private int timeID;
