@@ -84,7 +84,7 @@ public class TaskInfo implements Serializable{
         TotalTime totalTime = new TotalTime();
         totalTime.setDate(date);
         totalTime.setTask(taskName);
-        totalTime.setTotalTime(elapsedTime);
+        totalTime.setElapsedTime(elapsedTime);
 
         return totalTime;
     }

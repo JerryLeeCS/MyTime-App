@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieEntry;
@@ -309,12 +310,13 @@ public class TimeDatabaseHelper extends SQLiteOpenHelper {
         Log.v(TAG,"removeTotalTime....");
 
         int totalTimeOfTask = getTotalTime(totalTime);
+        Log.v(TAG,"totalTimeOfTask: " + totalTimeOfTask);
         if(totalTimeOfTask > 0){
             updateTotalTime(totalTime, totalTimeOfTask - totalTime.getElapsedTime());
         }
     }
 
-    public List<PieEntry> getTotalTimePieDataList(){//<><><><><<><><><><><><<><><><><><><><>
+    public List<PieEntry> getTotalTimePieDataList(){
         Log.v(TAG, "getTotalTimePieDataList...");
         LinkedList<PieEntry> pieDataList = new LinkedList<>();
 
@@ -340,7 +342,7 @@ public class TimeDatabaseHelper extends SQLiteOpenHelper {
                     long timeElapsed = cursor.getLong(cursor.getColumnIndex(TotalTime.TIME_ELAPSED_COLUMN));
                     String taskName = cursor.getString(cursor.getColumnIndex(TotalTime.TASK_COLUMN));
 
-                    Log.v(TAG,"timeELapsed: " + timeElapsed + " taskName: " + taskName + "<><><><><><>");
+                    //Log.v(TAG,"timeELapsed: " + timeElapsed + " taskName: " + taskName + "");
                     PieEntry pieData = new PieEntry(timeElapsed, taskName);
                     pieDataList.add(pieData);
                 }while(cursor.moveToNext());

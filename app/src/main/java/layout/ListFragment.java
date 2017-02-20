@@ -140,7 +140,7 @@ public class ListFragment extends Fragment {
                     String fromTaskName = data.getStringExtra(TimeFormActivity.TASK_CHANGED_FROM);
                     TotalTime removeTotalTime = new TotalTime();
                     removeTotalTime.setTask(fromTaskName);
-                    removeTotalTime.setTotalTime(data.getLongExtra(TimeFormActivity.ELAPSED_TIME_MINUS,0));
+                    removeTotalTime.setElapsedTime(data.getLongExtra(TimeFormActivity.ELAPSED_TIME_MINUS,0));
                     //update Frequency Table based on the old Taskname and new Taskname.
                     timeDatabaseHelper.addOneFrequency(dataItem.getTaskName());
                     timeDatabaseHelper.removeOneFrequency(fromTaskName);
@@ -152,7 +152,8 @@ public class ListFragment extends Fragment {
                     String fromTaskName = data.getStringExtra(TimeFormActivity.TASK_CHANGED_FROM);
                     TotalTime removeTotalTime = new TotalTime();
                     removeTotalTime.setTask(fromTaskName);
-                    removeTotalTime.setTotalTime(dataItem.getTotalTime().getElapsedTime());
+                    removeTotalTime.setDate(dataItem.getDate());
+                    removeTotalTime.setElapsedTime(dataItem.getElapsedTime());
 
                     //update the Frequency Table based on the old taskname and new taskname.
                     timeDatabaseHelper.addOneFrequency(dataItem.getTaskName());
@@ -164,7 +165,13 @@ public class ListFragment extends Fragment {
                 }else if(changedType == TimeFormActivity.DataChanged.ELAPSED_CHANGED){
                     Toast.makeText(getContext(), "elapsed time changed...", Toast.LENGTH_SHORT).show();
                     //update the TotalTime Table based on the elasped time difference.
+                    long elapsedTimeDifference = data.getLongExtra(TimeFormActivity.CHANGED_ELAPSED_TIME_DIFFERENCE, 0);
+                    TotalTime totalTime = new TotalTime();
+                    totalTime.setTask(dataItem.getTaskName());
+                    totalTime.setDate(dataItem.getDate());
+                    totalTime.setElapsedTime(elapsedTimeDifference);
 
+                    timeDatabaseHelper.addTotalTime(totalTime);
                 }
                 //update TaskInfo Table based on the dataItem
                 timeDatabaseHelper.updateTaskInfo(dataItem);

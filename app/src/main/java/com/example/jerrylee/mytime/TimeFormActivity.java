@@ -201,7 +201,7 @@ public class TimeFormActivity extends AppCompatActivity {
                     returnIntent.putExtra(TASK_CHANGED_FROM, dataItem.getTaskName());
                 } else if (getElapsedTimeDifference(dataItem.getElapsedTime(), returnItem.getElapsedTime()) != 0) {
                     returnIntent.putExtra(DATA_CHANGED_TYPE, DataChanged.ELAPSED_CHANGED);
-                    returnIntent.putExtra(CHANGED_ELAPSED_TIME_DIFFERENCE, getElapsedTimeDifference(dataItem.getElapsedTime(), returnItem.getElapsedTime()));
+                    returnIntent.putExtra(CHANGED_ELAPSED_TIME_DIFFERENCE, getElapsedTimeDifference(returnItem.getElapsedTime(), dataItem.getElapsedTime() ));
                 } else {
                     returnIntent.putExtra(DATA_CHANGED_TYPE, DataChanged.NOTHING_CHANGED);
                 }
@@ -224,7 +224,6 @@ public class TimeFormActivity extends AppCompatActivity {
         }catch (Exception e){
             Log.e(TAG,e.toString());
         }
-
         return 0;
     }
 

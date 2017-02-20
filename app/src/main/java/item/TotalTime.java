@@ -34,7 +34,7 @@ public class TotalTime {
         return task;
     }
 
-    public void setTotalTime(long totalTime){
+    public void setElapsedTime(long totalTime){
         this.totalTime = totalTime;
     }
 
