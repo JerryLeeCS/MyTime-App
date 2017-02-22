@@ -189,9 +189,8 @@ public class TimeFormActivity extends AppCompatActivity {
             returnItem.setID(dataItem.getID());
             returnItem.setElapsedTime(getValidElapsedTime());
 
-
             if (!dataItem.getTaskName().equals(returnItem.getTaskName())
-                    && getElapsedTimeDifference(dataItem.getElapsedTime(), returnItem.getElapsedTime()) != 0) {
+                    && getElapsedTimeDifference(dataItem.getElapsedTime(), returnItem.getElapsedTime()) >2 ) {
                 returnIntent.putExtra(DATA_CHANGED_TYPE, DataChanged.TASK_AND_ELAPSED_TIME_CHANGED);
                 returnIntent.putExtra(TASK_CHANGED_FROM, dataItem.getTaskName());
                 returnIntent.putExtra(ELAPSED_TIME_MINUS, dataItem.getElapsedTime());

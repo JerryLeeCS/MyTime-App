@@ -275,7 +275,7 @@ public class TimeDatabaseHelper extends SQLiteOpenHelper {
     }
 
     public void updateTaskInfo(TaskInfo dataItem){
-        Log.v(TAG,"updateContent...");
+        Log.v(TAG,"updateTaskInfo...");
         ContentValues values = new ContentValues();
         values.put(TaskInfo.TASK_COLUMN, dataItem.getTaskName());
         values.put(TaskInfo.TIME_ELAPSED_COLUMN, dataItem.getElapsedTime());
@@ -308,11 +308,32 @@ public class TimeDatabaseHelper extends SQLiteOpenHelper {
 
     public void removeTotalTime(TotalTime totalTime){
         Log.v(TAG,"removeTotalTime....");
-
+        Log.v(TAG,"<><><><><><>removeTaskName: " + totalTime.getTask() + " removedElapsedTime: " + totalTime.getElapsedTime() + " totalTimeDate: " + totalTime.getDate());
         int totalTimeOfTask = getTotalTime(totalTime);
-        Log.v(TAG,"totalTimeOfTask: " + totalTimeOfTask);
-        if(totalTimeOfTask > 0){
+        Log.v(TAG,"<><><><><><>totalElapsedTimeOfTask: " + totalTimeOfTask);
+        if(totalTimeOfTask - totalTime.getElapsedTime() > 1){
             updateTotalTime(totalTime, totalTimeOfTask - totalTime.getElapsedTime());
+        }else{
+            deleteTotalTime(totalTime);
+        }
+    }
+
+    private void deleteTotalTime(TotalTime totalTime) {
+        Log.v(TAG,"deleteTotalTime...");
+        SQLiteDatabase database = null;
+        try {
+            database = this.getWritableDatabase();
+
+            String selection = TotalTime.TASK_COLUMN + " LIKE ? ";
+            String[] selectionArgs = {totalTime.getTask()};
+
+            database.delete(TotalTime.TABLE,selection,selectionArgs);
+
+        }catch (Exception e){
+            Log.e(TAG,"deleteTotalTime Error: " + e.toString());
+        }finally {
+            database.close();
+            Log.v(TAG,"<><><><<><><<>><><> deletedTotalTime <><><><><<><<><>>");
         }
     }
 
@@ -342,9 +363,11 @@ public class TimeDatabaseHelper extends SQLiteOpenHelper {
                     long timeElapsed = cursor.getLong(cursor.getColumnIndex(TotalTime.TIME_ELAPSED_COLUMN));
                     String taskName = cursor.getString(cursor.getColumnIndex(TotalTime.TASK_COLUMN));
 
-                    //Log.v(TAG,"timeELapsed: " + timeElapsed + " taskName: " + taskName + "");
-                    PieEntry pieData = new PieEntry(timeElapsed, taskName);
-                    pieDataList.add(pieData);
+
+                    if(timeElapsed > 1) {
+                        PieEntry pieData = new PieEntry(timeElapsed, taskName);
+                        pieDataList.add(pieData);
+                    }
                 }while(cursor.moveToNext());
             }
         }catch (Exception e){
@@ -392,7 +415,7 @@ public class TimeDatabaseHelper extends SQLiteOpenHelper {
         close();
     }
 
-    private int getTotalTime(TotalTime totalTime){//Error causing needs review
+    private int getTotalTime(TotalTime totalTime){//This doesn't return the time right sometimes
         Log.v(TAG, "getElapsedTime...");
 
         String[] projection = {

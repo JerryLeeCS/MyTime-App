@@ -132,7 +132,8 @@ public class ListFragment extends Fragment {
             if(resultCode == RESULT_OK){
                 TimeDatabaseHelper timeDatabaseHelper = new TimeDatabaseHelper(getContext());
                 TaskInfo dataItem = (TaskInfo) data.getSerializableExtra(TimeFormActivity.ITEM);
-                //<><><>
+
+
                 TimeFormActivity.DataChanged changedType = (TimeFormActivity.DataChanged) data.getSerializableExtra(TimeFormActivity.DATA_CHANGED_TYPE);
 
                 if(changedType == TimeFormActivity.DataChanged.TASK_AND_ELAPSED_TIME_CHANGED){
