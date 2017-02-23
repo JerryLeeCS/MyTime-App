@@ -95,6 +95,7 @@ public class TimeDatabaseHelper extends SQLiteOpenHelper {
         Log.v(TAG,"removeFrequency...");
 
         int frequencyOfTask = getFrequency(taskName);
+        Log.v(TAG,"frequencyOfTask " + frequencyOfTask);
         if(frequencyOfTask > 0){
             updateFrequency(taskName, frequencyOfTask - 1);
         }
@@ -167,11 +168,12 @@ public class TimeDatabaseHelper extends SQLiteOpenHelper {
 
         try{
             String[] columns = new String[]{Frequency.TASK_COLUMN};
+            String selection = Frequency.FREQUENCY_COLUMN + " > 0";
 
             cursor = getReadableDatabase().query(
                     Frequency.TABLE,
                     columns,
-                    null,
+                    selection,
                     null,
                     null,
                     null,
