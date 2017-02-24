@@ -84,10 +84,49 @@ public class TimeDatabaseHelper extends SQLiteOpenHelper {
         Log.v(TAG,"addOneFrequency...");
 
         int frequencyOfTask = getFrequency(taskName);
-        if(frequencyOfTask == 0) {
-            insertFrequency(taskName);
-        }else{
+        if(doesFrequencyExist(taskName)) {
             updateFrequency(taskName, frequencyOfTask + 1);
+            Log.v(TAG,"FREQUENCY EXISTED!!!!!!!!");
+        }else{
+            insertFrequency(taskName);
+            Log.v(TAG,"FREQUENCY DOESN'T EXIST!!!!!");
+        }
+    }
+
+    private boolean doesFrequencyExist(String taskName) {
+        Log.v(TAG,"frequencyExist....");
+
+        String[] projection = {
+                Frequency.TASK_COLUMN
+        };
+
+        String selection = Frequency.TASK_COLUMN + " = ?";
+        String[] selectionArgs = {taskName};
+
+        Cursor cursor = null;
+
+        try{
+            cursor = getReadableDatabase().query(
+                    Frequency.TABLE,
+                    projection,
+                    selection,
+                    selectionArgs,
+                    null,
+                    null,
+                    null,
+                    null
+            );
+
+            cursor.moveToFirst();
+        }catch(Exception e){
+            Log.e(TAG,"frequencyExist error: " +  e.toString());
+        }finally {
+            if(cursor.getCount() == 0){
+                return false;
+            }else{
+                Log.v(TAG,"getCount..." + cursor.getCount());
+                return true;
+            }
         }
     }
 
@@ -210,6 +249,7 @@ public class TimeDatabaseHelper extends SQLiteOpenHelper {
     }
 
     public List<DataModel> getDataModelListTaskInfo(){
+        Log.v(TAG,"on getDataModelList...");
         LinkedList<String> dates = new LinkedList<>();
 
         Cursor cursor = null;
@@ -217,36 +257,17 @@ public class TimeDatabaseHelper extends SQLiteOpenHelper {
         ArrayList<DataModel> dataModelList = new ArrayList<DataModel>();
         DataModel dataModel = new DataModel();
         LinkedList<TaskInfo> itemList = new LinkedList<>();
-
-        Log.v(TAG,"on getDataModelList...");
+        int totalElapsedTime = 0;
 
         try{
-
-            String[] columns = new String[]{TaskInfo.ID_COLUMN, TaskInfo.TASK_COLUMN,TaskInfo.TIME_ELAPSED_COLUMN,TaskInfo.DATE_COLUMN,TaskInfo.START_TIME_COLUMN,TaskInfo.END_TIME_COLUMN};
-            String where = TaskInfo.DATE_COLUMN + " < ?";
-            String[] whereArg = new String[]{"Date("+ getLastMondayDate() + ")"};
-            String orderBy = TaskInfo.ID_COLUMN + " DESC";
-            cursor = getReadableDatabase().query(
-                    TaskInfo.TABLE,
-                    columns,
-                    where,
-                    whereArg,
-                    null,
-                    null,
-                    orderBy);
+            cursor = getCursorDataModelList();
 
             if(cursor.moveToFirst()){
                 dates.add(cursor.getString(cursor.getColumnIndex(TaskInfo.DATE_COLUMN)));
                 dataModel.setSectionTitle(cursor.getString(cursor.getColumnIndex(TaskInfo.DATE_COLUMN)));
-                int totalElapsedTime = 0;
+
                 do{
-                    TaskInfo item = new TaskInfo();
-                    item.setID(cursor.getString(cursor.getColumnIndex(TaskInfo.ID_COLUMN)));
-                    item.setTaskName(cursor.getString(cursor.getColumnIndex(TaskInfo.TASK_COLUMN)));
-                    item.setElapsedTime(Long.parseLong(cursor.getString(cursor.getColumnIndex(TaskInfo.TIME_ELAPSED_COLUMN))));
-                    item.setStartTime(cursor.getString(cursor.getColumnIndex(TaskInfo.START_TIME_COLUMN)));
-                    item.setEndTime(cursor.getString(cursor.getColumnIndex(TaskInfo.END_TIME_COLUMN)));
-                    item.setDate(cursor.getString(cursor.getColumnIndex(TaskInfo.DATE_COLUMN)));
+                    TaskInfo item = getCursorTaskInfo(cursor);
 
                     String date = cursor.getString(cursor.getColumnIndex(TaskInfo.DATE_COLUMN));
                     if(!dates.contains(date)){
@@ -267,6 +288,9 @@ public class TimeDatabaseHelper extends SQLiteOpenHelper {
             Log.v(TAG, "Failed to getDataModelList...");
         }finally {
             dataModel.setItemList(itemList);
+            if(dates.size() < 2){
+                dataModel.setTotalTimeElapsed(totalElapsedTime);
+            }
             dataModelList.add(dataModel);
             if(cursor != null && !cursor.isClosed()){
                 cursor.close();
@@ -276,17 +300,40 @@ public class TimeDatabaseHelper extends SQLiteOpenHelper {
         return dataModelList;
     }
 
+    private TaskInfo getCursorTaskInfo(Cursor cursor){
+        TaskInfo taskInfo = new TaskInfo();
+
+        taskInfo.setID(cursor.getString(cursor.getColumnIndex(TaskInfo.ID_COLUMN)));
+        taskInfo.setTaskName(cursor.getString(cursor.getColumnIndex(TaskInfo.TASK_COLUMN)));
+        taskInfo.setElapsedTime(Long.parseLong(cursor.getString(cursor.getColumnIndex(TaskInfo.TIME_ELAPSED_COLUMN))));
+        taskInfo.setStartTime(cursor.getString(cursor.getColumnIndex(TaskInfo.START_TIME_COLUMN)));
+        taskInfo.setEndTime(cursor.getString(cursor.getColumnIndex(TaskInfo.END_TIME_COLUMN)));
+        taskInfo.setDate(cursor.getString(cursor.getColumnIndex(TaskInfo.DATE_COLUMN)));
+
+        return taskInfo;
+    }
+
+    private Cursor getCursorDataModelList(){
+        String[] columns = new String[]{TaskInfo.ID_COLUMN, TaskInfo.TASK_COLUMN,TaskInfo.TIME_ELAPSED_COLUMN,TaskInfo.DATE_COLUMN,TaskInfo.START_TIME_COLUMN,TaskInfo.END_TIME_COLUMN};
+        String where = TaskInfo.DATE_COLUMN + " < ?";
+        String[] whereArg = new String[]{"Date("+ getLastMondayDate() + ")"};
+        String orderBy = TaskInfo.ID_COLUMN + " DESC";
+        Cursor cursor = getReadableDatabase().query(
+                TaskInfo.TABLE,
+                columns,
+                where,
+                whereArg,
+                null,
+                null,
+                orderBy);
+        return cursor;
+    }
+
     public void updateTaskInfo(TaskInfo dataItem){
         Log.v(TAG,"updateTaskInfo...");
-        ContentValues values = new ContentValues();
-        values.put(TaskInfo.TASK_COLUMN, dataItem.getTaskName());
-        values.put(TaskInfo.TIME_ELAPSED_COLUMN, dataItem.getElapsedTime());
-        values.put(TaskInfo.START_TIME_COLUMN, dataItem.getStartTime());
-        values.put(TaskInfo.END_TIME_COLUMN, dataItem.getEndTime());
-        values.put(TaskInfo.DATE_COLUMN, dataItem.getDate());
+        ContentValues values = setContentValues(dataItem);
 
         String where = TaskInfo.ID_COLUMN + " LIKE " + dataItem.getID();
-
         try {
             Log.v(TAG,String.valueOf(getWritableDatabase().update(TaskInfo.TABLE,values,where,null)));
             getWritableDatabase().update(TaskInfo.TABLE,values,where,null);
@@ -295,6 +342,17 @@ public class TimeDatabaseHelper extends SQLiteOpenHelper {
         }finally {
             close();
         }
+    }
+
+    private ContentValues setContentValues(TaskInfo dataItem){
+        ContentValues values = new ContentValues();
+        values.put(TaskInfo.TASK_COLUMN, dataItem.getTaskName());
+        values.put(TaskInfo.TIME_ELAPSED_COLUMN, dataItem.getElapsedTime());
+        values.put(TaskInfo.START_TIME_COLUMN, dataItem.getStartTime());
+        values.put(TaskInfo.END_TIME_COLUMN, dataItem.getEndTime());
+        values.put(TaskInfo.DATE_COLUMN, dataItem.getDate());
+
+        return values;
     }
 
     public void addTotalTime(TotalTime totalTime){
@@ -310,9 +368,7 @@ public class TimeDatabaseHelper extends SQLiteOpenHelper {
 
     public void removeTotalTime(TotalTime totalTime){
         Log.v(TAG,"removeTotalTime....");
-        Log.v(TAG,"<><><><><><>removeTaskName: " + totalTime.getTask() + " removedElapsedTime: " + totalTime.getElapsedTime() + " totalTimeDate: " + totalTime.getDate());
         int totalTimeOfTask = getTotalTime(totalTime);
-        Log.v(TAG,"<><><><><><>totalElapsedTimeOfTask: " + totalTimeOfTask);
         if(totalTimeOfTask - totalTime.getElapsedTime() > 1){
             updateTotalTime(totalTime, totalTimeOfTask - totalTime.getElapsedTime());
         }else{
@@ -467,6 +523,5 @@ public class TimeDatabaseHelper extends SQLiteOpenHelper {
         Log.v(TAG,"getLastMondayDate: " + simpleDateFormat.format(calendar.getTime()));
         return simpleDateFormat.format(calendar.getTime());
     }
-
 
 }
