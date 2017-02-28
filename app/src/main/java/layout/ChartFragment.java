@@ -1,21 +1,20 @@
 package layout;
 
 import android.graphics.Color;
-import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.jerrylee.mytime.R;
+import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.charts.PieChart;
-import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.data.BarData;
-import com.github.mikephil.charting.data.Entry;
+import com.github.mikephil.charting.data.BarDataSet;
+import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
@@ -45,6 +44,8 @@ public class ChartFragment extends Fragment {
     private OnFragmentInteractionListener mListener;
 
     private PieChart pieChart;
+
+    private BarChart barChart;
 
     public ChartFragment() {
         // Required empty public constructor
@@ -80,35 +81,58 @@ public class ChartFragment extends Fragment {
 
         pieChart = (PieChart) getView().findViewById(R.id.pieChart);
 
+        barChart = (BarChart) getView().findViewById(R.id.barChart);
+
         if(pieChart != null) {
-            pieChart.setData(generatePieData());
+            pieChart.setData(getPieData());
             pieChart.setTouchEnabled(false);
-            pieChart.setDrawHoleEnabled(false);
+            pieChart.setDrawHoleEnabled(true);
+
+            pieChart.setCenterText("Today");
+            pieChart.setCenterTextSize(36f);
+
+            pieChart.setEntryLabelColor(Color.BLACK);
+            pieChart.setDescription(null);
             pieChart.invalidate();
-        }else{
-            Log.v(TAG, "Pie Chart is null <>><><><<><><<>");
+        }
+
+        if(barChart != null){
+            barChart.setData(null);
+            barChart.setTouchEnabled(false);
+
         }
     }
 
-    private PieData generatePieData(){
-
-        int count = 4;
-
+    private PieData getPieData(){
         ArrayList<PieEntry> entries = new ArrayList<>();
 
         TimeDatabaseHelper timeDatabaseHelper = new TimeDatabaseHelper(getContext());
         entries.addAll(timeDatabaseHelper.getTotalTimePieDataList());
 
-        PieDataSet ds1 = new PieDataSet(entries, "Quarterly Revenues 2017");
+        PieDataSet ds1 = new PieDataSet(entries,"");
         ds1.setColors(ColorTemplate.VORDIPLOM_COLORS);
         ds1.setSliceSpace(2f);
-        ds1.setValueTextColor(Color.WHITE);
         ds1.setValueTextSize(12f);
 
         PieData d = new PieData(ds1);
 
         return d;
 
+    }
+
+    private BarData getBarData(){
+        List<BarEntry> entries;
+
+        TimeDatabaseHelper timeDatabaseHelper = new TimeDatabaseHelper(getContext());
+        entries = timeDatabaseHelper.getTotalTimeBarDataList();
+
+        BarDataSet barDataSet = null;
+
+        if(entries != null){
+            barDataSet = new BarDataSet(entries, "Weekly report");
+        }
+
+        return new BarData(barDataSet);
     }
 
     // TODO: Rename method, update argument and hook method into UI event

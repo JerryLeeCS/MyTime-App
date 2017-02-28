@@ -31,6 +31,7 @@
             android:id="@+id/timeElapsedView"
             android:layout_weight="0"
             android:textSize="12sp"
-            android:textAlignment="center" />
+            android:textAlignment="center"
+            android:textColor="@color/colorPrimary" />
     </LinearLayout>
 </android.support.v7.widget.CardView>

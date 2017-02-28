@@ -8,14 +8,17 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieEntry;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Stack;
 
 import item.Frequency;
 import item.TaskInfo;
@@ -420,8 +423,6 @@ public class TimeDatabaseHelper extends SQLiteOpenHelper {
                 do{
                     long timeElapsed = cursor.getLong(cursor.getColumnIndex(TotalTime.TIME_ELAPSED_COLUMN));
                     String taskName = cursor.getString(cursor.getColumnIndex(TotalTime.TASK_COLUMN));
-
-
                     if(timeElapsed > 1) {
                         PieEntry pieData = new PieEntry(timeElapsed, taskName);
                         pieDataList.add(pieData);
@@ -437,6 +438,62 @@ public class TimeDatabaseHelper extends SQLiteOpenHelper {
             close();
         }
         return  pieDataList;
+    }
+
+    public List<BarEntry> getTotalTimeBarDataList(){
+        Log.v(TAG,"getTotalTimeBarDataList...");
+        LinkedList<BarEntry> entries = new LinkedList<>();
+
+        Cursor cursor = null;
+
+        try{
+            String[] columns = new String[]{TotalTime.TIME_ELAPSED_COLUMN, TotalTime.DATE_COLUMN};
+            String where = TotalTime.DATE_COLUMN + " < ?";
+            String[] whereArg = new String[]{"Date("+ getLastMondayDate() + ")"};
+
+            Stack<String> stack = new Stack<>();
+
+            long totalTime = 0;
+
+            int i = 0;
+
+            cursor = getReadableDatabase().query(
+                    TotalTime.TABLE,
+                    columns,
+                    where,
+                    whereArg,
+                    null,
+                    null,
+                    null
+            );
+
+            if(cursor.moveToFirst()){
+
+                    stack.add(cursor.getString(cursor.getColumnIndex(TotalTime.DATE_COLUMN)));
+                do{
+                    long timeElapsed = cursor.getLong(cursor.getColumnIndex(TotalTime.TIME_ELAPSED_COLUMN));
+                    String date = cursor.getString(cursor.getColumnIndex(TotalTime.DATE_COLUMN));
+
+                    if(stack.contains(date)){
+                    totalTime += timeElapsed;
+                    }else{
+
+                        entries.add(new BarEntry(i++,totalTime,stack.peek()));
+                        stack.add(date);
+                        totalTime = 0;
+                    }
+                }while(cursor.moveToNext());
+            }
+
+        }catch (Exception e){
+            Log.e(TAG,"getTotalTimeBarDataList error: " + e.toString());
+        }finally {
+            if(!cursor.isClosed() && cursor != null){
+                cursor.close();
+            }
+            return entries;
+        }
+
     }
 
     private void insertTotalTime(TotalTime totalTime){
@@ -472,6 +529,7 @@ public class TimeDatabaseHelper extends SQLiteOpenHelper {
         }
         close();
     }
+
 
     private int getTotalTime(TotalTime totalTime){//This doesn't return the time right sometimes
         Log.v(TAG, "getElapsedTime...");
