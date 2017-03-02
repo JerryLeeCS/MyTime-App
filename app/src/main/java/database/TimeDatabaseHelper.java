@@ -8,14 +8,19 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.github.mikephil.charting.data.BarData;
+import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieEntry;
+import com.github.mikephil.charting.utils.ColorTemplate;
 
+import java.lang.reflect.Array;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Stack;
@@ -304,6 +309,7 @@ public class TimeDatabaseHelper extends SQLiteOpenHelper {
     }
 
     private TaskInfo getCursorTaskInfo(Cursor cursor){
+        Log.v(TAG, "getCursorTaskInfo...");
         TaskInfo taskInfo = new TaskInfo();
 
         taskInfo.setID(cursor.getString(cursor.getColumnIndex(TaskInfo.ID_COLUMN)));
@@ -317,6 +323,8 @@ public class TimeDatabaseHelper extends SQLiteOpenHelper {
     }
 
     private Cursor getCursorDataModelList(){
+        Log.v(TAG,"getCursorDataModelList...");
+
         String[] columns = new String[]{TaskInfo.ID_COLUMN, TaskInfo.TASK_COLUMN,TaskInfo.TIME_ELAPSED_COLUMN,TaskInfo.DATE_COLUMN,TaskInfo.START_TIME_COLUMN,TaskInfo.END_TIME_COLUMN};
         String where = TaskInfo.DATE_COLUMN + " < ?";
         String[] whereArg = new String[]{"Date("+ getLastMondayDate() + ")"};
@@ -440,22 +448,23 @@ public class TimeDatabaseHelper extends SQLiteOpenHelper {
         return  pieDataList;
     }
 
-    public List<BarEntry> getTotalTimeBarDataList(){
-        Log.v(TAG,"getTotalTimeBarDataList...");
-        LinkedList<BarEntry> entries = new LinkedList<>();
+    public BarData getBarChartBarData(){
+        Log.v(TAG,"getBarChartBarData...");
+        ArrayList<BarEntry> entries = new ArrayList<>();
+        ArrayList<String> dates = new ArrayList<>();
 
         Cursor cursor = null;
+
+        Stack<String> stack = new Stack<>();
+
+        long totalTime = 0;
+
+        int i = 0;
 
         try{
             String[] columns = new String[]{TotalTime.TIME_ELAPSED_COLUMN, TotalTime.DATE_COLUMN};
             String where = TotalTime.DATE_COLUMN + " < ?";
             String[] whereArg = new String[]{"Date("+ getLastMondayDate() + ")"};
-
-            Stack<String> stack = new Stack<>();
-
-            long totalTime = 0;
-
-            int i = 0;
 
             cursor = getReadableDatabase().query(
                     TotalTime.TABLE,
@@ -474,11 +483,16 @@ public class TimeDatabaseHelper extends SQLiteOpenHelper {
                     long timeElapsed = cursor.getLong(cursor.getColumnIndex(TotalTime.TIME_ELAPSED_COLUMN));
                     String date = cursor.getString(cursor.getColumnIndex(TotalTime.DATE_COLUMN));
 
+                    Log.v(TAG,"!!!!!! timeElapsed: " + timeElapsed + " date: " + date);
+
                     if(stack.contains(date)){
                     totalTime += timeElapsed;
                     }else{
+                        BarEntry barEntry = new BarEntry(i++, totalTime);
+                        dates.add(stack.peek());
 
-                        entries.add(new BarEntry(i++,totalTime,stack.peek()));
+                        entries.add(barEntry);
+                        Log.v(TAG,"<><><><> totalTime added is " + totalTime);
                         stack.add(date);
                         totalTime = 0;
                     }
@@ -486,15 +500,34 @@ public class TimeDatabaseHelper extends SQLiteOpenHelper {
             }
 
         }catch (Exception e){
-            Log.e(TAG,"getTotalTimeBarDataList error: " + e.toString());
+            Log.e(TAG,"getBarChartBarData error: " + e.toString());
         }finally {
             if(!cursor.isClosed() && cursor != null){
                 cursor.close();
             }
-            return entries;
+            if(!stack.isEmpty()) {
+                BarEntry barEntry = new BarEntry(i++,totalTime);
+
+                dates.add(stack.peek());
+                entries.add(barEntry);
+            }
+
+
+            BarDataSet barDataSet = null;
+
+            if(entries != null){
+                barDataSet = new BarDataSet(entries, "Weekly report");
+                barDataSet.setColors(ColorTemplate.MATERIAL_COLORS);
+            }
+
+
+            return new BarData(barDataSet);
         }
 
     }
+
+
+
 
     private void insertTotalTime(TotalTime totalTime){
         Log.v(TAG,"addTotalTime...");

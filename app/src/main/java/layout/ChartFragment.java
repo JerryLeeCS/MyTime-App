@@ -93,13 +93,16 @@ public class ChartFragment extends Fragment {
 
             pieChart.setEntryLabelColor(Color.BLACK);
             pieChart.setDescription(null);
+
             pieChart.invalidate();
         }
 
         if(barChart != null){
-            barChart.setData(null);
-            barChart.setTouchEnabled(false);
+            BarData barData = getBarData();
+            barData.setBarWidth(0.2f);
 
+            barChart.setData(barData);
+            barChart.setTouchEnabled(false);
         }
     }
 
@@ -110,7 +113,7 @@ public class ChartFragment extends Fragment {
         entries.addAll(timeDatabaseHelper.getTotalTimePieDataList());
 
         PieDataSet ds1 = new PieDataSet(entries,"");
-        ds1.setColors(ColorTemplate.VORDIPLOM_COLORS);
+        ds1.setColors(ColorTemplate.MATERIAL_COLORS);
         ds1.setSliceSpace(2f);
         ds1.setValueTextSize(12f);
 
@@ -121,18 +124,12 @@ public class ChartFragment extends Fragment {
     }
 
     private BarData getBarData(){
-        List<BarEntry> entries;
+        BarData barData;
 
         TimeDatabaseHelper timeDatabaseHelper = new TimeDatabaseHelper(getContext());
-        entries = timeDatabaseHelper.getTotalTimeBarDataList();
+        barData = timeDatabaseHelper.getBarChartBarData();
 
-        BarDataSet barDataSet = null;
-
-        if(entries != null){
-            barDataSet = new BarDataSet(entries, "Weekly report");
-        }
-
-        return new BarData(barDataSet);
+        return barData;
     }
 
     // TODO: Rename method, update argument and hook method into UI event
