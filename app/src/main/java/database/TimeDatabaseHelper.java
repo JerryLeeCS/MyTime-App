@@ -459,7 +459,7 @@ public class TimeDatabaseHelper extends SQLiteOpenHelper {
 
         long totalTime = 0;
 
-        int i = 0;
+        float i = 1;
 
         try{
             String[] columns = new String[]{TotalTime.TIME_ELAPSED_COLUMN, TotalTime.DATE_COLUMN};
@@ -506,12 +506,11 @@ public class TimeDatabaseHelper extends SQLiteOpenHelper {
                 cursor.close();
             }
             if(!stack.isEmpty()) {
-                BarEntry barEntry = new BarEntry(i++,totalTime);
+                BarEntry barEntry = new BarEntry(i++,totalTime);//******
 
                 dates.add(stack.peek());
                 entries.add(barEntry);
             }
-
 
             BarDataSet barDataSet = null;
 
@@ -519,15 +518,10 @@ public class TimeDatabaseHelper extends SQLiteOpenHelper {
                 barDataSet = new BarDataSet(entries, "Weekly report");
                 barDataSet.setColors(ColorTemplate.MATERIAL_COLORS);
             }
-
-
             return new BarData(barDataSet);
         }
 
     }
-
-
-
 
     private void insertTotalTime(TotalTime totalTime){
         Log.v(TAG,"addTotalTime...");

@@ -5,6 +5,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,13 +13,21 @@ import android.view.ViewGroup;
 import com.example.jerrylee.mytime.R;
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.charts.PieChart;
+import com.github.mikephil.charting.components.AxisBase;
+import com.github.mikephil.charting.components.Description;
+import com.github.mikephil.charting.components.XAxis;
+import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
+import com.github.mikephil.charting.formatter.DefaultAxisValueFormatter;
+import com.github.mikephil.charting.formatter.IAxisValueFormatter;
+import com.github.mikephil.charting.formatter.IndexAxisValueFormatter;
 import com.github.mikephil.charting.utils.ColorTemplate;
+
 
 import java.util.ArrayList;
 import java.util.List;
@@ -99,10 +108,23 @@ public class ChartFragment extends Fragment {
 
         if(barChart != null){
             BarData barData = getBarData();
-            barData.setBarWidth(0.2f);
+            barData.setBarWidth(0.1f);
 
             barChart.setData(barData);
             barChart.setTouchEnabled(false);
+            barChart.setFitBars(true);
+
+            XAxis xAxis = barChart.getXAxis();
+            xAxis.setDrawAxisLine(false);
+            xAxis.setLabelCount(7,true);
+            xAxis.setAxisMaximum(0);
+            xAxis.setAxisMaximum(7);
+
+            YAxis yAxis = barChart.getAxisLeft();
+            yAxis.setDrawAxisLine(false);
+            yAxis.setDrawLabels(false);
+
+            barChart.invalidate();
         }
     }
 
@@ -120,7 +142,6 @@ public class ChartFragment extends Fragment {
         PieData d = new PieData(ds1);
 
         return d;
-
     }
 
     private BarData getBarData(){
