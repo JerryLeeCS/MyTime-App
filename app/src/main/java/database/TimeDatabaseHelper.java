@@ -54,14 +54,14 @@ public class TimeDatabaseHelper extends SQLiteOpenHelper {
                     + TaskInfo.TIME_ELAPSED_COLUMN + " INTEGER, "
                     + TaskInfo.START_TIME_COLUMN + " TEXT, "
                     + TaskInfo.END_TIME_COLUMN + " TEXT, "
-                    + TaskInfo.DATE_COLUMN + " DATE);";
+                    + TaskInfo.DATE_COLUMN + " TEXT);";
 
     private static final String createTotalTimeTable =
             "CREATE TABLE " + TotalTime.TABLE + " ("
             + TotalTime.ID_COLUMN + " INTEGER PRIMARY KEY AUTOINCREMENT,"
             + TotalTime.TASK_COLUMN + " TEXT, "
             + TotalTime.TIME_ELAPSED_COLUMN + " INTEGER, "
-            + TotalTime.DATE_COLUMN + " DATE);";
+            + TotalTime.DATE_COLUMN + " TEXT);";
 
 
     public TimeDatabaseHelper(Context context) {
@@ -402,7 +402,7 @@ public class TimeDatabaseHelper extends SQLiteOpenHelper {
             Log.e(TAG,"deleteTotalTime Error: " + e.toString());
         }finally {
             database.close();
-            Log.v(TAG,"<><><><<><><<>><><> deletedTotalTime <><><><><<><<><>>");
+            Log.v(TAG,"deletedTotalTime ");
         }
     }
 
@@ -414,8 +414,8 @@ public class TimeDatabaseHelper extends SQLiteOpenHelper {
 
         try{
             String[] columns = new String[]{TotalTime.TASK_COLUMN, TotalTime.TIME_ELAPSED_COLUMN};
-            String where = TotalTime.DATE_COLUMN + " < ?";
-            String[] whereArg = new String[]{"Date("+ getLastMondayDate() + ")"};
+            String where = TotalTime.DATE_COLUMN  + " = ? ";
+            String[] whereArg = new String[]{getPresentDate()};
 
             cursor = getReadableDatabase().query(
                     TotalTime.TABLE,
@@ -464,7 +464,7 @@ public class TimeDatabaseHelper extends SQLiteOpenHelper {
         try{
             String[] columns = new String[]{TotalTime.TIME_ELAPSED_COLUMN, TotalTime.DATE_COLUMN};
             String where = TotalTime.DATE_COLUMN + " < ?";
-            String[] whereArg = new String[]{"Date("+ getLastMondayDate() + ")"};
+            String[] whereArg = new String[]{"date("+ getLastMondayDate() + ")"};
 
             cursor = getReadableDatabase().query(
                     TotalTime.TABLE,
@@ -606,6 +606,13 @@ public class TimeDatabaseHelper extends SQLiteOpenHelper {
         calendar.add(Calendar.DAY_OF_MONTH,diff == 1 ? -6 : diff );
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
         Log.v(TAG,"getLastMondayDate: " + simpleDateFormat.format(calendar.getTime()));
+        return simpleDateFormat.format(calendar.getTime());
+    }
+
+    private String getPresentDate(){
+        Calendar calendar = Calendar.getInstance();
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        Log.v(TAG,"getPresentDate : " + simpleDateFormat.format(calendar.getTime()));
         return simpleDateFormat.format(calendar.getTime());
     }
 
