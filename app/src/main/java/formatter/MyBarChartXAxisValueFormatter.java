@@ -10,9 +10,8 @@ import com.github.mikephil.charting.formatter.IAxisValueFormatter;
 public class MyBarChartXAxisValueFormatter implements IAxisValueFormatter {
 
     private String[] mValues;
-
-    public MyBarChartXAxisValueFormatter(String[] mValues){
-        this.mValues = mValues;
+    public MyBarChartXAxisValueFormatter(){
+        this.mValues = new String[]{"MON","TUES","WED","THUR","FRI","SAT","SUN"};
     }
 
 

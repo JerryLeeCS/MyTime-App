@@ -20,6 +20,8 @@ public class MyBarChartYAxisValueFormatter implements IAxisValueFormatter {
 
     @Override
     public String getFormattedValue(float value, AxisBase axis) {
-        return mFormat.format(value) + " hr";
+        int hours = ((int)value)/3600;
+
+        return hours + " hr";
     }
 }

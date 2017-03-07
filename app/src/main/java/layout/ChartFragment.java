@@ -33,6 +33,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import database.TimeDatabaseHelper;
+import formatter.MyBarChartXAxisValueFormatter;
+import formatter.MyBarChartYAxisValueFormatter;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -108,7 +110,7 @@ public class ChartFragment extends Fragment {
 
         if(barChart != null){
             BarData barData = getBarData();
-            barData.setBarWidth(0.1f);
+            barData.setBarWidth(0.5f);
 
             barChart.setData(barData);
             barChart.setTouchEnabled(false);
@@ -116,13 +118,27 @@ public class ChartFragment extends Fragment {
 
             XAxis xAxis = barChart.getXAxis();
             xAxis.setDrawAxisLine(false);
+            xAxis.setDrawGridLines(false);
+            xAxis.setPosition(XAxis.XAxisPosition.TOP_INSIDE);
+            xAxis.setDrawLabels(true);
+            xAxis.setLabelRotationAngle(30);
             xAxis.setLabelCount(7,true);
-            xAxis.setAxisMaximum(0);
-            xAxis.setAxisMaximum(7);
+            xAxis.setAxisMinimum(0f);
+            xAxis.setAxisMaximum(7f);
+            xAxis.setGranularity(1f);
+            xAxis.setValueFormatter(new MyBarChartXAxisValueFormatter());
 
-            YAxis yAxis = barChart.getAxisLeft();
-            yAxis.setDrawAxisLine(false);
-            yAxis.setDrawLabels(false);
+            YAxis yAxisLeft = barChart.getAxisLeft();
+            yAxisLeft.setDrawAxisLine(false);
+            yAxisLeft.setDrawGridLines(false);
+            yAxisLeft.setDrawLabels(false);
+
+            YAxis yAxisRight = barChart.getAxisRight();
+            yAxisRight.setDrawLabels(true);
+            yAxisRight.setAxisMinimum(0f);
+            yAxisRight.setAxisMaximum(86400f);
+            yAxisRight.setGranularity(3600f);
+            yAxisRight.setValueFormatter(new MyBarChartYAxisValueFormatter());
 
             barChart.invalidate();
         }
