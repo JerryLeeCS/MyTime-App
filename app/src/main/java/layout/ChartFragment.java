@@ -115,30 +115,33 @@ public class ChartFragment extends Fragment {
             barChart.setData(barData);
             barChart.setTouchEnabled(false);
             barChart.setFitBars(true);
+            barChart.setDrawBorders(false);
 
             XAxis xAxis = barChart.getXAxis();
-            xAxis.setDrawAxisLine(false);
-            xAxis.setDrawGridLines(false);
-            xAxis.setPosition(XAxis.XAxisPosition.TOP_INSIDE);
+            xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
             xAxis.setDrawLabels(true);
             xAxis.setLabelRotationAngle(30);
-            xAxis.setLabelCount(7,true);
+            xAxis.setLabelCount(8,true);
             xAxis.setAxisMinimum(0f);
             xAxis.setAxisMaximum(7f);
             xAxis.setGranularity(1f);
+            xAxis.setCenterAxisLabels(true);
             xAxis.setValueFormatter(new MyBarChartXAxisValueFormatter());
 
             YAxis yAxisLeft = barChart.getAxisLeft();
+            YAxis yAxisRight= barChart.getAxisRight();
+
+            yAxisRight.setDrawAxisLine(false);
+            yAxisRight.setDrawGridLines(false);
+            yAxisRight.setDrawLabels(false);
+
+            yAxisLeft.setDrawLabels(true);
+            yAxisLeft.setAxisMinimum(0f);
+            yAxisLeft.setAxisMaximum(86400f);
+            yAxisLeft.setGranularity(1800f);
+            yAxisLeft.setValueFormatter(new MyBarChartYAxisValueFormatter());
             yAxisLeft.setDrawAxisLine(false);
             yAxisLeft.setDrawGridLines(false);
-            yAxisLeft.setDrawLabels(false);
-
-            YAxis yAxisRight = barChart.getAxisRight();
-            yAxisRight.setDrawLabels(true);
-            yAxisRight.setAxisMinimum(0f);
-            yAxisRight.setAxisMaximum(86400f);
-            yAxisRight.setGranularity(3600f);
-            yAxisRight.setValueFormatter(new MyBarChartYAxisValueFormatter());
 
             barChart.invalidate();
         }

@@ -1,5 +1,7 @@
 package formatter;
 
+import android.util.Log;
+
 import com.github.mikephil.charting.components.AxisBase;
 import com.github.mikephil.charting.formatter.IAxisValueFormatter;
 
@@ -9,14 +11,16 @@ import com.github.mikephil.charting.formatter.IAxisValueFormatter;
 
 public class MyBarChartXAxisValueFormatter implements IAxisValueFormatter {
 
+    static final String TAG = MyBarChartXAxisValueFormatter.class.getSimpleName();
+
     private String[] mValues;
     public MyBarChartXAxisValueFormatter(){
-        this.mValues = new String[]{"MON","TUES","WED","THUR","FRI","SAT","SUN"};
+        this.mValues = new String[]{"MON","TUES","WED","THUR","FRI","SAT","SUN",""};
     }
-
 
     @Override
     public String getFormattedValue(float value, AxisBase axis) {
+        Log.v(TAG,"value: " + value);
         return mValues[(int) value];
     }
 }

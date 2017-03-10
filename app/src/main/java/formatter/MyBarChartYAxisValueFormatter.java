@@ -17,7 +17,6 @@ public class MyBarChartYAxisValueFormatter implements IAxisValueFormatter {
         mFormat = new DecimalFormat("###,###,##0.0");
     }
 
-
     @Override
     public String getFormattedValue(float value, AxisBase axis) {
         int hours = ((int)value)/3600;

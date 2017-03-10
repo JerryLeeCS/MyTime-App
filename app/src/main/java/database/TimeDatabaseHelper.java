@@ -63,7 +63,6 @@ public class TimeDatabaseHelper extends SQLiteOpenHelper {
             + TotalTime.TIME_ELAPSED_COLUMN + " INTEGER, "
             + TotalTime.DATE_COLUMN + " TEXT);";
 
-
     public TimeDatabaseHelper(Context context) {
         super(context, DB_NAME, null, DB_VERSION);
         Log.v(TAG,"onInitializing <><><><>");
@@ -459,7 +458,7 @@ public class TimeDatabaseHelper extends SQLiteOpenHelper {
 
         long totalTime = 0;
 
-        float i = 1;
+        float i = (float) 0.5;
 
         try{
             String[] columns = new String[]{TotalTime.TIME_ELAPSED_COLUMN, TotalTime.DATE_COLUMN};
@@ -506,8 +505,7 @@ public class TimeDatabaseHelper extends SQLiteOpenHelper {
                 cursor.close();
             }
             if(!stack.isEmpty()) {
-                BarEntry barEntry = new BarEntry(i++,totalTime);//******
-
+                BarEntry barEntry = new BarEntry(i++,totalTime);
                 dates.add(stack.peek());
                 entries.add(barEntry);
             }
