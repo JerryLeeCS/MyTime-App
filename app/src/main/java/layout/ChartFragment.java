@@ -136,9 +136,9 @@ public class ChartFragment extends Fragment {
             yAxisRight.setDrawLabels(false);
 
             yAxisLeft.setDrawLabels(true);
+            yAxisLeft.setLabelCount(5);
             yAxisLeft.setAxisMinimum(0f);
-            yAxisLeft.setAxisMaximum(86400f);
-            yAxisLeft.setGranularity(1800f);
+            yAxisLeft.setGranularity(3600f);
             yAxisLeft.setValueFormatter(new MyBarChartYAxisValueFormatter());
             yAxisLeft.setDrawAxisLine(false);
             yAxisLeft.setDrawGridLines(false);

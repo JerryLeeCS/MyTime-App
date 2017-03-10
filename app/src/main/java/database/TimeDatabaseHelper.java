@@ -16,9 +16,11 @@ import com.github.mikephil.charting.data.PieEntry;
 import com.github.mikephil.charting.utils.ColorTemplate;
 
 import java.lang.reflect.Array;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -487,7 +489,7 @@ public class TimeDatabaseHelper extends SQLiteOpenHelper {
                     if(stack.contains(date)){
                     totalTime += timeElapsed;
                     }else{
-                        BarEntry barEntry = new BarEntry(i++, totalTime);
+                        BarEntry barEntry = new BarEntry(getDay(stack.peek()), totalTime);
                         dates.add(stack.peek());
 
                         entries.add(barEntry);
@@ -505,7 +507,7 @@ public class TimeDatabaseHelper extends SQLiteOpenHelper {
                 cursor.close();
             }
             if(!stack.isEmpty()) {
-                BarEntry barEntry = new BarEntry(i++,totalTime);
+                BarEntry barEntry = new BarEntry(getDay(stack.peek()),totalTime);
                 dates.add(stack.peek());
                 entries.add(barEntry);
             }
@@ -612,6 +614,21 @@ public class TimeDatabaseHelper extends SQLiteOpenHelper {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
         Log.v(TAG,"getPresentDate : " + simpleDateFormat.format(calendar.getTime()));
         return simpleDateFormat.format(calendar.getTime());
+    }
+
+    private float getDay(String date){
+        Calendar calendar = Calendar.getInstance();
+
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+
+        try {
+            Date date1 = simpleDateFormat.parse(date);
+            calendar.setTime(date1);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        return calendar.get(Calendar.DAY_OF_WEEK) - 1.5f;
     }
 
 }
