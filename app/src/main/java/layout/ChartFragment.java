@@ -15,6 +15,7 @@ import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.components.AxisBase;
 import com.github.mikephil.charting.components.Description;
+import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.BarData;
@@ -35,6 +36,7 @@ import java.util.List;
 import database.TimeDatabaseHelper;
 import formatter.MyBarChartXAxisValueFormatter;
 import formatter.MyBarChartYAxisValueFormatter;
+import formatter.timeValueFormatter;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -98,6 +100,7 @@ public class ChartFragment extends Fragment {
             pieChart.setData(getPieData());
             pieChart.setTouchEnabled(false);
             pieChart.setDrawHoleEnabled(true);
+            pieChart.getData().setValueFormatter(new timeValueFormatter());
 
             pieChart.setCenterText("Today");
             pieChart.setCenterTextSize(36f);
@@ -112,10 +115,17 @@ public class ChartFragment extends Fragment {
             BarData barData = getBarData();
             barData.setBarWidth(0.5f);
 
+            Description description = new Description();
+            description.setText("");
+            barChart.setDescription(description);
+
             barChart.setData(barData);
             barChart.setTouchEnabled(false);
             barChart.setFitBars(true);
             barChart.setDrawBorders(false);
+            barChart.setDrawValueAboveBar(true);
+            //barChart.getBarData().setDrawValues(false);
+            barChart.getBarData().setValueFormatter(new timeValueFormatter());
 
             XAxis xAxis = barChart.getXAxis();
             xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
@@ -141,7 +151,7 @@ public class ChartFragment extends Fragment {
             yAxisLeft.setGranularity(3600f);
             yAxisLeft.setValueFormatter(new MyBarChartYAxisValueFormatter());
             yAxisLeft.setDrawAxisLine(false);
-            yAxisLeft.setDrawGridLines(false);
+            yAxisLeft.setDrawGridLines(true);
 
             barChart.invalidate();
         }
