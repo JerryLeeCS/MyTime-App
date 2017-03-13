@@ -17,8 +17,8 @@ public class timeValueFormatter implements IValueFormatter {
     private String getTimeValue(float value){
         int mValue = (int) value;
 
-        int hours = mValue / 216000;
-        int minutes = (mValue % 216000) / 60;
+        int hours = mValue / 3600;
+        int minutes = (mValue % 3600) / 60;
 
         if(hours == 0){
             return String.valueOf(minutes) + " mins";
