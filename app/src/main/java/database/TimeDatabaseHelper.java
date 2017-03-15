@@ -257,13 +257,13 @@ public class TimeDatabaseHelper extends SQLiteOpenHelper {
         return majorId;
     }
 
-    public List<DataModel> getDataModelListTaskInfo(){
+    public List<DataModel> getDataModelListTaskInfo(){//***
         Log.v(TAG,"on getDataModelList...");
-        LinkedList<String> dates = new LinkedList<>();
+        Stack<String> dates = new Stack<>();
 
         Cursor cursor = null;
 
-        ArrayList<DataModel> dataModelList = new ArrayList<DataModel>();
+        ArrayList<DataModel> dataModelList = new ArrayList<>();
         DataModel dataModel = new DataModel();
         LinkedList<TaskInfo> itemList = new LinkedList<>();
         int totalElapsedTime = 0;
@@ -277,19 +277,24 @@ public class TimeDatabaseHelper extends SQLiteOpenHelper {
 
                 do{
                     TaskInfo item = getCursorTaskInfo(cursor);
-
                     String date = cursor.getString(cursor.getColumnIndex(TaskInfo.DATE_COLUMN));
+                    int elapsedTime = cursor.getInt(cursor.getColumnIndex(TaskInfo.TIME_ELAPSED_COLUMN));
+                    Log.v(TAG,"Read elapsed time: " + elapsedTime + " Date: " + date);
                     if(!dates.contains(date)){
-                        dates.add(date);
+
                         dataModel.setTotalTimeElapsed(totalElapsedTime);
                         dataModel.setItemList(itemList);
                         dataModelList.add(dataModel);
+                        Log.v(TAG,"saved totalElapsedTime: " + totalElapsedTime + " date: " + dates.peek());
+                        dates.add(date);
+
                         dataModel = new DataModel();
                         totalElapsedTime = 0;
                         dataModel.setSectionTitle(date);
                         itemList = new LinkedList<>();
                     }
-                    totalElapsedTime += cursor.getInt(cursor.getColumnIndex(TaskInfo.TIME_ELAPSED_COLUMN));
+                    totalElapsedTime += elapsedTime;
+                    Log.v(TAG,"totalElapsedTime: " + totalElapsedTime);
                     itemList.add(item);
                 }while(cursor.moveToNext());
             }
@@ -297,9 +302,14 @@ public class TimeDatabaseHelper extends SQLiteOpenHelper {
             Log.v(TAG, "Failed to getDataModelList...");
         }finally {
             dataModel.setItemList(itemList);
+            dataModel.setTotalTimeElapsed(totalElapsedTime);
+
+            /*
             if(dates.size() < 2){
                 dataModel.setTotalTimeElapsed(totalElapsedTime);
             }
+            */
+
             dataModelList.add(dataModel);
             if(cursor != null && !cursor.isClosed()){
                 cursor.close();
@@ -327,14 +337,14 @@ public class TimeDatabaseHelper extends SQLiteOpenHelper {
         Log.v(TAG,"getCursorDataModelList...");
 
         String[] columns = new String[]{TaskInfo.ID_COLUMN, TaskInfo.TASK_COLUMN,TaskInfo.TIME_ELAPSED_COLUMN,TaskInfo.DATE_COLUMN,TaskInfo.START_TIME_COLUMN,TaskInfo.END_TIME_COLUMN};
-        String where = TaskInfo.DATE_COLUMN + " < ?";
-        String[] whereArg = new String[]{"Date("+ getLastMondayDate() + ")"};
+        //String where = TaskInfo.DATE_COLUMN + " > ?";
+        //String[] whereArg = new String[]{getLastMondayDate()};
         String orderBy = TaskInfo.ID_COLUMN + " DESC";
         Cursor cursor = getReadableDatabase().query(
                 TaskInfo.TABLE,
                 columns,
-                where,
-                whereArg,
+                /*where*/null,
+                /*whereArg*/null,
                 null,
                 null,
                 orderBy);
@@ -452,7 +462,6 @@ public class TimeDatabaseHelper extends SQLiteOpenHelper {
     public BarData getBarChartBarData(){
         Log.v(TAG,"getBarChartBarData...");
         ArrayList<BarEntry> entries = new ArrayList<>();
-        ArrayList<String> dates = new ArrayList<>();
 
         Cursor cursor = null;
 
@@ -464,8 +473,8 @@ public class TimeDatabaseHelper extends SQLiteOpenHelper {
 
         try{
             String[] columns = new String[]{TotalTime.TIME_ELAPSED_COLUMN, TotalTime.DATE_COLUMN};
-            String where = TotalTime.DATE_COLUMN + " < ?";
-            String[] whereArg = new String[]{"date("+ getLastMondayDate() + ")"};
+            String where = TotalTime.DATE_COLUMN + " > ?";
+            String[] whereArg = new String[]{getLastMondayDate()};
 
             cursor = getReadableDatabase().query(
                     TotalTime.TABLE,
@@ -484,19 +493,17 @@ public class TimeDatabaseHelper extends SQLiteOpenHelper {
                     long timeElapsed = cursor.getLong(cursor.getColumnIndex(TotalTime.TIME_ELAPSED_COLUMN));
                     String date = cursor.getString(cursor.getColumnIndex(TotalTime.DATE_COLUMN));
 
-                    Log.v(TAG,"!!!!!! timeElapsed: " + timeElapsed + " date: " + date);
+                    Log.v(TAG,"OOOOOOOOOOO timeElapsed: " + timeElapsed + " date: " + date);
 
-                    if(stack.contains(date)){
-                    totalTime += timeElapsed;
-                    }else{
+                    if(!stack.contains(date)){
                         BarEntry barEntry = new BarEntry(getDay(stack.peek()), totalTime);
-                        dates.add(stack.peek());
-
                         entries.add(barEntry);
-                        Log.v(TAG,"<><><><> totalTime added is " + totalTime);
+
+                        Log.v(TAG,"XXXXXXXXXXXXXX totalTime added is " + totalTime + " day is: " + getDay(stack.peek()) + " date is: " + stack.peek());
                         stack.add(date);
                         totalTime = 0;
                     }
+                    totalTime += timeElapsed;
                 }while(cursor.moveToNext());
             }
 
@@ -508,7 +515,6 @@ public class TimeDatabaseHelper extends SQLiteOpenHelper {
             }
             if(!stack.isEmpty()) {
                 BarEntry barEntry = new BarEntry(getDay(stack.peek()),totalTime);
-                dates.add(stack.peek());
                 entries.add(barEntry);
             }
 

@@ -102,7 +102,7 @@ public class ChartFragment extends Fragment {
             pieChart.setDrawHoleEnabled(true);
             pieChart.getData().setValueFormatter(new timeValueFormatter());
 
-            pieChart.setCenterText("Today");
+            pieChart.setCenterText("Today\n");
             pieChart.setCenterTextSize(36f);
 
             pieChart.setEntryLabelColor(Color.BLACK);
