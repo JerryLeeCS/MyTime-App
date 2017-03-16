@@ -125,6 +125,7 @@ public class ChartFragment extends Fragment {
             barChart.setDrawBorders(false);
             barChart.setDrawValueAboveBar(true);
             barChart.getBarData().setValueFormatter(new timeValueFormatter());
+            barChart.getBarData().setValueTextSize(13);
 
             XAxis xAxis = barChart.getXAxis();
             xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);

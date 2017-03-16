@@ -3,6 +3,7 @@ package com.example.jerrylee.mytime;
 
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
+import android.graphics.Color;
 import android.os.PersistableBundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -41,6 +42,8 @@ public class MainActivity extends AppCompatActivity  implements onDataChangedLis
      */
     private ViewPager mViewPager;
 
+    private TabLayout tabLayout;
+
     Fragment[] fragments;
 
     @Override
@@ -51,19 +54,26 @@ public class MainActivity extends AppCompatActivity  implements onDataChangedLis
         setContentView(R.layout.activity_main);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+        Toolbar toolBar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolBar);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+        toolBar.setTitle("");
+        toolBar.setSubtitle("");
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.
+
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
 
         // Set up the ViewPager with the sections adapter.
         mViewPager = (ViewPager) findViewById(R.id.container);
         mViewPager.setAdapter(mSectionsPagerAdapter);
 
-        TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
+        tabLayout = (TabLayout) findViewById(R.id.tabLayout);
         tabLayout.setupWithViewPager(mViewPager);
 
+        tabLayout.getTabAt(0).setIcon(R.drawable.ic_play_circle_filled_black_48dp);
+        tabLayout.getTabAt(1).setIcon(R.drawable.ic_reorder_black_48dp);
+        tabLayout.getTabAt(2).setIcon(R.drawable.ic_assessment_black_48dp);
     }
 
     @Override
@@ -76,7 +86,6 @@ public class MainActivity extends AppCompatActivity  implements onDataChangedLis
     public boolean onCreateOptionsMenu(Menu menu) {
         Log.v(TAG,"onCreateOptionMenu...");
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
     }
 
@@ -144,11 +153,11 @@ public class MainActivity extends AppCompatActivity  implements onDataChangedLis
         public CharSequence getPageTitle(int position) {
             switch (position) {
                 case 0:
-                    return "TIME";
+                    return null;
                 case 1:
-                    return "LIST";
+                    return null;
                 case 2:
-                    return "REPORT";
+                    return null;
             }
             return null;
         }
