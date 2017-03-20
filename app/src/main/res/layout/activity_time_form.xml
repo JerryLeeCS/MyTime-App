@@ -3,18 +3,28 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/timeform_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="?attr/colorPrimary"
+        android:minHeight="?attr/actionBarSize"
+        android:theme="?attr/actionBarTheme"
+        android:elevation="4dp"/>
+
     <Space
         android:layout_width="match_parent"
         android:layout_height="40dp" />
 
     <EditText
+        android:id="@+id/taskNameEditText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:inputType="textPersonName"
         android:ems="10"
-        android:id="@+id/taskNameEditText"
-        android:textAlignment="center"
-        android:hint="enter task name"/>
+        android:hint="enter task name"
+        android:inputType="textPersonName"
+        android:textAlignment="center" />
 
     <HorizontalScrollView
         android:layout_width="match_parent"

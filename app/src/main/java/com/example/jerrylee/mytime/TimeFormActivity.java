@@ -2,10 +2,9 @@ package com.example.jerrylee.mytime;
 
 import android.app.TimePickerDialog;
 import android.content.Intent;
-import android.provider.ContactsContract;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -14,7 +13,6 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.TimePicker;
-import android.widget.Toast;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -43,6 +41,7 @@ public class TimeFormActivity extends AppCompatActivity {
     public static final String ELAPSED_TIME_MINUS = "ELAPSED_TIME_MINUS";
 
     private TaskInfo dataItem;
+    private Toolbar toolBar;
 
     public enum DataChanged{
         TASK_CHANGED,
@@ -69,6 +68,13 @@ public class TimeFormActivity extends AppCompatActivity {
         fromTimeEditText = (TextView) findViewById(R.id.fromTimeEditText);
         toTimeEditText = (TextView) findViewById(R.id.toTimeEditText);
         buttonLinearLayout = (LinearLayout) findViewById(R.id.scrollLinearLayout);
+        toolBar = (Toolbar) findViewById(R.id.timeform_toolbar);
+        toolBar.setNavigationIcon(R.drawable.ic_navigate_before_black_48dp);
+
+        setSupportActionBar(toolBar);
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
 
         Intent intent = getIntent();
 
