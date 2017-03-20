@@ -2,6 +2,7 @@ package com.example.jerrylee.mytime;
 
 import android.app.TimePickerDialog;
 import android.content.Intent;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -13,8 +14,11 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.TimePicker;
+import android.widget.Toast;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -42,6 +46,7 @@ public class TimeFormActivity extends AppCompatActivity {
 
     private TaskInfo dataItem;
     private Toolbar toolBar;
+    private TextView currentDateTextView;
 
     public enum DataChanged{
         TASK_CHANGED,
@@ -70,6 +75,9 @@ public class TimeFormActivity extends AppCompatActivity {
         buttonLinearLayout = (LinearLayout) findViewById(R.id.scrollLinearLayout);
         toolBar = (Toolbar) findViewById(R.id.timeform_toolbar);
         toolBar.setNavigationIcon(R.drawable.ic_navigate_before_black_48dp);
+        currentDateTextView = (TextView) findViewById(R.id.currentDateTextView);
+
+        currentDateTextView.setText(getCurrentDate() + " " + getDayOfWeek());
 
         setSupportActionBar(toolBar);
 
@@ -255,6 +263,45 @@ public class TimeFormActivity extends AppCompatActivity {
             buttonLinearLayout.addView(button);
         }
 
+    }
+
+    private String getCurrentDate(){
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        Date date = new Date();
+        return simpleDateFormat.format(date);
+    }
+
+    private String getDayOfWeek(){
+        Calendar calendar = Calendar.getInstance();
+
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+
+        try {
+            Date date1 = simpleDateFormat.parse(getCurrentDate());
+            calendar.setTime(date1);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        Toast.makeText(this,"Week of day: " + calendar.get(Calendar.DAY_OF_WEEK),Toast.LENGTH_SHORT).show();
+
+        switch(calendar.get(Calendar.DAY_OF_WEEK)){
+            case 2:
+                return "MON";
+            case 3:
+                return "TUES";
+            case 4:
+                return "WED";
+            case 5:
+                return "THUR";
+            case 6:
+                return "FRI";
+            case 7:
+                return "SAT";
+            case 8:
+                return "SUN";
+        }
+        return "";
     }
 }
 

@@ -11,7 +11,17 @@
         android:background="?attr/colorPrimary"
         android:minHeight="?attr/actionBarSize"
         android:theme="?attr/actionBarTheme"
-        android:elevation="4dp"/>
+        android:elevation="4dp">
+
+        <TextView
+            android:id="@+id/currentDateTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/colorPrimaryDark"
+            android:textSize="20sp"/>
+
+    </android.support.v7.widget.Toolbar>
+
 
     <Space
         android:layout_width="match_parent"
