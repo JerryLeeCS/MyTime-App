@@ -1,49 +1,60 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="layout.ChronometerFragment"
     android:orientation="vertical"
-    android:padding="1dp"
     android:background="@android:color/background_light"
     android:id="@+id/chronometerFragment">
 
     <!-- TODO: Update blank fragment layout -->
 
 
+    <at.grabner.circleprogress.CircleProgressView
+        android:id="@+id/timer_circle_progress_view"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:visibility="visible"
+        tools:layout_constraintTop_creator="1"
+        tools:layout_constraintRight_creator="1"
+        android:layout_marginTop="16dp"
+        tools:layout_constraintLeft_creator="1"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        android:layout_marginRight="16dp"
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_marginLeft="16dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintVertical_bias="0.781" />
+
     <TextView
         android:id="@+id/timer_text_view"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_centerVertical="true"
+        android:layout_width="192dp"
+        android:layout_height="58dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginLeft="32dp"
+        android:layout_marginRight="32dp"
+        android:layout_marginTop="8dp"
         android:background="@android:color/background_light"
         android:padding="6dp"
-        android:text="@string/timer_text_view_empty"
         android:textAlignment="center"
         android:textColor="@android:color/background_dark"
-        android:textSize="74sp" />
-
-    <Button
-        android:id="@+id/start_button"
-        style="@style/Widget.AppCompat.Button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="15dp"
-        android:backgroundTint="@color/colorPrimary"
-        android:drawableTint="@color/cardview_dark_background"
-        android:elevation="2dp"
-        android:text="@string/timer_start_button"
-        android:textAlignment="center"
-        android:textColor="@android:color/background_dark"
-        android:textSize="24sp" />
+        android:textSize="36sp"
+        app:layout_constraintBottom_toBottomOf="@+id/timer_circle_progress_view"
+        app:layout_constraintLeft_toLeftOf="@+id/timer_circle_progress_view"
+        app:layout_constraintRight_toRightOf="@+id/timer_circle_progress_view"
+        app:layout_constraintTop_toTopOf="@+id/timer_circle_progress_view"
+        app:layout_constraintVertical_bias="0.504"
+        tools:layout_constraintBottom_creator="1"
+        tools:layout_constraintLeft_creator="1"
+        tools:layout_constraintRight_creator="1" />
 
     <TextView
         android:hint="@string/auto_complete_text_view_blank"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:id="@+id/taskNameTextView"
         android:background="@android:color/background_light"
@@ -55,11 +66,45 @@
         android:maxLines="1"
         android:inputType="text"
         android:imeOptions="actionDone"
-        android:layout_marginTop="48dp"
         android:freezesText="true"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentStart="true"
-        />
+        tools:layout_constraintTop_creator="1"
+        tools:layout_constraintRight_creator="1"
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_marginTop="8dp"
+        tools:layout_constraintLeft_creator="1"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        app:layout_constraintHorizontal_bias="0.0"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintVertical_bias="0.269"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/timer_circle_progress_view" />
+
+    <ImageButton
+        android:id="@+id/start_button"
+        style="@style/Widget.AppCompat.Button"
+        android:layout_width="114dp"
+        android:layout_height="64dp"
+        android:layout_marginBottom="8dp"
+        android:backgroundTint="@color/colorPrimary"
+        android:drawableTint="@color/cardview_dark_background"
+        android:elevation="2dp"
+        android:text="@string/timer_start_button"
+        android:textAlignment="center"
+        android:textColor="@android:color/background_dark"
+        android:textSize="24sp"
+        app:layout_constraintBottom_toBottomOf="@+id/timer_circle_progress_view"
+        app:layout_constraintLeft_toLeftOf="@+id/timer_circle_progress_view"
+        app:layout_constraintRight_toRightOf="@+id/timer_circle_progress_view"
+        tools:layout_constraintLeft_creator="1"
+        tools:layout_constraintRight_creator="1"
+        tools:layout_constraintTop_creator="1"
+        app:layout_constraintTop_toTopOf="@+id/timer_circle_progress_view"
+        android:layout_marginTop="8dp"
+        app:layout_constraintVertical_bias="0.491"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp" />
 
 
-</RelativeLayout>
+</android.support.constraint.ConstraintLayout>

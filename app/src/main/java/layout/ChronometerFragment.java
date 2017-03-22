@@ -16,6 +16,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -27,6 +28,7 @@ import java.lang.ref.WeakReference;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import at.grabner.circleprogress.CircleProgressView;
 import database.TimeDatabaseHelper;
 import item.TaskInfo;
 import listener.onDataChangedListener;
@@ -55,9 +57,10 @@ public class ChronometerFragment extends Fragment {
 
     private OnFragmentInteractionListener mListener;
 
-    private Button timerButton;
+    private ImageButton timerButton;
     private TextView timerTextView;
     private TextView taskNameEditText;
+    private CircleProgressView circleProgressView;
 
     private final Handler mUpdateTimeHandler = new UIUpdateHandler(this);
 
@@ -144,10 +147,11 @@ public class ChronometerFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         Log.v(TAG,"onViewCreated...");
-        timerButton = (Button) getView().findViewById(R.id.start_button);
+        timerButton = (ImageButton) getView().findViewById(R.id.start_button);
         timerTextView = (TextView) getView().findViewById(R.id.timer_text_view);
         taskNameEditText = (TextView) getView().findViewById(R.id.taskNameTextView);
-
+        circleProgressView = (CircleProgressView) getView().findViewById(R.id.timer_circle_progress_view);
+        
         final TimeDatabaseHelper timeDatabaseHelper = new TimeDatabaseHelper(getContext());
 
         Log.v(TAG,"onViewCreated...");
@@ -329,14 +333,15 @@ public class ChronometerFragment extends Fragment {
     private void updateUIStartRun(){
         Log.v(TAG,"updateUIStartRun....");
         mUpdateTimeHandler.sendEmptyMessage(MSG_UPDATE_TIME);
-        timerButton.setText(R.string.timer_stop_button);
+        //timerButton.setText(R.string.timer_stop_button);
         taskNameEditText.setText(timerService.getTaskName() == null ? "" : timerService.getTaskName());
     }
 
     private void updateUIStopRun(){
         Log.v(TAG,"updateUIStopRun...");
         mUpdateTimeHandler.removeMessages(MSG_UPDATE_TIME);
-        timerButton.setText(R.string.timer_start_button);
+        //timerButton.setText(R.string.timer_start_button);
+
     }
 
     private void updateUITimer(){

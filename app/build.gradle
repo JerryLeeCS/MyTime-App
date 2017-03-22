@@ -32,5 +32,6 @@ dependencies {
     compile 'com.android.support:recyclerview-v7:25.1.0'
     compile 'com.afollestad:sectioned-recyclerview:0.2.3'
     compile 'com.github.PhilJay:MPAndroidChart:v3.0.1'
-    //compile 'com.github.PhilJay:MPAndroidChart:v2.2.4'
+    compile 'com.github.jakob-grabner:Circle-Progress-View:v1.3'
+    compile 'com.android.support.constraint:constraint-layout:1.0.2'
 }
