@@ -136,7 +136,7 @@ public class ChronometerFragment extends Fragment {
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        String taskName = taskNameEditText.getText().toString() == null ? "" : taskNameEditText.getText().toString();
+        String taskName = taskNameEditText.getText().toString() == null ? "xx" : taskNameEditText.getText().toString();
         insertItem.setTaskName(taskName);
 
         outState.putSerializable("insertItem", (Serializable) insertItem);
@@ -230,6 +230,7 @@ public class ChronometerFragment extends Fragment {
         super.onStop();
         Log.v(TAG,"onStop...");
         updateUIStopRun();
+
         if(serviceBound){
             if(timerService.isTimerRunning()){
                 timerService.foreground();
@@ -242,8 +243,6 @@ public class ChronometerFragment extends Fragment {
             serviceBound = false;
             Log.v(TAG,"Chrono onStop()....");
         }
-
-
     }
 
     private void startTimer(){
@@ -333,15 +332,14 @@ public class ChronometerFragment extends Fragment {
     private void updateUIStartRun(){
         Log.v(TAG,"updateUIStartRun....");
         mUpdateTimeHandler.sendEmptyMessage(MSG_UPDATE_TIME);
-        //timerButton.setText(R.string.timer_stop_button);
+        timerButton.setImageResource(R.drawable.check);
         taskNameEditText.setText(timerService.getTaskName() == null ? "" : timerService.getTaskName());
     }
 
     private void updateUIStopRun(){
         Log.v(TAG,"updateUIStopRun...");
         mUpdateTimeHandler.removeMessages(MSG_UPDATE_TIME);
-        //timerButton.setText(R.string.timer_start_button);
-
+        timerButton.setImageResource(R.drawable.play);
     }
 
     private void updateUITimer(){
