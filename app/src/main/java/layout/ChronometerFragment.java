@@ -4,6 +4,7 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -58,11 +59,8 @@ public class ChronometerFragment extends Fragment {
     private OnFragmentInteractionListener mListener;
 
     private ImageButton timerButton;
-    private TextView timerTextView;
     private TextView taskNameEditText;
     private CircleProgressView circleProgressView;
-
-    private final Handler mUpdateTimeHandler = new UIUpdateHandler(this);
 
     private final static int MSG_UPDATE_TIME = 0;
 
@@ -103,7 +101,6 @@ public class ChronometerFragment extends Fragment {
             section = getArguments().getString(ARG_SECTION);
         }
         Log.v(TAG,"onCreate...");
-
     }
 
     @Override
@@ -118,7 +115,7 @@ public class ChronometerFragment extends Fragment {
     public void onStart() {
         super.onStart();
         if(Log.isLoggable(TAG, Log.VERBOSE)){
-            Log.v(TAG, "Starting binding service------------------");
+            Log.v(TAG, "Starting binding service");
         }
         Intent intent = new Intent(getActivity(), TimerService.class);
         getActivity().startService(intent);
@@ -148,18 +145,18 @@ public class ChronometerFragment extends Fragment {
 
         Log.v(TAG,"onViewCreated...");
         timerButton = (ImageButton) getView().findViewById(R.id.start_button);
-        timerTextView = (TextView) getView().findViewById(R.id.timer_text_view);
         taskNameEditText = (TextView) getView().findViewById(R.id.taskNameTextView);
         circleProgressView = (CircleProgressView) getView().findViewById(R.id.timer_circle_progress_view);
         
         final TimeDatabaseHelper timeDatabaseHelper = new TimeDatabaseHelper(getContext());
+
+        circleProgressView.setSpinBarColor(getResources().getColor(R.color.white));
 
         Log.v(TAG,"onViewCreated...");
         timerButton.setOnClickListener(new View.OnClickListener(){
 
             @Override
             public void onClick(View view) {
-                timerTextView.setText(R.string.timer_text_view_empty);
 
                 if(serviceBound && !timerService.isTimerRunning()){
                     onStartTimeForm();
@@ -216,6 +213,12 @@ public class ChronometerFragment extends Fragment {
                 insertItem = new TaskInfo();
             }
         }
+
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
     }
 
     @Override
@@ -331,22 +334,17 @@ public class ChronometerFragment extends Fragment {
 
     private void updateUIStartRun(){
         Log.v(TAG,"updateUIStartRun....");
-        mUpdateTimeHandler.sendEmptyMessage(MSG_UPDATE_TIME);
-        timerButton.setImageResource(R.drawable.check);
         taskNameEditText.setText(timerService.getTaskName() == null ? "" : timerService.getTaskName());
+        timerButton.setImageResource(R.drawable.check);
+        circleProgressView.spin();
     }
 
     private void updateUIStopRun(){
         Log.v(TAG,"updateUIStopRun...");
-        mUpdateTimeHandler.removeMessages(MSG_UPDATE_TIME);
         timerButton.setImageResource(R.drawable.play);
+        circleProgressView.stopSpinning();
     }
 
-    private void updateUITimer(){
-        if(serviceBound){
-            timerTextView.setText(formattedTimer(timerService.elapsedTime()));
-        }
-    }
 
     private String formattedTimer(long time){
         long hour = time/3600;
@@ -358,25 +356,6 @@ public class ChronometerFragment extends Fragment {
         return simpleDateFormat.format(date);
     }
 
-    static class UIUpdateHandler extends Handler{
-
-        private final static int UPDATE_TIME_RATE = 1000;
-        private final WeakReference<ChronometerFragment> fragmentWeakReference;
-
-        UIUpdateHandler(ChronometerFragment fragment){
-            this.fragmentWeakReference = new WeakReference<ChronometerFragment>(fragment);
-        }
-        @Override
-        public void handleMessage(Message msg) {
-            if(MSG_UPDATE_TIME == msg.what){
-                if(Log.isLoggable(TAG,Log.VERBOSE)){
-                    Log.v(TAG,"updating time......");
-                }
-                fragmentWeakReference.get().updateUITimer();
-                sendEmptyMessageDelayed(MSG_UPDATE_TIME,UPDATE_TIME_RATE);
-            }
-        }
-    }
 
     private String getCurrentTime(){
         String format = "h:mm:ss";
@@ -389,6 +368,5 @@ public class ChronometerFragment extends Fragment {
         Date date = new Date();
         return simpleDateFormat.format(date);
     }
-
 
 }

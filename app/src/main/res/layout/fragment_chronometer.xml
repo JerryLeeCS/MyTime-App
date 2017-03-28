@@ -30,7 +30,11 @@
         android:layout_marginBottom="8dp"
         app:layout_constraintVertical_bias="0.781"
         app:cpv_rimColor="@color/cardview_dark_background"
-        app:cpv_rimWidth="30dp"/>
+        app:cpv_rimWidth="30dp"
+        app:cpv_barWidth="30dp"
+        app:cpv_spinBarLength="50"
+        app:cpv_spinSpeed="20"
+        />
 
     <TextView
         android:id="@+id/timer_text_view"
