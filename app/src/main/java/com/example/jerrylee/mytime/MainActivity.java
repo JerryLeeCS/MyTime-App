@@ -123,6 +123,13 @@ public class MainActivity extends AppCompatActivity  implements onDataChangedLis
         }
     }
 
+    @Override
+    public void onBackPressed() {
+        Intent i = new Intent(this, MainActivity.class);
+        
+
+        super.onBackPressed();
+    }
 
     /**
      * A {@link FragmentPagerAdapter} that returns a fragment corresponding to
