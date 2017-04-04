@@ -345,7 +345,6 @@ public class ChronometerFragment extends Fragment {
         circleProgressView.stopSpinning();
     }
 
-
     private String formattedTimer(long time){
         long hour = time/3600;
         long minutes = (time%3600)/60;

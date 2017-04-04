@@ -11,6 +11,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.TimePicker;
@@ -25,6 +26,7 @@ import java.util.Locale;
 
 import database.TimeDatabaseHelper;
 import item.TaskInfo;
+import petrov.kristiyan.colorpicker.ColorPicker;
 
 public class TimeFormActivity extends AppCompatActivity {
 
@@ -61,6 +63,7 @@ public class TimeFormActivity extends AppCompatActivity {
     private TextView fromTimeEditText;
     private TextView toTimeEditText;
     private LinearLayout buttonLinearLayout;
+    private ImageButton colorImageButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,6 +79,7 @@ public class TimeFormActivity extends AppCompatActivity {
         toolBar = (Toolbar) findViewById(R.id.timeform_toolbar);
         toolBar.setNavigationIcon(R.drawable.ic_navigate_before_black_48dp);
         currentDateTextView = (TextView) findViewById(R.id.currentDateTextView);
+        colorImageButton = (ImageButton) findViewById(R.id.colorButton);
 
         currentDateTextView.setText(getCurrentDate() + " " + getDayOfWeek());
 
@@ -143,6 +147,26 @@ public class TimeFormActivity extends AppCompatActivity {
                 }
             });
         }
+
+        colorImageButton.setOnClickListener(new View.OnClickListener(){
+
+            @Override
+            public void onClick(View view) {
+                final ColorPicker colorPicker = new ColorPicker(TimeFormActivity.this);
+                colorPicker.setOnFastChooseColorListener(new ColorPicker.OnFastChooseColorListener() {
+                    @Override
+                    public void setOnFastChooseColorListener(int position, int color) {
+                        colorImageButton.setColorFilter(color);
+                    }
+
+                    @Override
+                    public void onCancel() {
+
+                    }
+                }).disableDefaultButtons(true).show();
+
+            }
+        });
     }
 
     @Override
