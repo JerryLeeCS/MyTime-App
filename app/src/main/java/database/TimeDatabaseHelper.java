@@ -28,6 +28,7 @@ import java.util.List;
 import java.util.Stack;
 
 import item.Frequency;
+import item.TaskColor;
 import item.TaskInfo;
 import item.DataModel;
 import item.TotalTime;
@@ -65,6 +66,12 @@ public class TimeDatabaseHelper extends SQLiteOpenHelper {
             + TotalTime.TIME_ELAPSED_COLUMN + " INTEGER, "
             + TotalTime.DATE_COLUMN + " TEXT);";
 
+    private static final String createTaskColorTable =
+            "CREATE TABLE " + TaskColor.TABLE + " ("
+            + TaskColor.ID_COLUMN + " INTEGER PRIMARY KEY AUTOINCREMENT,"
+            + TaskColor.TASK_COLUMN + " TEXT, "
+            + TaskColor.COLOR_COLUMN + " INTEGER);";
+
     public TimeDatabaseHelper(Context context) {
         super(context, DB_NAME, null, DB_VERSION);
         Log.v(TAG,"onInitializing <><><><>");
@@ -77,6 +84,7 @@ public class TimeDatabaseHelper extends SQLiteOpenHelper {
         db.execSQL(createFrequencyTable);
         db.execSQL(createTaskInfoTable);
         db.execSQL(createTotalTimeTable);
+        db.execSQL(createTaskColorTable);
     }
 
     @Override
@@ -86,6 +94,7 @@ public class TimeDatabaseHelper extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + Frequency.TABLE);
         db.execSQL("DROP TABLE IF EXISTS " + TaskInfo.TABLE);
         db.execSQL("DROP TABLE IF EXISTS " + TotalTime.TABLE);
+        db.execSQL("DROP TABLE IF EXISTS " + TaskColor.TABLE);
         onCreate(db);
     }
 
@@ -604,6 +613,39 @@ public class TimeDatabaseHelper extends SQLiteOpenHelper {
             close();
             return 0;
         }
+    }
+
+    private void insertTaskColor(TaskColor taskColor){
+        Log.v(TAG, "insertTaskColor...");
+
+        ContentValues values = new ContentValues();
+        values.put(TaskColor.TASK_COLUMN, taskColor.getTaskName());
+        values.put(TaskColor.COLOR_COLUMN, taskColor.getTaskColor());
+
+        getWritableDatabase().insert(TaskColor.TABLE, null, values);
+        close();
+    }
+
+    private void updateTaskColor(TaskColor taskColor, TaskColor newTaskColor){
+        Log.v(TAG, "updateTaskColor...");
+
+        ContentValues values = new ContentValues();
+        values.put(TaskColor.COLOR_COLUMN, newTaskColor.getTaskColor());
+
+        String selection = TaskColor.TASK_COLUMN + " LIKE ?";
+        String[] selectionArgs = {taskColor.getTaskName()};
+
+        try{
+            getWritableDatabase().update(
+                    TaskColor.TABLE,
+                    values,
+                    selection,
+                    selectionArgs
+            );
+        }catch (Exception e){
+            Log.e(TAG, "updateTaskColor: " + e.toString());
+        }
+        close();
     }
 
     private String getLastMondayDate(){
