@@ -615,7 +615,7 @@ public class TimeDatabaseHelper extends SQLiteOpenHelper {
         }
     }
 
-    private void insertTaskColor(TaskColor taskColor){
+    public void insertTaskColor(TaskColor taskColor){
         Log.v(TAG, "insertTaskColor...");
 
         ContentValues values = new ContentValues();
@@ -626,7 +626,7 @@ public class TimeDatabaseHelper extends SQLiteOpenHelper {
         close();
     }
 
-    private void updateTaskColor(TaskColor taskColor, TaskColor newTaskColor){
+    public void updateTaskColor(TaskColor taskColor, TaskColor newTaskColor){
         Log.v(TAG, "updateTaskColor...");
 
         ContentValues values = new ContentValues();

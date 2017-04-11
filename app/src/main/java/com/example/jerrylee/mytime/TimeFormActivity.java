@@ -37,6 +37,7 @@ public class TimeFormActivity extends AppCompatActivity {
     public static final String EDIT_MODE = "EDIT";
 
     public static final String ITEM = "DAT_ITEM";
+    public static final String COLOR = "DAT_COLOR";
 
     public static final String DATA_CHANGED_TYPE = "DATA_CHANGED_TYPE";
 
@@ -58,6 +59,8 @@ public class TimeFormActivity extends AppCompatActivity {
     }
 
     private boolean editMode;
+
+    private int colorTag = -1;
 
     private EditText taskNameEditText;
     private TextView fromTimeEditText;
@@ -157,6 +160,7 @@ public class TimeFormActivity extends AppCompatActivity {
                     @Override
                     public void setOnFastChooseColorListener(int position, int color) {
                         colorImageButton.setColorFilter(color);
+                        colorTag = color;
                     }
 
                     @Override
@@ -221,6 +225,7 @@ public class TimeFormActivity extends AppCompatActivity {
         returnItem.setTaskName(taskNameEditText.getText().toString());
         returnItem.setStartTime(fromTimeEditText.getText().toString());
 
+
         if(editMode) {
             returnItem.setEndTime(toTimeEditText.getText().toString());
             returnItem.setDate(dataItem.getDate());
@@ -245,6 +250,7 @@ public class TimeFormActivity extends AppCompatActivity {
             }
         }
         returnIntent.putExtra(ITEM,returnItem);
+        returnIntent.putExtra(COLOR, colorTag);
         setResult(RESULT_OK,returnIntent);
         finish();
     }

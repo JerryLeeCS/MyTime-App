@@ -37,6 +37,7 @@ public class TimerService extends Service {
     private String taskName;
     private String startTimeInclock;
     private String startDate;
+    private int color;
 
     private final IBinder serviceBinder = new RunServiceBinder();
 
@@ -170,6 +171,14 @@ public class TimerService extends Service {
 
     public String getStartDate(){
         return startDate;
+    }
+
+    public void setColor(int color){
+        this.color = color;
+    }
+
+    public int getColor(){
+        return color;
     }
 
 }
