@@ -2,7 +2,6 @@ package com.example.jerrylee.mytime;
 
 import android.app.TimePickerDialog;
 import android.content.Intent;
-import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -25,6 +24,7 @@ import java.util.List;
 import java.util.Locale;
 
 import database.TimeDatabaseHelper;
+import item.TaskColorTag;
 import item.TaskInfo;
 import petrov.kristiyan.colorpicker.ColorPicker;
 
@@ -37,7 +37,7 @@ public class TimeFormActivity extends AppCompatActivity {
     public static final String EDIT_MODE = "EDIT";
 
     public static final String ITEM = "DAT_ITEM";
-    public static final String COLOR = "DAT_COLOR";
+    public static final String TASK_COLOR_TAG = "DAT_COLOR_TAG";
 
     public static final String DATA_CHANGED_TYPE = "DATA_CHANGED_TYPE";
 
@@ -63,9 +63,11 @@ public class TimeFormActivity extends AppCompatActivity {
     private int colorTag = -1;
 
     private EditText taskNameEditText;
+    private EditText colorTagEditText;
     private TextView fromTimeEditText;
     private TextView toTimeEditText;
-    private LinearLayout buttonLinearLayout;
+    private LinearLayout taskNameLinearLayout;
+    private LinearLayout colorTagLinearLayout;
     private ImageButton colorImageButton;
 
     @Override
@@ -76,9 +78,11 @@ public class TimeFormActivity extends AppCompatActivity {
         Log.v(TAG,"onCreate...");
 
         taskNameEditText = (EditText) findViewById(R.id.taskNameEditText);
+        colorTagEditText = (EditText) findViewById(R.id.colorTagEditText);
         fromTimeEditText = (TextView) findViewById(R.id.fromTimeEditText);
         toTimeEditText = (TextView) findViewById(R.id.toTimeEditText);
-        buttonLinearLayout = (LinearLayout) findViewById(R.id.scrollLinearLayout);
+        taskNameLinearLayout = (LinearLayout) findViewById(R.id.taskNameScrollLinearLayout);
+        colorTagLinearLayout = (LinearLayout) findViewById(R.id.colorTagLinearLayout);
         toolBar = (Toolbar) findViewById(R.id.timeform_toolbar);
         toolBar.setNavigationIcon(R.drawable.ic_navigate_before_black_48dp);
         currentDateTextView = (TextView) findViewById(R.id.currentDateTextView);
@@ -218,39 +222,44 @@ public class TimeFormActivity extends AppCompatActivity {
 
     private void putResult(){
         Log.v(TAG,"putResult....");
-        TaskInfo returnItem = new TaskInfo();
+        TaskInfo returnTaskInfo = new TaskInfo();
+        TaskColorTag returnTaskColorTag = new TaskColorTag();
 
         Intent returnIntent = new Intent();
 
-        returnItem.setTaskName(taskNameEditText.getText().toString());
-        returnItem.setStartTime(fromTimeEditText.getText().toString());
+        returnTaskInfo.setTaskName(taskNameEditText.getText().toString());
+        returnTaskInfo.setStartTime(fromTimeEditText.getText().toString());
 
+        returnTaskColorTag.setTaskName(taskNameEditText.getText().toString());
+        returnTaskColorTag.setTaskColor(colorTag);
+        returnTaskColorTag.setTaskTag(colorTagEditText.getText().toString());
 
-        if(editMode) {
-            returnItem.setEndTime(toTimeEditText.getText().toString());
-            returnItem.setDate(dataItem.getDate());
-            returnItem.setID(dataItem.getID());
-            returnItem.setElapsedTime(getValidElapsedTime());
+        if(editMode) {//Haven't add the TaskColorTag in the editMode yet
+            returnTaskInfo.setEndTime(toTimeEditText.getText().toString());
+            returnTaskInfo.setDate(dataItem.getDate());
+            returnTaskInfo.setID(dataItem.getID());
+            returnTaskInfo.setElapsedTime(getValidElapsedTime());
 
-            if (!dataItem.getTaskName().equals(returnItem.getTaskName())
-                    && getElapsedTimeDifference(dataItem.getElapsedTime(), returnItem.getElapsedTime()) >2 ) {
+            if (!dataItem.getTaskName().equals(returnTaskInfo.getTaskName())
+                    && getElapsedTimeDifference(dataItem.getElapsedTime(), returnTaskInfo.getElapsedTime()) >2 ) {
                 returnIntent.putExtra(DATA_CHANGED_TYPE, DataChanged.TASK_AND_ELAPSED_TIME_CHANGED);
                 returnIntent.putExtra(TASK_CHANGED_FROM, dataItem.getTaskName());
                 returnIntent.putExtra(ELAPSED_TIME_MINUS, dataItem.getElapsedTime());
             } else {
-                if (!dataItem.getTaskName().equals(returnItem.getTaskName())) {
+                if (!dataItem.getTaskName().equals(returnTaskInfo.getTaskName())) {
                     returnIntent.putExtra(DATA_CHANGED_TYPE, DataChanged.TASK_CHANGED);
                     returnIntent.putExtra(TASK_CHANGED_FROM, dataItem.getTaskName());
-                } else if (getElapsedTimeDifference(dataItem.getElapsedTime(), returnItem.getElapsedTime()) != 0) {
+                } else if (getElapsedTimeDifference(dataItem.getElapsedTime(), returnTaskInfo.getElapsedTime()) != 0) {
                     returnIntent.putExtra(DATA_CHANGED_TYPE, DataChanged.ELAPSED_CHANGED);
-                    returnIntent.putExtra(CHANGED_ELAPSED_TIME_DIFFERENCE, getElapsedTimeDifference(returnItem.getElapsedTime(), dataItem.getElapsedTime() ));
+                    returnIntent.putExtra(CHANGED_ELAPSED_TIME_DIFFERENCE, getElapsedTimeDifference(returnTaskInfo.getElapsedTime(), dataItem.getElapsedTime() ));
                 } else {
                     returnIntent.putExtra(DATA_CHANGED_TYPE, DataChanged.NOTHING_CHANGED);
                 }
             }
         }
-        returnIntent.putExtra(ITEM,returnItem);
-        returnIntent.putExtra(COLOR, colorTag);
+        returnIntent.putExtra(ITEM,returnTaskInfo);
+        returnIntent.putExtra(TASK_COLOR_TAG,returnTaskColorTag);
+
         setResult(RESULT_OK,returnIntent);
         finish();
     }
@@ -290,7 +299,7 @@ public class TimeFormActivity extends AppCompatActivity {
                 }
             });
 
-            buttonLinearLayout.addView(button);
+            taskNameLinearLayout.addView(button);
         }
 
     }

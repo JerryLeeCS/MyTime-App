@@ -6,29 +6,24 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
-import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieEntry;
 import com.github.mikephil.charting.utils.ColorTemplate;
 
-import java.lang.reflect.Array;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.HashSet;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Stack;
 
 import item.Frequency;
-import item.TaskColor;
+import item.TaskColorTag;
 import item.TaskInfo;
 import item.DataModel;
 import item.TotalTime;
@@ -66,11 +61,12 @@ public class TimeDatabaseHelper extends SQLiteOpenHelper {
             + TotalTime.TIME_ELAPSED_COLUMN + " INTEGER, "
             + TotalTime.DATE_COLUMN + " TEXT);";
 
-    private static final String createTaskColorTable =
-            "CREATE TABLE " + TaskColor.TABLE + " ("
-            + TaskColor.ID_COLUMN + " INTEGER PRIMARY KEY AUTOINCREMENT,"
-            + TaskColor.TASK_COLUMN + " TEXT, "
-            + TaskColor.COLOR_COLUMN + " INTEGER);";
+    private static final String createTaskColorTagTable =
+            "CREATE TABLE " + TaskColorTag.TABLE + " ("
+            + TaskColorTag.ID_COLUMN + " INTEGER PRIMARY KEY AUTOINCREMENT, "
+            + TaskColorTag.TASK_COLUMN + " TEXT, "
+            + TaskColorTag.TAG_COLUMN + " TEXT, "
+            + TaskColorTag.COLOR_COLUMN + " INTEGER);";
 
     public TimeDatabaseHelper(Context context) {
         super(context, DB_NAME, null, DB_VERSION);
@@ -84,7 +80,7 @@ public class TimeDatabaseHelper extends SQLiteOpenHelper {
         db.execSQL(createFrequencyTable);
         db.execSQL(createTaskInfoTable);
         db.execSQL(createTotalTimeTable);
-        db.execSQL(createTaskColorTable);
+        db.execSQL(createTaskColorTagTable);
     }
 
     @Override
@@ -94,7 +90,7 @@ public class TimeDatabaseHelper extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + Frequency.TABLE);
         db.execSQL("DROP TABLE IF EXISTS " + TaskInfo.TABLE);
         db.execSQL("DROP TABLE IF EXISTS " + TotalTime.TABLE);
-        db.execSQL("DROP TABLE IF EXISTS " + TaskColor.TABLE);
+        db.execSQL("DROP TABLE IF EXISTS " + TaskColorTag.TABLE);
         onCreate(db);
     }
 
@@ -615,29 +611,31 @@ public class TimeDatabaseHelper extends SQLiteOpenHelper {
         }
     }
 
-    public void insertTaskColor(TaskColor taskColor){
+    public void insertTaskColor(TaskColorTag taskColorTag){
         Log.v(TAG, "insertTaskColor...");
 
         ContentValues values = new ContentValues();
-        values.put(TaskColor.TASK_COLUMN, taskColor.getTaskName());
-        values.put(TaskColor.COLOR_COLUMN, taskColor.getTaskColor());
+        values.put(TaskColorTag.TASK_COLUMN, taskColorTag.getTaskName());
+        values.put(TaskColorTag.COLOR_COLUMN, taskColorTag.getTaskColor());
+        values.put(TaskColorTag.TAG_COLUMN, taskColorTag.getTaskTag());
 
-        getWritableDatabase().insert(TaskColor.TABLE, null, values);
+        getWritableDatabase().insert(TaskColorTag.TABLE, null, values);
         close();
     }
 
-    public void updateTaskColor(TaskColor taskColor, TaskColor newTaskColor){
+    public void updateTaskColor(TaskColorTag oldTaskColorTag, TaskColorTag newTaskColorTag){
         Log.v(TAG, "updateTaskColor...");
 
         ContentValues values = new ContentValues();
-        values.put(TaskColor.COLOR_COLUMN, newTaskColor.getTaskColor());
+        values.put(TaskColorTag.COLOR_COLUMN, newTaskColorTag.getTaskColor());
+        values.put(TaskColorTag.TAG_COLUMN, newTaskColorTag.getTaskTag());
 
-        String selection = TaskColor.TASK_COLUMN + " LIKE ?";
-        String[] selectionArgs = {taskColor.getTaskName()};
+        String selection = TaskColorTag.TASK_COLUMN + " LIKE ?";
+        String[] selectionArgs = {oldTaskColorTag.getTaskName()};
 
         try{
             getWritableDatabase().update(
-                    TaskColor.TABLE,
+                    TaskColorTag.TABLE,
                     values,
                     selection,
                     selectionArgs

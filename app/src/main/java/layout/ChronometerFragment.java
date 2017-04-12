@@ -4,19 +4,15 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
-import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
 import android.os.IBinder;
-import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v4.app.*;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -25,13 +21,12 @@ import com.example.jerrylee.mytime.R;
 import com.example.jerrylee.mytime.TimeFormActivity;
 
 import java.io.Serializable;
-import java.lang.ref.WeakReference;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import at.grabner.circleprogress.CircleProgressView;
 import database.TimeDatabaseHelper;
-import item.TaskColor;
+import item.TaskColorTag;
 import item.TaskInfo;
 import listener.onDataChangedListener;
 import service.TimerService;
@@ -68,7 +63,7 @@ public class ChronometerFragment extends Fragment {
     private onDataChangedListener dataChangedListener;
 
     TaskInfo insertItem;
-    TaskColor insertTaskColor;
+    TaskColorTag insertTaskColorTag;
 
     private static final int TASK_NAME_REQUEST = 1;
 
@@ -172,10 +167,12 @@ public class ChronometerFragment extends Fragment {
 
                     setEndInsertItem();
 
+                    setEndTaskColor();
+
                     timeDatabaseHelper.insertTaskInfo(insertItem);
                     timeDatabaseHelper.addOneFrequency(insertItem.getTaskName());
                     timeDatabaseHelper.addTotalTime(insertItem.getTotalTime());
-                    timeDatabaseHelper.insertTaskColor(insertTaskColor);
+                    timeDatabaseHelper.insertTaskColor(insertTaskColorTag);
 
                     dataChangedListener.onDataInserted();
 
@@ -279,8 +276,10 @@ public class ChronometerFragment extends Fragment {
     }
 
     private void setEndTaskColor(){
-        insertTaskColor.setTaskName(timerService.getTaskName() == null ? "" : timerService.getTaskName());
-        insertTaskColor.setTaskColor(timerService.getColor());
+        insertTaskColorTag = new TaskColorTag();
+        insertTaskColorTag.setTaskName(timerService.getTaskName() == null ? "" : timerService.getTaskName());
+        insertTaskColorTag.setTaskColor(timerService.getColor());
+        insertTaskColorTag.setTaskTag(timerService.getTaskTag());
     }
 
     private void onStartTimeForm(){
@@ -301,12 +300,13 @@ public class ChronometerFragment extends Fragment {
         if(requestCode == TASK_NAME_REQUEST && data != null){
             if(resultCode == RESULT_OK){
                 TaskInfo dataItem = (TaskInfo) data.getSerializableExtra(TimeFormActivity.ITEM);
-                int taskColor = data.getIntExtra(TimeFormActivity.COLOR, -1);
+                TaskColorTag taskColorTag = (TaskColorTag) data.getSerializableExtra(TimeFormActivity.TASK_COLOR_TAG);
 
 
                 taskNameEditText.setText(dataItem.getTaskName());
                 timerService.setTaskName(dataItem.getTaskName());
-                timerService.setColor(taskColor);
+                timerService.setColor(taskColorTag.getTaskColor());
+                timerService.setTaskTag(taskColorTag.getTaskTag());
             }
         }else{
             Log.v(TAG,"DATA is null...");
