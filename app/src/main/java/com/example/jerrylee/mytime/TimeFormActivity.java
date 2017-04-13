@@ -108,7 +108,8 @@ public class TimeFormActivity extends AppCompatActivity {
         if(!editMode){
             toTimeEditText.setVisibility(View.INVISIBLE);
             fromTimeEditText.setText(dataItem.getStartTime());
-            setUpButtonLinearLayout();
+            setUpTaskNameLinearLayout();
+            setUpColorTagLinearLayout();
         }else{
             taskNameEditText.setText(dataItem.getTaskName());
             fromTimeEditText.setText(dataItem.getStartTime());
@@ -230,7 +231,6 @@ public class TimeFormActivity extends AppCompatActivity {
         returnTaskInfo.setTaskName(taskNameEditText.getText().toString());
         returnTaskInfo.setStartTime(fromTimeEditText.getText().toString());
 
-        returnTaskColorTag.setTaskName(taskNameEditText.getText().toString());
         returnTaskColorTag.setTaskColor(colorTag);
         returnTaskColorTag.setTaskTag(colorTagEditText.getText().toString());
 
@@ -283,7 +283,7 @@ public class TimeFormActivity extends AppCompatActivity {
         return fromElapsedTime - toElapsedTime;
     }
 
-    private void setUpButtonLinearLayout(){
+    private void setUpTaskNameLinearLayout(){
         TimeDatabaseHelper helper = new TimeDatabaseHelper(this);
         final List<String> taskList = helper.getMostFrequentTaskList();
 
@@ -298,8 +298,29 @@ public class TimeFormActivity extends AppCompatActivity {
                     taskNameEditText.setText(task);
                 }
             });
-
             taskNameLinearLayout.addView(button);
+        }
+    }
+
+    private void setUpColorTagLinearLayout(){
+        TimeDatabaseHelper timeDatabaseHelper = new TimeDatabaseHelper(this);
+        final List<TaskColorTag> colorTagList = timeDatabaseHelper.getColorTagList();
+
+        for(int i = 0; i < colorTagList.size(); i++){
+            Button button = new Button(this);
+            final TaskColorTag taskColorTag = colorTagList.get(i);
+            button.setText(taskColorTag.getTaskTag());
+            button.setTextColor(taskColorTag.getTaskColor());
+
+            button.setOnClickListener(new View.OnClickListener(){
+
+                @Override
+                public void onClick(View view) {
+                    colorTagEditText.setText(taskColorTag.getTaskTag());
+                    colorImageButton.setColorFilter(taskColorTag.getTaskColor());
+                }
+            });
+            colorTagLinearLayout.addView(button);
         }
 
     }

@@ -172,7 +172,7 @@ public class ChronometerFragment extends Fragment {
                     timeDatabaseHelper.insertTaskInfo(insertItem);
                     timeDatabaseHelper.addOneFrequency(insertItem.getTaskName());
                     timeDatabaseHelper.addTotalTime(insertItem.getTotalTime());
-                    timeDatabaseHelper.insertTaskColor(insertTaskColorTag);
+                    timeDatabaseHelper.insertColorTag(insertTaskColorTag);
 
                     dataChangedListener.onDataInserted();
 
@@ -277,7 +277,6 @@ public class ChronometerFragment extends Fragment {
 
     private void setEndTaskColor(){
         insertTaskColorTag = new TaskColorTag();
-        insertTaskColorTag.setTaskName(timerService.getTaskName() == null ? "" : timerService.getTaskName());
         insertTaskColorTag.setTaskColor(timerService.getColor());
         insertTaskColorTag.setTaskTag(timerService.getTaskTag());
     }
@@ -301,7 +300,6 @@ public class ChronometerFragment extends Fragment {
             if(resultCode == RESULT_OK){
                 TaskInfo dataItem = (TaskInfo) data.getSerializableExtra(TimeFormActivity.ITEM);
                 TaskColorTag taskColorTag = (TaskColorTag) data.getSerializableExtra(TimeFormActivity.TASK_COLOR_TAG);
-
 
                 taskNameEditText.setText(dataItem.getTaskName());
                 timerService.setTaskName(dataItem.getTaskName());

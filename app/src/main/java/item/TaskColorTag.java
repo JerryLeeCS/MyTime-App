@@ -11,28 +11,20 @@ public class TaskColorTag implements Serializable{
     public static final String TABLE = "COLOR_TABLE";
 
     public static final String ID_COLUMN = "_ID";
-    public static final String TASK_COLUMN = "TASK_COL";
     public static final String COLOR_COLUMN = "COLOR_COL";
     public static final String TAG_COLUMN = "TAG_COL";
+    public static final String FREQUENCY_COLUMN = "FREQUENCY_COL";
 
-    private String taskName;
-    private int taskColor;
+    private int tagColor;
     private String taskTag;
-
-    public void setTaskName(String taskName){
-        this.taskName = taskName;
-    }
-
-    public String getTaskName(){
-        return taskName;
-    }
+    private int tagFrequency;
 
     public void setTaskColor(int taskColor){
-        this.taskColor = taskColor;
+        this.tagColor = taskColor;
     }
 
     public int getTaskColor(){
-        return taskColor;
+        return tagColor;
     }
 
     public void setTaskTag(String taskTag){
@@ -41,5 +33,13 @@ public class TaskColorTag implements Serializable{
 
     public String getTaskTag(){
         return taskTag;
+    }
+
+    public void setTagFrequency(int tagFrequency){
+        this.tagFrequency = tagFrequency;
+    }
+
+    public int getTagFrequency(){
+        return tagFrequency;
     }
 }

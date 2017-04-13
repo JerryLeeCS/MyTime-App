@@ -64,8 +64,8 @@ public class TimeDatabaseHelper extends SQLiteOpenHelper {
     private static final String createTaskColorTagTable =
             "CREATE TABLE " + TaskColorTag.TABLE + " ("
             + TaskColorTag.ID_COLUMN + " INTEGER PRIMARY KEY AUTOINCREMENT, "
-            + TaskColorTag.TASK_COLUMN + " TEXT, "
             + TaskColorTag.TAG_COLUMN + " TEXT, "
+            + TaskColorTag.FREQUENCY_COLUMN + " INTEGER, "
             + TaskColorTag.COLOR_COLUMN + " INTEGER);";
 
     public TimeDatabaseHelper(Context context) {
@@ -611,27 +611,27 @@ public class TimeDatabaseHelper extends SQLiteOpenHelper {
         }
     }
 
-    public void insertTaskColor(TaskColorTag taskColorTag){
-        Log.v(TAG, "insertTaskColor...");
+    public void insertColorTag(TaskColorTag taskColorTag){
+        Log.v(TAG, "insertColorTag...");
 
         ContentValues values = new ContentValues();
-        values.put(TaskColorTag.TASK_COLUMN, taskColorTag.getTaskName());
         values.put(TaskColorTag.COLOR_COLUMN, taskColorTag.getTaskColor());
         values.put(TaskColorTag.TAG_COLUMN, taskColorTag.getTaskTag());
+        values.put(TaskColorTag.FREQUENCY_COLUMN, 1);
 
         getWritableDatabase().insert(TaskColorTag.TABLE, null, values);
         close();
     }
 
-    public void updateTaskColor(TaskColorTag oldTaskColorTag, TaskColorTag newTaskColorTag){
-        Log.v(TAG, "updateTaskColor...");
+    public void updateColorTag(TaskColorTag oldTaskColorTag, TaskColorTag newTaskColorTag){
+        Log.v(TAG, "updateColorTag...");
 
         ContentValues values = new ContentValues();
         values.put(TaskColorTag.COLOR_COLUMN, newTaskColorTag.getTaskColor());
         values.put(TaskColorTag.TAG_COLUMN, newTaskColorTag.getTaskTag());
 
-        String selection = TaskColorTag.TASK_COLUMN + " LIKE ?";
-        String[] selectionArgs = {oldTaskColorTag.getTaskName()};
+        String selection = TaskColorTag.TAG_COLUMN + " LIKE ?";
+        String[] selectionArgs = {oldTaskColorTag.getTaskTag()};
 
         try{
             getWritableDatabase().update(
@@ -641,9 +641,46 @@ public class TimeDatabaseHelper extends SQLiteOpenHelper {
                     selectionArgs
             );
         }catch (Exception e){
-            Log.e(TAG, "updateTaskColor: " + e.toString());
+            Log.e(TAG, "updateColorTag: " + e.toString());
         }
         close();
+    }
+
+    public List<TaskColorTag> getColorTagList(){
+        Log.v(TAG,"getColorTagList....");
+        LinkedList<TaskColorTag> colorTagList = new LinkedList<>();
+
+        Cursor cursor = null;
+
+        try{
+            String[] columns = new String[]{TaskColorTag.TAG_COLUMN,TaskColorTag.COLOR_COLUMN};
+            String selection = TaskColorTag.FREQUENCY_COLUMN + " > 0";
+
+            cursor = getReadableDatabase().query(
+                    TaskColorTag.TABLE,
+                    columns,
+                    selection,
+                    null,
+                    null,
+                    null,
+                    TaskColorTag.FREQUENCY_COLUMN + " DESC",
+                    "7"
+            );
+
+            if(cursor.moveToFirst()){
+                do{
+                    TaskColorTag taskColorTag = new TaskColorTag();
+                    taskColorTag.setTaskTag(cursor.getString(cursor.getColumnIndex(TaskColorTag.TAG_COLUMN)));
+                    taskColorTag.setTaskColor(cursor.getInt(cursor.getColumnIndex(TaskColorTag.COLOR_COLUMN)));
+
+                    colorTagList.add(taskColorTag);
+                }while(cursor.moveToNext());
+            }
+        }catch (Exception e){
+            Log.e(TAG,e.toString());
+        }finally {
+            return colorTagList;
+        }
     }
 
     private String getLastMondayDate(){
