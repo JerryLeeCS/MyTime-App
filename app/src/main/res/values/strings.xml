@@ -10,5 +10,10 @@
     <string name="timer_text_view_empty">00:00:00</string>
     <string name="quote_placement">The most dangerous thing you can do in life is play it safe.</string>
     <string name="auto_complete_text_view_blank">"What's your task?"</string>
+    <string name="from_time_hint">from time</string>
+    <string name="to_time_hint">to time</string>
+    <string name="task_name_edit">Task</string>
+    <string name="color_button_description">Choose a color</string>
+    <string name="tag_name_edit">Tag</string>
 
 </resources>

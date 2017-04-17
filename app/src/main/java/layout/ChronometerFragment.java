@@ -172,7 +172,7 @@ public class ChronometerFragment extends Fragment {
                     timeDatabaseHelper.insertTaskInfo(insertItem);
                     timeDatabaseHelper.addOneFrequency(insertItem.getTaskName());
                     timeDatabaseHelper.addTotalTime(insertItem.getTotalTime());
-                    timeDatabaseHelper.insertColorTag(insertTaskColorTag);
+                    timeDatabaseHelper.addColorTag(insertTaskColorTag);
 
                     dataChangedListener.onDataInserted();
 

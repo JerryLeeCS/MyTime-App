@@ -119,6 +119,7 @@ public class TimeDatabaseHelper extends SQLiteOpenHelper {
 
         Cursor cursor = null;
 
+        int frequencyCount;
         try{
             cursor = getReadableDatabase().query(
                     Frequency.TABLE,
@@ -134,14 +135,12 @@ public class TimeDatabaseHelper extends SQLiteOpenHelper {
             cursor.moveToFirst();
         }catch(Exception e){
             Log.e(TAG,"frequencyExist error: " +  e.toString());
-        }finally {
-            if(cursor.getCount() == 0){
-                return false;
-            }else{
-                Log.v(TAG,"getCount..." + cursor.getCount());
-                return true;
-            }
+        }finally{
+            frequencyCount = cursor.getCount();
+            cursor.close();
+            close();
         }
+        return frequencyCount != 0;
     }
 
     public void removeOneFrequency(String taskName){
@@ -207,8 +206,13 @@ public class TimeDatabaseHelper extends SQLiteOpenHelper {
 
         if(cursor.getCount() > 0){
             cursor.moveToFirst();
-            return cursor.getInt(cursor.getColumnIndex(Frequency.FREQUENCY_COLUMN));
+            int frequencyCount = cursor.getInt(cursor.getColumnIndex(Frequency.FREQUENCY_COLUMN));
+            cursor.close();
+            close();
+            return frequencyCount;
         }else{
+            cursor.close();
+            close();
             return 0;
         }
     }
@@ -217,13 +221,12 @@ public class TimeDatabaseHelper extends SQLiteOpenHelper {
         Log.v(TAG,"getMostFrequentTaskList....");
         LinkedList<String> taskList = new LinkedList<>();
 
-        Cursor cursor = null;
 
         try{
             String[] columns = new String[]{Frequency.TASK_COLUMN};
             String selection = Frequency.FREQUENCY_COLUMN + " > 0";
 
-            cursor = getReadableDatabase().query(
+            Cursor cursor = getReadableDatabase().query(
                     Frequency.TABLE,
                     columns,
                     selection,
@@ -239,11 +242,12 @@ public class TimeDatabaseHelper extends SQLiteOpenHelper {
                     taskList.add(cursor.getString(cursor.getColumnIndex(Frequency.TASK_COLUMN)));
                 }while(cursor.moveToNext());
             }
+            cursor.close();
+            close();
         }catch (Exception e){
             Log.e(TAG,e.toString());
-        }finally {
-            return taskList;
         }
+        return taskList;
     }
 
     public int insertTaskInfo(TaskInfo taskInfo){
@@ -342,8 +346,7 @@ public class TimeDatabaseHelper extends SQLiteOpenHelper {
         Log.v(TAG,"getCursorDataModelList...");
 
         String[] columns = new String[]{TaskInfo.ID_COLUMN, TaskInfo.TASK_COLUMN,TaskInfo.TIME_ELAPSED_COLUMN,TaskInfo.DATE_COLUMN,TaskInfo.START_TIME_COLUMN,TaskInfo.END_TIME_COLUMN};
-        //String where = TaskInfo.DATE_COLUMN + " > ?";
-        //String[] whereArg = new String[]{getLastMondayDate()};
+
         String orderBy = TaskInfo.ID_COLUMN + " DESC";
         Cursor cursor = getReadableDatabase().query(
                 TaskInfo.TABLE,
@@ -417,7 +420,7 @@ public class TimeDatabaseHelper extends SQLiteOpenHelper {
         }catch (Exception e){
             Log.e(TAG,"deleteTotalTime Error: " + e.toString());
         }finally {
-            database.close();
+            close();
             Log.v(TAG,"deletedTotalTime ");
         }
     }
@@ -611,9 +614,69 @@ public class TimeDatabaseHelper extends SQLiteOpenHelper {
         }
     }
 
-    public void insertColorTag(TaskColorTag taskColorTag){
-        Log.v(TAG, "insertColorTag...");
+    public void addColorTag(TaskColorTag taskColorTag){
+        Log.v(TAG, "addColorTag...");
+        int colorTagFrequency = getColorTagFrequency(taskColorTag);
+        if(colorTagFrequency > 0){
 
+            updateColorTagFrequency(taskColorTag, colorTagFrequency + 1);
+        }else{
+            insertColorTag(taskColorTag);
+        }
+    }
+
+    private int getColorTagFrequency(TaskColorTag taskColorTag){
+        Log.v(TAG,"getColorTagFrequency....");
+
+        String[] projection = {
+                TaskColorTag.FREQUENCY_COLUMN
+        };
+
+        String selection = TaskColorTag.TAG_COLUMN + " = ?";
+        String[] selectionArgs = {taskColorTag.getTaskTag()};
+
+        Cursor cursor = getReadableDatabase().query(
+                TaskColorTag.TABLE,
+                projection,
+                selection,
+                selectionArgs,
+                null,
+                null,
+                null,
+                null
+        );
+
+        if(cursor.getCount() > 0){
+            cursor.moveToFirst();
+            return cursor.getInt(cursor.getColumnIndex(TaskColorTag.FREQUENCY_COLUMN));
+        }else{
+            return 0;
+        }
+    }
+
+    private void updateColorTagFrequency(TaskColorTag taskColorTag, int destinatedFrequency){
+        Log.v(TAG,"updateColorTagFrequency... destinatedFrequency: " + destinatedFrequency );
+
+        ContentValues values = new ContentValues();
+        values.put(TaskColorTag.FREQUENCY_COLUMN, destinatedFrequency);
+
+        String selection = TaskColorTag.TAG_COLUMN + " LIKE ?";
+        String[] selectionArgs = {taskColorTag.getTaskTag()};
+
+        try{
+            getWritableDatabase().update(
+                    TaskColorTag.TABLE,
+                    values,
+                    selection,
+                    selectionArgs
+            );
+        }catch (Exception e){
+            Log.e(TAG,"updateColorTagFrequency: " + e.toString());
+        }
+        close();
+    }
+
+    private void insertColorTag(TaskColorTag taskColorTag){
         ContentValues values = new ContentValues();
         values.put(TaskColorTag.COLOR_COLUMN, taskColorTag.getTaskColor());
         values.put(TaskColorTag.TAG_COLUMN, taskColorTag.getTaskTag());
@@ -653,7 +716,7 @@ public class TimeDatabaseHelper extends SQLiteOpenHelper {
         Cursor cursor = null;
 
         try{
-            String[] columns = new String[]{TaskColorTag.TAG_COLUMN,TaskColorTag.COLOR_COLUMN};
+            String[] columns = new String[]{TaskColorTag.TAG_COLUMN,TaskColorTag.COLOR_COLUMN,TaskColorTag.FREQUENCY_COLUMN};
             String selection = TaskColorTag.FREQUENCY_COLUMN + " > 0";
 
             cursor = getReadableDatabase().query(

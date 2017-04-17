@@ -12,7 +12,7 @@
         android:background="?attr/colorPrimary"
         android:minHeight="?attr/actionBarSize"
         android:theme="?attr/actionBarTheme"
-        android:elevation="4dp">
+        >
 
         <TextView
             android:id="@+id/currentDateTextView"
@@ -24,53 +24,55 @@
     </android.support.v7.widget.Toolbar>
 
 
-    <Space
-        android:layout_width="match_parent"
-        android:layout_height="40dp" />
-
-
     <LinearLayout
-        android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="0.16">
+        android:layout_weight="0.16"
+        android:orientation="horizontal"
+        android:layout_marginTop="20dp">
 
         <TextView
+            android:id="@+id/fromTimeEditText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:inputType="textPersonName"
-            android:ems="10"
-            android:id="@+id/fromTimeEditText"
             android:layout_weight="1"
-            android:hint="fromTime"
+            android:ems="10"
+            android:hint="@string/from_time_hint"
             android:textAlignment="center" />
 
         <TextView
+            android:id="@+id/toTimeEditText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:inputType="textPersonName"
-            android:ems="10"
-            android:id="@+id/toTimeEditText"
             android:layout_weight="1"
-            android:hint="toTime"
+            android:ems="10"
+            android:hint="@string/to_time_hint"
             android:textAlignment="center" />
     </LinearLayout>
+
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_weight="0.28" />
+
 
     <EditText
         android:id="@+id/taskNameEditText"
         android:layout_width="match_parent"
-        android:layout_height="68dp"
+        android:layout_height="38dp"
         android:ems="10"
-        android:hint="enter task name"
+        android:hint="@string/task_name_edit"
         android:inputType="textPersonName"
-        android:textAlignment="center" />
+        android:textAlignment="center"
+        android:layout_marginTop="10dp"/>
 
     <HorizontalScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp">
 
         <LinearLayout
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:id="@+id/taskNameScrollLinearLayout">
@@ -80,18 +82,20 @@
 
     <Space
         android:layout_width="match_parent"
-        android:layout_height="40dp" />
-
+        android:layout_height="40dp"
+        android:layout_weight="0.27" />
 
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:weightSum="1">
+        android:weightSum="1"
+        android:layout_marginTop="10dp">
 
         <ImageButton
             android:id="@+id/colorButton"
+            android:contentDescription="@string/color_button_description"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="3dp"
@@ -103,21 +107,22 @@
         <EditText
             android:id="@+id/colorTagEditText"
             android:layout_width="match_parent"
-            android:layout_height="68dp"
+            android:layout_height="38dp"
+            android:layout_weight="1"
             android:ems="10"
-            android:hint="enter task name"
+            android:hint="@string/tag_name_edit"
             android:inputType="textPersonName"
-            android:textAlignment="center"
-            android:layout_weight="1" />
+            android:textAlignment="center" />
 
     </LinearLayout>
 
     <HorizontalScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp">
 
         <LinearLayout
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:id="@+id/colorTagLinearLayout">
